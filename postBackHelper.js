@@ -1,7 +1,7 @@
 "use strict";
 
-var postBackHelper = {};
 var View = require('./view');
+var postBackHelper = {};
 
 postBackHelper.handlePostBack = function(bot, message, payload) {
 	if(payload.indexOf("-") === -1 ) payload += "-";

@@ -1,8 +1,6 @@
 "use strict";
 
 var Consts = require('./consts');
-var Groups = require('./groups');
-var Games = require('./games');
 var DateFormat = require('dateformat');
 var Utils = require('./utils');
 var mockApi = {};
