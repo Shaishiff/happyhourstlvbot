@@ -3,8 +3,6 @@
 var Consts = require('./consts');
 var Api = require('./mockApi');
 var FacebookHelper = require('./facebookHelper');
-var Stadiums = require('./stadiums');
-var Flags = require('./flags');
 var view = {};
 
 view.buildMainMenu = function() {

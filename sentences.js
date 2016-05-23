@@ -76,30 +76,6 @@ var sentences = {
     "^Show grups",
     "^group(s)?(.*)show(.*)",
   ],
-  show_team_games: [
-    "(.*)(" + Consts.TEAMS.join("|") + ")(.*)" + game
-  ],
-  show_games_for_team: [
-    "(.*)" + game + "(.*)(" + Consts.TEAMS.join("|") + ")(.*)"
-  ],
-  show_team_group: [
-    "(.*)(" + Consts.TEAMS.join("|") + ")(.*)" + group
-  ],
-  show_group_for_team: [
-    "(.*)" + group + "(.*)(" + Consts.TEAMS.join("|") + ")(.*)"
-  ],
-  show_live_games: [
-    "^show me " + live + " " + game,
-    "^" + live + " " + game,
-    "^show(.*)" + live + " " + game,
-    "^what(.*)" + live + " " + game,
-  ],
-  show_games_today: [
-    "^show me " + today + " " + game,
-    "^" + today + " " + game,
-    "^show(.*)" + today + " " + game,
-    "^what(.*)" + today + " " + game,
-  ],
   help_me: [
     "^help$",
     "^help !",
