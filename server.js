@@ -1,17 +1,10 @@
 "use strict";
 
-// TODO:
-// show quarter/semi/final game
-// show group A|B|C|
-// show team stats/info
-// Notifications about game events
-
 var Botkit = require('botkit');
 var Sentences = require('./sentences');
 var Api = require('./mockApi');
 var View = require('./view');
 var Utils = require('./utils');
-var DateFormat = require('dateformat');
 var FacebookHelper = require('./facebookHelper');
 var PostBackHelper = require('./postBackHelper');
 var AnalyticsHelper = require('./analyticsHelper');
@@ -85,93 +78,8 @@ controller.hears(Sentences.user_says_thanks, 'message_received', function(bot, m
 });
 
 // User wants help.
-controller.hears(["menu"], 'message_received', function(bot, message) {
-  View.showMainMenu(bot, message);
-});
-
-// User wants main menu.
 controller.hears(Sentences.help_me, 'message_received', function(bot, message) {
   bot.reply(message, Sentences.help_message);
-});
-
-// Show the groups to the user.
-controller.hears(Sentences.show_groups, 'message_received', function(bot, message) {
-  View.showAllGroups(bot, message);
-});
-
-// Show the games of a specific team to the user.
-controller.hears(Sentences.show_team_games, 'message_received', function(bot, message) {
-  var team = null;
-  if (message.match.length > 2) {
-    team = message.match[2];
-  }
-  if (typeof team === "string" && team.length > 0) {
-    console.log("Show games for " + team);
-    View.showMatchesForTeam(bot, message,team);
-  } else {
-    notSureWhatUserWants(bot, message);
-  }
-});
-
-// Show the games of a specific team to the user #2.
-controller.hears(Sentences.show_games_for_team, 'message_received', function(bot, message) {
-  var team = null;
-  if (message.match.length > 4) {
-    team = message.match[4];
-  }
-  if (typeof team === "string" && team.length > 0) {
-    console.log("Show games for " + team);
-    View.showMatchesForTeam(bot, message, team);
-  } else {
-    notSureWhatUserWants(bot, message);
-  }
-});
-
-
-// Show the group of a specific team to the user.
-controller.hears(Sentences.show_team_group, 'message_received', function(bot, message) {
-  var team = null;
-  if (message.match.length > 2) {
-    team = message.match[2];
-  }
-  if (typeof team === "string" && team.length > 0) {
-    View.showGroup(bot, message, team);
-  } else {
-    notSureWhatUserWants(bot, message);
-  }
-});
-
-// Show the games of a specific team to the user #2.
-controller.hears(Sentences.show_group_for_team, 'message_received', function(bot, message) {
-  var team = null;
-  if (message.match.length > 4) {
-    team = message.match[4];
-  }
-  if (typeof team === "string" && team.length > 0) {
-    View.showGroup(bot, message, team);
-  } else {
-    notSureWhatUserWants(bot, message);
-  }
-});
-
-// Show live games.
-controller.hears(Sentences.show_live_games, 'message_received', function(bot, message) {
-});
-
-// Show todays games.
-controller.hears(Sentences.show_games_today, 'message_received', function(bot, message) {
-  View.showMatchesForToday(bot, message);
-});
-
-// Test
-controller.hears(['test'], 'message_received', function(bot, message) {
-  bot.startConversation(message, function(err, convo) {
-     convo.say('Ok...');
-     convo.ask('What are you testing ?', function(response, convo) {
-       convo.say('yeah, let\'s test ' + response.text);
-       convo.next();
-    });
-  });
 });
 
 // Not suer what the users wants. Final fallback.
