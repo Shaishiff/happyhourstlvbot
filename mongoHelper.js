@@ -4,10 +4,10 @@ var Consts = require('./consts');
 var MongoClient = require('mongodb').MongoClient;
 var mongoHelper = {};
 
-var insertIntoMongo = function(document, collection, callback) {
+var insertIntoMongo = function(docToInsert, collection, callback) {
 	MongoClient.connect(Consts.MONGO_DB_URL, function(err, db) {
 		console.log("insertIntoMongo - Connected to server with error: " + err);
-		db.collection(collection).insertOne(userInfo, function(err, r) {
+		db.collection(collection).insertOne(docToInsert, function(err, r) {
 			console.log("insertIntoMongo - Insert complete with error: " + err);
 			db.close();
 			callback();
