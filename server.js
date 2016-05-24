@@ -24,7 +24,7 @@ if (process.env.FACEBOOK_PAGE_ACCESS_TOKEN) {
 }
 
 // Set initial data store.
-api.collectData();
+Api.collectData();
 
 // Start web server.
 var webServerPort = process.env.PORT || 8080;
