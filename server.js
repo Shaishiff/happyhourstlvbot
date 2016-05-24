@@ -1,6 +1,6 @@
 "use strict";
 
-// TODOs:
+// TODO:
 // show quarter/semi/final game
 // show group A|B|C|
 // show team stats/info
