@@ -6,7 +6,7 @@ var mongoHelper = {};
 
 var insertIntoMongo = function(docToInsert, collection, callback) {
 	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
-		if(!errConnect) {
+		if(errConnect) {
 			console.error("insertIntoMongo - Could not connect to server with error: " + errConnect);
 			callback(false);
 			return;
@@ -25,7 +25,7 @@ var insertIntoMongo = function(docToInsert, collection, callback) {
 
 var getFromMongo = function(docToFind, collection, callback) {
 	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
-		if(!errConnect) {
+		if(errConnect) {
 			console.error("getFromMongo - Could not connect to server with error: " + errConnect);
 			callback();
 			return;
