@@ -5,6 +5,22 @@ var Api = require('./api');
 var FacebookHelper = require('./facebookHelper');
 var view = {};
 
+view.buildDealElement = function(dealData, lang) {
+  var element = {}
+  element.title = dealData["headline" + lang];
+  if (dealData.image_url) {
+    gamesElement.image_url = "http://www.clipartbest.com/cliparts/ncB/rjq/ncBrjqRcA.png";
+  }
+  gamesElement.buttons = [];
+  if (dealData.link) {
+    gamesElement.buttons.push({
+      type: 'web_url',
+      title: 'Site',
+      url: dealData.link
+    });
+  }
+}
+
 view.buildMainMenu = function() {
   var gamesElement = {}
   gamesElement.title = "Matches";

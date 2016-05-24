@@ -4,15 +4,19 @@ var Mysql = require('mysql');
 var Consts = require('./consts');
 var api = {};
 var data = null;
-var fields = null;
 
-function findFieldIndex(fieldName) {
-	for (var i=0; i < fields.length; i++) {
-        if (fields[i].name === fieldName) {
-            return i;
-        }
-    }
-    return -1;
+function sortDataByDistanceFromUser(userLat, userLon) {
+	var sortedData = data;
+	return sortedData.sort(function(a, b) {
+	    var aDistance = sqrt(pow(a.lat - userLat),2) + pow(a.lon - userLon),2), 2);
+		var bDistance = sqrt(pow(a.lat - userLat),2) + pow(a.lon - userLon),2), 2);
+		return (aDistance - bDistance);
+  });
+}
+
+function filterDataByCategory(category) {
+	var filteredData = data;
+	return filteredData.filter(function(obj) {return (obj.category === category)});
 }
 
 api.collectData = function() {
@@ -24,13 +28,12 @@ api.collectData = function() {
 			database : process.env.MYSQL_DB
 		});
 		connection.connect();
-		connection.query("SELECT * FROM " + process.env.MYSQL_TABLE, function(err, rows, fs) {
+		connection.query("SELECT * FROM " + process.env.MYSQL_TABLE " WHERE is_active = 1 ORDER BY headline", function(err, rows, fs) {
 			if (err) {
 				console.error("Failed to retrieve data from DB: " + err);
 			} else {
 				console.log("Number of rows retrieved: ", rows.length);
 				data = rows;
-				fields = fs;
 			}
 		});
 		connection.end();
