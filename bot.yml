@@ -28,15 +28,23 @@ config:
     friendly_name: ANALYTICS_TOKEN
     type: secret
     global: true
-  - name: CYRANOAPI_HOST
-    friendly_name: CYRANOAPI_HOST
+  - name: MYSQL_HOST
+    friendly_name: MYSQL_HOST
     type: secret
     global: true
-  - name: CYRANOAPI_TOKEN
-    friendly_name: CYRANOAPI_TOKEN
+  - name: MYSQL_USER
+    friendly_name: MYSQL_USER
     type: secret
     global: true
-  - name: LUIS_NLP_TOKEN
-    friendly_name: LUIS_NLP_TOKEN
+  - name: MYSQL_PASSWORD
+    friendly_name: MYSQL_PASSWORD
+    type: secret
+    global: true
+  - name: MYSQL_DB
+    friendly_name: MYSQL_DB
+    type: secret
+    global: true
+  - name: MYSQL_TABLE
+    friendly_name: MYSQL_TABLE
     type: secret
     global: true
