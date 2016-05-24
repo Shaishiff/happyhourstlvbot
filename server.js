@@ -16,7 +16,6 @@ var FacebookHelper = require('./facebookHelper');
 var PostBackHelper = require('./postBackHelper');
 var AnalyticsHelper = require('./analyticsHelper');
 var TranslateHelper = require('./translateHelper');
-var NlpHelper = require('./nlpHelper');
 var UserInfoCache = {};
 
 var controller = Botkit.facebookbot({
@@ -58,9 +57,7 @@ controller.middleware.receive.use(function(bot, message, next) {
         }
         UserInfoCache[message.user].text_original_lang = translationApiResponse.user.lang;
       }
-      NlpHelper.addInfoFromNLP(message, function(message) {
-        next();
-      });
+      next();
     });
   });
 });
@@ -197,13 +194,7 @@ controller.hears(['test'], 'message_received', function(bot, message) {
 // Not suer what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
   console.log("Reached unknown user message");
-  var matchedIntent = NlpHelper.findSuitableIntent(message);
-  if (matchedIntent) {
-    console.log("Found intent: " + matchedIntent);
-    bot.reply(message, "Did you mean " + matchedIntent + " ?");
-  } else {
-    notSureWhatUserWants(bot, message);
-  }
+  notSureWhatUserWants(bot, message);
   return false;
 });
 
