@@ -26,7 +26,7 @@ api.collectData = function() {
 	} catch(err) {
 		console.error("Caught exception while trying to retrieve data from DB: " + err.message);
 	}
-	setTimeout(api.collectData, Consts.RETRIEVE_DATA_INTERVAL)
+	//setTimeout(api.collectData, Consts.RETRIEVE_DATA_INTERVAL)
 }
 
 module.exports = api;
