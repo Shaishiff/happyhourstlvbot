@@ -35,6 +35,7 @@ controller.setupWebserver(webServerPort, function(err, webserver) {
 
 // Log the message and add more info to the message.
 controller.middleware.receive.use(function(bot, message, next) {
+  console.log("Message received: " + JSON.stringify(message));
   Utils.getUserInfo(message.user, function(userInfo) {
     if (userInfo) {
       message.userInfo = userInfo;
