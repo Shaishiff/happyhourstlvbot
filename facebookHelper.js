@@ -28,9 +28,9 @@ facebookHelper.setWelcomeMessageStructuredMessage = function(elements) {
     }
   }, function(error, response, body) {
     if (error) {
-      console.log('Error setting welcome message: ', error);
+      console.error('Error setting welcome message: ', error);
     } else if (response.body.error) {
-      console.log('Error in response body when setting welcome message: ', response.body.error);
+      console.error('Error in response body when setting welcome message: ', response.body.error);
     }
   });
 }

@@ -6,7 +6,6 @@ var DateFormat = require('dateformat');
 var analyticsHelper = {};
 
 var sendToAnalyticsInternal = function(sender, text, direction) {
-  console.log("sendToAnalyticsInternal from sender " + sender + " with text: " + text);
   Request({
       url: Consts.ANALYTICS_API,
       qs: {
@@ -24,9 +23,9 @@ var sendToAnalyticsInternal = function(sender, text, direction) {
     },
     function(error, response, body) {
       if (error) {
-        console.log('Error sending message to analytics: ', error);
+        console.error('Error sending message to analytics: ', error);
       } else if (response.body.error) {
-        console.log('Error in body response when sending message to analytics: ', response.body.error);
+        console.error('Error in body response when sending message to analytics: ', response.body.error);
       }
     });
 }
@@ -38,5 +37,5 @@ analyticsHelper.sendUserMsgToAnalytics = function(sender, text) {
 analyticsHelper.sendBotMsgToAnalytics = function(sender, text) {
 	sendToAnalyticsInternal(sender, text, "outgoing");
 }
- 
+
 module.exports = analyticsHelper;

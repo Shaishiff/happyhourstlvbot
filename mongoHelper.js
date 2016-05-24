@@ -5,26 +5,38 @@ var MongoClient = require('mongodb').MongoClient;
 var mongoHelper = {};
 
 var insertIntoMongo = function(docToInsert, collection, callback) {
-	MongoClient.connect(Consts.MONGO_DB_URL, function(err, db) {
-		console.log("insertIntoMongo - Connected to server with error: " + err);
-		db.collection(collection).insertOne(docToInsert, function(err, r) {
-			console.log("insertIntoMongo - Insert complete with error: " + err);
+	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
+		if(!errConnect) {
+			console.error("insertIntoMongo - Could not connect to server with error: " + errConnect);
+			callback(false);
+			return;
+		}
+		db.collection(collection).insertOne(docToInsert, function(errInsert, r) {
 			db.close();
-			callback();
+			if(!errInsert) {
+				console.error("insertIntoMongo - Insert complete with error: " + errInsert);
+				callback(false);
+				return;
+			}
+			callback(true);
 		});
 	});
 }
 
 var getFromMongo = function(docToFind, collection, callback) {
-	MongoClient.connect(Consts.MONGO_DB_URL, function(err, db) {
-		console.log("getFromMongo - Connected to server with error: " + err);
-		db.collection(collection).find(docToFind).limit(1).toArray(function(err, docs) {
+	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
+		if(!errConnect) {
+			console.error("getFromMongo - Could not connect to server with error: " + errConnect);
+			callback();
+			return;
+		}
+		db.collection(collection).find(docToFind).limit(1).toArray(function(errFind, docs) {
 			db.close();
 			if (docs instanceof Array && docs.length == 1) {
 				console.log("getFromMongo - Found the document: " + JSON.stringify(docs[0]));
 				callback(docs[0]);
 			} else {
-				console.log("getFromMongo - Could not find the document");
+				console.log("getFromMongo - Could not find the document: " + errFind);
 				callback();
 			}
 		});
