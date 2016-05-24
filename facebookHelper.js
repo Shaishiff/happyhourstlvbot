@@ -3,7 +3,6 @@
 var request = require('request');
 var Consts = require('./consts');
 var Sentences = require('./sentences');
-var Api = require('./mockApi');
 var DateFormat = require('dateformat');
 var facebookHelper = {};
 

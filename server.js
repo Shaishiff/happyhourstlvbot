@@ -2,7 +2,7 @@
 
 var Botkit = require('botkit');
 var Sentences = require('./sentences');
-var Api = require('./mockApi');
+var Api = require('./api');
 var View = require('./view');
 var Utils = require('./utils');
 var FacebookHelper = require('./facebookHelper');
@@ -22,6 +22,9 @@ if (process.env.FACEBOOK_PAGE_ACCESS_TOKEN) {
   //FacebookHelper.setWelcomeMessageText(Sentences.page_welcome_msg);
   FacebookHelper.setWelcomeMessageStructuredMessage(View.buildMainMenu());
 }
+
+// Set initial data store.
+api.collectData();
 
 // Start web server.
 var webServerPort = process.env.PORT || 8080;

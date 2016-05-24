@@ -1,7 +1,7 @@
 "use strict";
 
 var Consts = require('./consts');
-var Api = require('./mockApi');
+var Api = require('./api');
 var FacebookHelper = require('./facebookHelper');
 var view = {};
 
