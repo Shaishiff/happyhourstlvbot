@@ -28,7 +28,7 @@ view.buildDealElement = function(dealData, lang) {
   if (dealData.link) {
     element.buttons.push({
       type: 'web_url',
-      title: 'Site',
+      title: (lang.length === 0 ? 'לאתר' : "Web site"),
       url: dealData.link
     });
   }
@@ -37,6 +37,13 @@ view.buildDealElement = function(dealData, lang) {
       type: 'postback',
       title: (lang.length === 0 ? 'מספר טלפון' : "Phone number"),
       payload: 'showDealNumber-' + dealData.object_id
+    });
+  }
+  if (dealData.lat && dealData.lon) {
+    element.buttons.push({
+      type: 'web_url',
+      title: (lang.length === 0 ? 'פתח במפה' : "Show in map"),
+      payload: "https://www.google.com/maps/@" + dealData.lat + "," + dealData.lon + ",18z"
     });
   }
   return element;

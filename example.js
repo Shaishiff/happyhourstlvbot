@@ -34,3 +34,22 @@ var RowDataPacket = {
 	place_id: 'ChIJcW8VJINMHRURxeOJFoIld4Y',
 	opening_hours: '[[{"end":1900,"start":1200}],[{"end":1900,"start":1200}],[{"end":1900,"start":1200}],[{"end":1900,"start":1200}],[{"end":1900,"start":1200}],[{"end":1900,"start":1200}],[{"end":1900,"start":1200}]]'
 };
+
+{
+	"user": "10154157335931753",
+	"channel": "10154157335931753",
+	"timestamp": 1464180791156,
+	"seq": 42,
+	"mid": "mid.1464180790959:0490340f1090c7cf12",
+	"attachments": [{
+		"title": "Gcp Next 2016",
+		"url": "https://www.facebook.com/l.php?u=https%3A%2F%2Fwww.bing.com%2Fmaps%2Fdefault.aspx%3Fv%3D2%26pc%3DFACEBK%26mid%3D8100%26where1%3DTel%2BAviv%252C%2BIsrael%26FORM%3DFBKPL1%26mkt%3Den-US&h=BAQFEIz6A&s=1&enc=AZM_bikF_yqz-mbTgEsMdwQC3vu4HiLcTs0XflIlSnCloiXhIh-OyKTZmVYv0w1f8t0oG3keFbP3DyE2BDtqnEh0J6A5Fr5a2wfrZXH0aNuoBQ",
+		"type": "location",
+		"payload": {
+			"coordinates": {
+				"lat": 32.10676574707,
+				"long": 34.810844421387
+			}
+		}
+	}]
+}
