@@ -10,7 +10,7 @@ view.buildDealElement = function(dealData, lang) {
   var element = {}
   element.title = dealData["headline" + lang];
   if (dealData.image_url) {
-    element.image_url = "http://www.clipartbest.com/cliparts/ncB/rjq/ncBrjqRcA.png";
+    element.image_url = dealData.image_url;
   }
   element.buttons = [];
   if (dealData.link) {
@@ -20,6 +20,7 @@ view.buildDealElement = function(dealData, lang) {
       url: dealData.link
     });
   }
+  return element;
 }
 
 view.buildDealElements = function(dealsData, lang) {
