@@ -23,8 +23,9 @@ view.buildDealElement = function(dealData, lang) {
 }
 
 view.buildDealElements = function(dealsData, lang) {
+  console.log("buildDealElements started");
   var elements = [];
-  for(var i = 0; i < Consts.DEALS_IN_CAROUSEL; i++) {
+  for(var i = 0; i < 5; i++) {
     elements.push(view.buildDealElement(dealsData[i], lang));
   }
   return elements;
