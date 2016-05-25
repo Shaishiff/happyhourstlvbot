@@ -5,6 +5,17 @@ var Api = require('./api');
 var FacebookHelper = require('./facebookHelper');
 var view = {};
 
+view.showDealNumber = function(bot, message, postbackData) {
+  if (!postbackData) return;
+  api.getDataByObjectId(postbackData, function(dealData) {
+    if (!dealData || !dealData.phone) {
+      bot.reply(message, "Sorry but I don't have the number :(");
+      return;
+    }
+    bot.reply(message, dealData.phone);
+  });
+}
+
 view.buildDealElement = function(dealData, lang) {
   console.log("buildDealElement for: " + dealData["headline" + lang]);
   var element = {}
@@ -12,6 +23,7 @@ view.buildDealElement = function(dealData, lang) {
   if (dealData.image_url) {
     element.image_url = Consts.HAPPY_HOURS_DOMAIN + "/images/" + dealData.image_url;
   }
+  element.subtitle = dealData["main_offer" + lang] + dealData["main_offer" + lang];
   element.buttons = [];
   if (dealData.link) {
     element.buttons.push({
@@ -20,13 +32,25 @@ view.buildDealElement = function(dealData, lang) {
       url: dealData.link
     });
   }
+  if (dealData.phone) {
+    element.buttons.push({
+      type: 'postback',
+      title: (lang.length === 0 ? 'מספר טלפון' : "Phone number"),
+      payload: 'showDealNumber-' + dealData.object_id
+    });
+    element.buttons.push({
+      type: 'web_url',
+      title: (lang.length === 0 ? 'התקשר' : "Call"),
+      url: "tel:" + dealData.phone
+    });
+  }
   return element;
 }
 
 view.buildDealElements = function(dealsData, lang) {
   console.log("buildDealElements started");
   var elements = [];
-  for(var i = 0; i < 5; i++) {
+  for(var i = 0; i < 10; i++) {
     elements.push(view.buildDealElement(dealsData[i], lang));
   }
   return elements;

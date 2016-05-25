@@ -5,15 +5,24 @@ var Consts = require('./consts');
 var api = {};
 var data = null;
 
+api.getDataByObjectId = function(objectId, callback) {
+	for(var i = 0; i < data.length; i++) {
+		if (data[i].object_id === objectId) {
+			callback(data[i]);
+			return;
+		}
+	}
+	callback();
+}
+
 api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 	var sortedData = data;
-	callback(sortedData.sort(function(a, b) {
-		//var aDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
-		//var bDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
-		var aDistance = Math.abs(a.lat - userLat) + Math.abs(a.lon - userLon);
-		var bDistance = Math.abs(b.lat - userLat) + Math.abs(b.lon - userLon);
-		if(aDistance == bDistance) return 0;
-		else return (aDistance > bDistance ? 1 : -1);
+	for(var i = 0; i < sortedData.length; i++) {
+		sortedData[i].distance = Math.sqrt(Math.pow(sortedData[i].lat - userLat, 2) + Math.pow(sortedData[i].lon - userLon, 2), 2);
+	}
+	callback(sortedData.sort(function(a, b) {		
+		if(a.distance == b.distance) return 0;
+		else return (a.distance > b.distance ? 1 : -1);
 	}));
 }
 
