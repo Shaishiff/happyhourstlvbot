@@ -10,7 +10,7 @@ view.showDealNumber = function(bot, message, postbackData) {
   if (postbackData.indexOf(",") === -1) postbackData += ",";
   var objectId = postbackData.split(",")[0];
   var lang = postbackData.split(",")[1];
-  Api.getDataByObjectId(postbackData, function(dealData) {
+  Api.getDataByObjectId(objectId, function(dealData) {
     if (!dealData || !dealData.phone) {
       bot.reply(message, "Sorry but I don't have the number :(");
       return;
@@ -46,7 +46,7 @@ view.buildDealElement = function(dealData, lang) {
     element.buttons.push({
       type: 'web_url',
       title: (lang.length === 0 ? 'פתח במפה' : "Show in map"),
-      url: "http://maps.google.com/?q=" + dealData.address
+      url: "http://maps.google.com/?q=" + dealData["address" + lang]
       //url: "http://maps.google.com/maps?q=" + dealData.lat + "," + dealData.lon
     });
   }
