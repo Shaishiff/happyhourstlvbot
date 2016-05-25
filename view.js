@@ -38,11 +38,6 @@ view.buildDealElement = function(dealData, lang) {
       title: (lang.length === 0 ? 'מספר טלפון' : "Phone number"),
       payload: 'showDealNumber-' + dealData.object_id
     });
-    element.buttons.push({
-      type: 'web_url',
-      title: (lang.length === 0 ? 'התקשר' : "Call"),
-      url: "tel:" + dealData.phone
-    });
   }
   return element;
 }
