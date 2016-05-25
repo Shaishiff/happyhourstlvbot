@@ -32,7 +32,7 @@ view.buildDealElements = function(dealData, lang) {
 
 view.showDealsByDistance = function(bot, message, lat, lon) {
   console.log("showDealsByDistance started: " + lat + "," + lon);
-  Api.sortDataByDistanceFromUser(lat, lon, function(deals) {
+  Api.getDataByDistanceFromUser(lat, lon, function(deals) {
     FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealData, lang));
   });
 }

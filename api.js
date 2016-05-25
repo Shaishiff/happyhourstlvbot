@@ -5,7 +5,7 @@ var Consts = require('./consts');
 var api = {};
 var data = null;
 
-function sortDataByDistanceFromUser(userLat, userLon, callback) {
+api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 	var sortedData = data;
 	callback(sortedData.sort(function(a, b) {
 	    var aDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
