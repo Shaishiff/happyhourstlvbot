@@ -8,11 +8,12 @@ var data = null;
 api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 	var sortedData = data;
 	callback(sortedData.sort(function(a, b) {
-	    //var aDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
+		//var aDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
 		//var bDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
 		var aDistance = Math.abs(a.lat - userLat) + Math.abs(a.lon - userLon);
 		var bDistance = Math.abs(a.lat - userLat) + Math.abs(a.lon - userLon);
-		return (aDistance - bDistance);
+		if(aDistance == bDistance) return 0;
+		else return (aDistance > bDistance ? 1 : -1);
 	}));
 }
 
