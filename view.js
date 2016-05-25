@@ -7,12 +7,15 @@ var view = {};
 
 view.showDealNumber = function(bot, message, postbackData) {
   if (!postbackData) return;
+  if (postbackData.indexOf(",") === -1) postbackData += ",";
+  var objectId = postbackData.split(",")[0];
+  var lang = postbackData.split(",")[1];
   Api.getDataByObjectId(postbackData, function(dealData) {
     if (!dealData || !dealData.phone) {
       bot.reply(message, "Sorry but I don't have the number :(");
       return;
     }
-    bot.reply(message, dealData.phone);
+    bot.reply(message, dealData["headline" + lang] + "\n" + dealData.phone);
   });
 }
 
@@ -36,7 +39,7 @@ view.buildDealElement = function(dealData, lang) {
     element.buttons.push({
       type: 'postback',
       title: (lang.length === 0 ? 'מספר טלפון' : "Phone number"),
-      payload: 'showDealNumber-' + dealData.object_id
+      payload: 'showDealNumber-' + dealData.object_id + "," + lang
     });
   }
   if (dealData.lat && dealData.lon) {
