@@ -33,7 +33,7 @@ controller.setupWebserver(webServerPort, function(err, webserver) {
   });
 });
 
-function handleUserAttachment(bot, message) {
+function handleUserAttachment(bot, message, lang) {
   console.log("handleUserAttachment started");
   if (message.attachments.length === 1 &&
     message.attachments[0].payload &&
@@ -42,7 +42,7 @@ function handleUserAttachment(bot, message) {
     message.attachments[0].payload.coordinates.long) {
     var lat = message.attachments[0].payload.coordinates.lat;
     var lon = message.attachments[0].payload.coordinates.long;
-    View.showDealsByDistance(bot, message, lat, lon);
+    View.showDealsByDistance(bot, message, lang, lat, lon);
   }
 }
 
@@ -57,7 +57,7 @@ controller.middleware.receive.use(function(bot, message, next) {
       message.fullNameWithId = message.user;
     }
     AnalyticsHelper.sendUserMsgToAnalytics(message.fullNameWithId, message.text);
-    if (message.attachments) handleUserAttachment(bot, message, next)
+    if (message.attachments) handleUserAttachment(bot, message, "")
     next();
   });
 });

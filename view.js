@@ -10,11 +10,11 @@ view.buildDealElement = function(dealData, lang) {
   var element = {}
   element.title = dealData["headline" + lang];
   if (dealData.image_url) {
-    gamesElement.image_url = "http://www.clipartbest.com/cliparts/ncB/rjq/ncBrjqRcA.png";
+    element.image_url = "http://www.clipartbest.com/cliparts/ncB/rjq/ncBrjqRcA.png";
   }
-  gamesElement.buttons = [];
+  element.buttons = [];
   if (dealData.link) {
-    gamesElement.buttons.push({
+    element.buttons.push({
       type: 'web_url',
       title: 'Site',
       url: dealData.link
@@ -22,18 +22,18 @@ view.buildDealElement = function(dealData, lang) {
   }
 }
 
-view.buildDealElements = function(dealData, lang) {
+view.buildDealElements = function(dealsData, lang) {
   var elements = [];
   for(var i = 0; i < Consts.DEALS_IN_CAROUSEL; i++) {
-    elements.push(view.buildDealElement(dealData, lang));
+    elements.push(view.buildDealElement(dealsData[i], lang));
   }
   return elements;
 }
 
-view.showDealsByDistance = function(bot, message, lat, lon) {
+view.showDealsByDistance = function(bot, message, lang, lat, lon) {
   console.log("showDealsByDistance started: " + lat + "," + lon);
-  Api.getDataByDistanceFromUser(lat, lon, function(deals) {
-    FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealData, lang));
+  Api.getDataByDistanceFromUser(lat, lon, function(dealsData) {
+    FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
   });
 }
 
