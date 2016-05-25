@@ -11,7 +11,7 @@ api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 		//var aDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
 		//var bDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
 		var aDistance = Math.abs(a.lat - userLat) + Math.abs(a.lon - userLon);
-		var bDistance = Math.abs(a.lat - userLat) + Math.abs(a.lon - userLon);
+		var bDistance = Math.abs(b.lat - userLat) + Math.abs(b.lon - userLon);
 		if(aDistance == bDistance) return 0;
 		else return (aDistance > bDistance ? 1 : -1);
 	}));
