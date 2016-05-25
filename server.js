@@ -42,7 +42,7 @@ function handleUserAttachment(bot, message, lang) {
     message.attachments[0].payload.coordinates.long) {
     var lat = message.attachments[0].payload.coordinates.lat;
     var lon = message.attachments[0].payload.coordinates.long;
-    bot.reply(message, "Lat: " + lat + ", Lon: " + lon);
+    //bot.reply(message, "Lat: " + lat + ", Lon: " + lon);
     View.showDealsByDistance(bot, message, lang, lat, lon);
   }
 }
@@ -109,11 +109,11 @@ controller.hears("test location", 'message_received', function(bot, message) {
     View.showDealsByDistance(bot, message, "", lat, lon);
 });
 
-// Not suer what the users wants. Final fallback.
+// Not sure what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
-  console.log("Reached unknown user message");
-  if (message.text) notSureWhatUserWants(bot, message);
-  return false;
+  //console.log("Reached unknown user message");
+  //if (message.text) notSureWhatUserWants(bot, message);
+  //return false;
 });
 
 function notSureWhatUserWants(bot, message) {
