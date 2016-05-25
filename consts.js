@@ -5,7 +5,9 @@ var consts = {
 	FACEBOOK_USER_PROFILE_API: "https://graph.facebook.com/v2.6/<USER_ID>?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	MONGO_DB_URL: "mongodb://" + process.env.MONGO_DB_USER + ":" + process.env.MONGO_DB_USER + "@" + process.env.MONGO_DB_HOST + ":" + process.env.MONGO_DB_PORT + "/" + process.env.MONGO_DB_NAME,
 	MONGO_DB_USER_INFO_COL: "user_info",
-	ANALYTICS_API: "http://api.bot-metrics.com/v1/messages"
+	ANALYTICS_API: "http://api.bot-metrics.com/v1/messages",
+	HAPPY_HOURS_DOMAIN: "http://happyhourstlv.com",
+	DEALS_IN_CAROUSEL: 5
 };
 
 module.exports = consts;

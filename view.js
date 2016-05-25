@@ -10,7 +10,7 @@ view.buildDealElement = function(dealData, lang) {
   var element = {}
   element.title = dealData["headline" + lang];
   if (dealData.image_url) {
-    element.image_url = dealData.image_url;
+    element.image_url = Consts.HAPPY_HOURS_DOMAIN + "/images/" + dealData.image_url;
   }
   element.buttons = [];
   if (dealData.link) {
