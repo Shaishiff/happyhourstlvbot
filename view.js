@@ -42,11 +42,12 @@ view.buildDealElement = function(dealData, lang) {
       payload: 'showDealNumber-' + dealData.object_id + "," + lang
     });
   }
-  if (dealData.lat && dealData.lon) {
+  if (dealData.lat && dealData.lon && dealData.address) {
     element.buttons.push({
       type: 'web_url',
       title: (lang.length === 0 ? 'פתח במפה' : "Show in map"),
-      url: "http://maps.google.com/maps?q=" + dealData.lat + "," + dealData.lon
+      url: "http://maps.google.com/?q=" + dealData.address
+      //url: "http://maps.google.com/maps?q=" + dealData.lat + "," + dealData.lon
     });
   }
   return element;
