@@ -101,6 +101,14 @@ controller.hears(Sentences.help_me, 'message_received', function(bot, message) {
   bot.reply(message, Sentences.help_message);
 });
 
+// Test location.
+controller.hears("test location", 'message_received', function(bot, message) {
+    var lat = 32.079869;
+    var lon = 34.77845;
+    bot.reply(message, "Lat: " + lat + ", Lon: " + lon);
+    View.showDealsByDistance(bot, message, "", lat, lon);
+});
+
 // Not suer what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
   console.log("Reached unknown user message");
