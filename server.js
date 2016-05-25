@@ -42,6 +42,7 @@ function handleUserAttachment(bot, message, lang) {
     message.attachments[0].payload.coordinates.long) {
     var lat = message.attachments[0].payload.coordinates.lat;
     var lon = message.attachments[0].payload.coordinates.long;
+    bot.reply(message, "Lat: " + lat + ", Lon: " + lon);
     View.showDealsByDistance(bot, message, lang, lat, lon);
   }
 }
