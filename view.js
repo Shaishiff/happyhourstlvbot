@@ -43,7 +43,7 @@ view.buildDealElement = function(dealData, lang) {
     element.buttons.push({
       type: 'web_url',
       title: (lang.length === 0 ? 'פתח במפה' : "Show in map"),
-      url: "https://www.google.com/maps/@" + dealData.lat + "," + dealData.lon + ",18z"
+      url: "http://maps.google.com/maps?q=" + dealData.lat + "," + dealData.lon
     });
   }
   return element;
