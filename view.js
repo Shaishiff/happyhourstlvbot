@@ -7,7 +7,7 @@ var view = {};
 
 view.showDealNumber = function(bot, message, postbackData) {
   if (!postbackData) return;
-  api.getDataByObjectId(postbackData, function(dealData) {
+  Api.getDataByObjectId(postbackData, function(dealData) {
     if (!dealData || !dealData.phone) {
       bot.reply(message, "Sorry but I don't have the number :(");
       return;
@@ -23,7 +23,7 @@ view.buildDealElement = function(dealData, lang) {
   if (dealData.image_url) {
     element.image_url = Consts.HAPPY_HOURS_DOMAIN + "/images/" + dealData.image_url;
   }
-  element.subtitle = dealData["main_offer" + lang] + dealData["main_offer" + lang];
+  element.subtitle = dealData["address" + lang] + " - " + dealData["main_offer" + lang];
   element.buttons = [];
   if (dealData.link) {
     element.buttons.push({
