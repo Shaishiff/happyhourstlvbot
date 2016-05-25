@@ -8,8 +8,8 @@ var data = null;
 api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 	var sortedData = data;
 	callback(sortedData.sort(function(a, b) {
-	    var aDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
-		var bDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
+	    var aDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
+		var bDistance = Math.sqrt(Math.pow(a.lat - userLat, 2) + Math.pow(a.lon - userLon, 2), 2);
 		return (aDistance - bDistance);
 	}));
 }
