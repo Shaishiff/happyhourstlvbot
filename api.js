@@ -5,13 +5,13 @@ var Consts = require('./consts');
 var api = {};
 var data = null;
 
-function sortDataByDistanceFromUser(userLat, userLon) {
+function sortDataByDistanceFromUser(userLat, userLon, callback) {
 	var sortedData = data;
-	return sortedData.sort(function(a, b) {
+	callback(sortedData.sort(function(a, b) {
 	    var aDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
 		var bDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
 		return (aDistance - bDistance);
-	});
+	}));
 }
 
 function filterDataByCategory(category) {

@@ -6,6 +6,7 @@ var FacebookHelper = require('./facebookHelper');
 var view = {};
 
 view.buildDealElement = function(dealData, lang) {
+  console.log("buildDealElement for: " + dealData["headline" + lang]);
   var element = {}
   element.title = dealData["headline" + lang];
   if (dealData.image_url) {
@@ -19,6 +20,21 @@ view.buildDealElement = function(dealData, lang) {
       url: dealData.link
     });
   }
+}
+
+view.buildDealElements = function(dealData, lang) {
+  var elements = [];
+  for(var i = 0; i < Consts.DEALS_IN_CAROUSEL; i++) {
+    elements.push(view.buildDealElement(dealData, lang));
+  }
+  return elements;
+}
+
+view.showDealsByDistance = function(bot, message, lat, lon) {
+  console.log("showDealsByDistance started: " + lat + "," + lon);
+  Api.sortDataByDistanceFromUser(lat, lon, function(deals) {
+    FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealData, lang));
+  });
 }
 
 view.buildMainMenu = function() {

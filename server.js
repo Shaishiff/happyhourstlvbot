@@ -33,6 +33,19 @@ controller.setupWebserver(webServerPort, function(err, webserver) {
   });
 });
 
+function handleUserAttachment(bot, message) {
+  console.log("handleUserAttachment started");
+  if (message.attachments.length === 1 &&
+    message.attachments[0].payload &&
+    message.attachments[0].payload.coordinates &&
+    message.attachments[0].payload.coordinates.lat &&
+    message.attachments[0].payload.coordinates.long) {
+    var lat = message.attachments[0].payload.coordinates.lat;
+    var lon = message.attachments[0].payload.coordinates.long;
+    View.showDealsByDistance(bot, message, lat, lon);
+  }
+}
+
 // Log the message and add more info to the message.
 controller.middleware.receive.use(function(bot, message, next) {
   console.log("Message received: " + JSON.stringify(message));
@@ -44,6 +57,7 @@ controller.middleware.receive.use(function(bot, message, next) {
       message.fullNameWithId = message.user;
     }
     AnalyticsHelper.sendUserMsgToAnalytics(message.fullNameWithId, message.text);
+    if (message.attachments) handleUserAttachment(bot, message, next)
     next();
   });
 });
@@ -89,7 +103,7 @@ controller.hears(Sentences.help_me, 'message_received', function(bot, message) {
 // Not suer what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
   console.log("Reached unknown user message");
-  notSureWhatUserWants(bot, message);
+  if (message.text) notSureWhatUserWants(bot, message);
   return false;
 });
 
