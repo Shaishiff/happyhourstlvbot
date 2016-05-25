@@ -8,10 +8,10 @@ var data = null;
 function sortDataByDistanceFromUser(userLat, userLon) {
 	var sortedData = data;
 	return sortedData.sort(function(a, b) {
-	    var aDistance = sqrt(pow(a.lat - userLat),2) + pow(a.lon - userLon),2), 2);
-		var bDistance = sqrt(pow(a.lat - userLat),2) + pow(a.lon - userLon),2), 2);
+	    var aDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
+		var bDistance = sqrt(pow(a.lat - userLat, 2) + pow(a.lon - userLon, 2), 2);
 		return (aDistance - bDistance);
-  });
+	});
 }
 
 function filterDataByCategory(category) {
@@ -28,7 +28,7 @@ api.collectData = function() {
 			database : process.env.MYSQL_DB
 		});
 		connection.connect();
-		connection.query("SELECT * FROM " + process.env.MYSQL_TABLE " WHERE is_active = 1 ORDER BY headline", function(err, rows, fs) {
+		connection.query("SELECT * FROM " + process.env.MYSQL_TABLE + " WHERE is_active = 1 ORDER BY headline", function(err, rows, fs) {
 			if (err) {
 				console.error("Failed to retrieve data from DB: " + err);
 			} else {
