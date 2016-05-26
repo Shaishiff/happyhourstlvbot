@@ -26,7 +26,7 @@ api.getDataByStringSimilarity = function(userText, lang, callback) {
 		}
 		sortedData[i].stringSimilarity = Utils.getEditDistance(userText, dealName);
 		if (userText.length >= 4 && dealName.indexOf(userText) === 0) {
-			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity*1.5);
+			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity*2);
 		}
 	}
 	callback(sortedData.sort(function(a, b) {
