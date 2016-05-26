@@ -68,11 +68,11 @@ mongoHelper.insertUserInfoToMongo = function(userInfo, callback) {
 }
 
 mongoHelper.getUserInfoFromMongo = function(userId, callback) {
-  getFromMongo({user_id : userId}, Consts.MONGO_DB_USER_INFO_COL, callback);
+ 	getFromMongo({user_id : userId}, Consts.MONGO_DB_USER_INFO_COL, callback);
 }
 
 mongoHelper.upsertUserInfoToMongo = function(userId, userInfo, callback) {
-  getFromMongo({user_id : userId}, userInfo, Consts.MONGO_DB_USER_INFO_COL, callback);
+	upsertIntoMongo({user_id : userId}, userInfo, Consts.MONGO_DB_USER_INFO_COL, callback);
 }
 
 module.exports = mongoHelper;
