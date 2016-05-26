@@ -110,7 +110,7 @@ controller.hears("test location", 'message_received', function(bot, message) {
 
 controller.hears("aaa", 'message_received', function(bot, message) {
      var askCategory = function(response, convo) {
-      convo.ask('What flavor ?', function(response, convo) {
+      convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
         convo.say('ok1.');
         askSize(response, convo);
         convo.next();
