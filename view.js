@@ -71,7 +71,7 @@ view.showDealsByDistance = function(bot, message, lang, lat, lon) {
 
 view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
   console.log("showDealsByStringSimilarity started: " + userText);
-  Api.getDataByStringSimilarity(userText, function(dealsData) {
+  Api.getDataByStringSimilarity(userText, lang, function(dealsData) {
     FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
   });
 }

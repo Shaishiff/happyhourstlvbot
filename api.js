@@ -16,10 +16,18 @@ api.getDataByObjectId = function(objectId, callback) {
 	callback();
 }
 
-api.getDataByStringSimilarity = function(userText, callback) {
+api.getDataByStringSimilarity = function(userText, lang, callback) {
 	var sortedData = data;
 	for(var i = 0; i < sortedData.length; i++) {
-		sortedData[i].stringSimilarity = Utils.getEditDistance(userText, sortedData[i]["headline"]);
+		var dealName = sortedData[i]["headline" + lang];
+		// Remove english chars if we're in hebrew mode.
+		if (lang.length === 0) {
+			dealName = dealName.replace(/[A-z]/g, "").trim();
+		}
+		sortedData[i].stringSimilarity = Utils.getEditDistance(userText, dealName);
+		if (userText.length >= 4 && dealName.indexOf(userText) === 0) {
+			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity*1.5);
+		}
 	}
 	callback(sortedData.sort(function(a, b) {
 		if(a.stringSimilarity == b.stringSimilarity) return 0;
