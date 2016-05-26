@@ -108,13 +108,13 @@ controller.hears("test location", 'message_received', function(bot, message) {
     View.showDealsByDistance(bot, message, "", lat, lon);
 });
 
+controller.hears(["pizza","piza"], 'message_recieved', function(bot,message) {
+  bot.reply(message, "Pizzatime !");
+});
+
 // Main menu.
 controller.hears(["menu","תפריט"], 'message_received', function(bot, message) {
   View.showMainMenu(bot, message);
-});
-
-controller.hears(["pizza","piza"], 'message_recieved', function(bot,message) {
-  bot.reply(message, "Pizzatime !");
 });
 
 // Similar string.
