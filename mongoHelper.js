@@ -23,6 +23,26 @@ var insertIntoMongo = function(docToInsert, collection, callback) {
 	});
 }
 
+
+var upsertIntoMongo = function(docToFind, docToUpsert, collection, callback) {
+	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
+		if(errConnect) {
+			console.error("upsertIntoMongo - Could not connect to server with error: " + errConnect);
+			callback(false);
+			return;
+		}
+		db.collection(collection).update(docToInsert, docToUpsert, {upsert: true}, function(errUpsert, r) {
+			db.close();
+			if(!errUpsert) {
+				console.error("upsertIntoMongo - Upsert complete with error: " + errUpsert);
+				callback(false);
+				return;
+			}
+			callback(true);
+		});
+	});
+}
+
 var getFromMongo = function(docToFind, collection, callback) {
 	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
 		if(errConnect) {
@@ -49,6 +69,10 @@ mongoHelper.insertUserInfoToMongo = function(userInfo, callback) {
 
 mongoHelper.getUserInfoFromMongo = function(userId, callback) {
   getFromMongo({user_id : userId}, Consts.MONGO_DB_USER_INFO_COL, callback);
+}
+
+mongoHelper.upsertUserInfoToMongo = function(userId, userInfo, callback) {
+  getFromMongo({user_id : userId}, userInfo, Consts.MONGO_DB_USER_INFO_COL, callback);
 }
 
 module.exports = mongoHelper;

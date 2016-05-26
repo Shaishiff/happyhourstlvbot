@@ -47,7 +47,10 @@ utils.changeDateFormat = function(str) {
 
 utils.getUserInfo = function(userId, callback) {
   MongoHelper.getUserInfoFromMongo(userId, function(userInfo) {
-    if (typeof userInfo !== "undefined") {
+    if (typeof userInfo !== "undefined" &&
+      userInfo.first_name &&
+      userInfo.last_name &&
+      userInfo.gender) {
       console.log("Got the user info from mongoDB");
       callback(userInfo);
     } else {

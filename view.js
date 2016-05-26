@@ -3,12 +3,13 @@
 var Consts = require('./consts');
 var Api = require('./api');
 var FacebookHelper = require('./facebookHelper');
+var MongoHelper = require('./mongoHelper');
 var view = {};
 
 view.buildLanguageMenu = function() {
   console.log("buildLanguageMenu");
   var element = {}
-  element.title = "Choose your language";
+  element.title = "בחר/י את השפה שלך - Choose your language";
   element.image_url = "http://www.happyhourstlv.com/assets/cover_long.jpg";
   element.buttons = [];
   element.buttons.push({
@@ -27,6 +28,20 @@ view.buildLanguageMenu = function() {
 
 view.showLanguageMenu = function(bot, message) {
   FacebookHelper.sendGenericTemplate(bot, message, view.buildLanguageMenu());
+}
+
+view.showFirstMessage = function(bot, message, postbackData) {
+  console.log("showFirstMessage with " + postbackData);
+  if (!message.userInfo) {
+    message.userInfo = {};
+    message.userInfo.user_id = message.user;
+  }
+  bot.reply(message, "You chose the language: " + postbackData);
+  if (postbackData === "he") postbackData = ""; // Hebrew is the default language.
+  message.userInfo.chosen_lang = postbackData;
+  MongoHelper.upsertUserInfoToMongo(message.userInfo.user_id, message.userInfo, function(res){
+    bot.reply(message, "Data saved to mongo: " + res);
+  });
 }
 
 view.showDealNumber = function(bot, message, postbackData) {
