@@ -19,8 +19,8 @@ var bot = controller.spawn({});
 
 // Set up the welcome message.
 if (process.env.FACEBOOK_PAGE_ACCESS_TOKEN) {
-  //FacebookHelper.setWelcomeMessageText(Sentences.page_welcome_msg);
-  FacebookHelper.setWelcomeMessageStructuredMessage(View.buildMainMenu());
+  FacebookHelper.setWelcomeMessageText("Welcome to happy hours TLV !");
+  //FacebookHelper.setWelcomeMessageStructuredMessage(View.buildMainMenu());
 }
 
 // Set initial data store.
