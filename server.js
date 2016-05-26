@@ -110,14 +110,20 @@ controller.hears("test location", 'message_received', function(bot, message) {
 
 controller.hears("aaa", 'message_received', function(bot, message) {
      var askCategory = function(response, convo) {
+      convo.say('Please choose which deal are you interested in:');
       convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
         console.log("response: " + JSON.stringify(response));
-        convo.say('ok1.');
-        askSize(response, convo);
+
+        // TODO check if this a valid response
+        if (response.text) {
+
+        }
+        askWhen(response, convo);
         convo.next();
       });
     }
-    var askSize = function(response, convo) {
+    var askWhen = function(response, convo) {
+      convo.say('When ?');
       convo.ask('What size ?', function(response, convo) {
         console.log("response: " + JSON.stringify(response));
         convo.say('ok2.')

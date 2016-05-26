@@ -3,7 +3,16 @@
 var Consts = require('./consts');
 var MongoHelper = require('./mongoHelper');
 var HttpHelper = require('./httpHelper');
+var View = require('./view');
 var utils = {};
+
+utils.validateCategory = function() {
+
+}
+
+utils.categoryIdToCategoryDbName = function() {
+
+}
 
 // Compute the edit distance between the two given strings
 // Taken from: https://gist.github.com/andrei-m/982927

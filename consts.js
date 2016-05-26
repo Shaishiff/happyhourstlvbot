@@ -7,7 +7,14 @@ var consts = {
 	MONGO_DB_USER_INFO_COL: "user_info",
 	ANALYTICS_API: "http://api.bot-metrics.com/v1/messages",
 	HAPPY_HOURS_DOMAIN: "http://happyhourstlv.com",
-	DEALS_IN_CAROUSEL: 5
+	DEALS_IN_CAROUSEL: 5,
+	CATEGORIES: [{
+		title_en: "Everything",
+		title: "הכל",
+		db_name: "aa",
+		payload: "showEverything",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
+	}]
 };
 
 module.exports = consts;

@@ -82,19 +82,22 @@ view.buildCategoryMenu = function() {
   var elements = [];
   var element;
 
-  element = {}
-  element.title = "הכל";
-  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg";
-  element.buttons = [];
-  element.buttons.push({
-    'type': 'postback',
-    'title': 'הכל',
-    'payload': 'showEverything'
-  });
-  elements.push(element);
+  for (var i=0; i < Consts.CATEGORIES.length; i++) {
+    var category = Consts.CATEGORIES[i];
+    element = {}
+    element.title = "" + (i+1);
+    element.image_url = category.image_url;
+    element.buttons = [];
+    element.buttons.push({
+      'type': 'postback',
+      'title': category.title,
+      'payload': category.payload
+    });
+    elements.push(element);
+  }
 
   element = {}
-  element.title = "לייט נייט";
+  element.title = "2";
   element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg";
   element.buttons = [];
   element.buttons.push({
@@ -105,7 +108,7 @@ view.buildCategoryMenu = function() {
   elements.push(element);
 
   element = {}
-  element.title = "שעה שמחה";
+  element.title = "3";
   element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg";
   element.buttons = [];
   element.buttons.push({
@@ -116,7 +119,7 @@ view.buildCategoryMenu = function() {
   elements.push(element);
 
   element = {}
-  element.title = "עסקית צהריים";
+  element.title = "4";
   element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg";
   element.buttons = [];
   element.buttons.push({
@@ -127,7 +130,7 @@ view.buildCategoryMenu = function() {
   elements.push(element);
 
   element = {}
-  element.title = "'בראנץ";
+  element.title = "5";
   element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg";
   element.buttons = [];
   element.buttons.push({
