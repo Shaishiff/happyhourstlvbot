@@ -113,32 +113,8 @@ controller.hears(["menu","תפריט"], 'message_received', function(bot, messag
   View.showMainMenu(bot, message);
 });
 
-controller.hears(["pizzatime"], 'message_recieved', function(bot,message) {
-    askFlavor = function(response, convo) {
-      convo.ask('What flavor of pizza do you want?', function(response, convo) {
-        if (response) console.log(JSON.stringify(response));
-        convo.say('Awesome.');
-        askSize(response, convo);
-        convo.next();
-      });
-    }
-    askSize = function(response, convo) {
-      convo.ask('What size do you want?', function(response, convo) {
-        if (response) console.log(JSON.stringify(response));
-        convo.say('Ok.')
-        askWhereDeliver(response, convo);
-        convo.next();
-      });
-    }
-    askWhereDeliver = function(response, convo) {
-      convo.ask('So where do you want it delivered?', function(response, convo) {
-        if (response) console.log(JSON.stringify(response));
-        convo.say('Ok! Good bye.');
-        convo.next();
-      });
-    }
+controller.hears(["pizza"], 'message_recieved', function(bot,message) {
     bot.reply(message, "Pizzatime !");
-    bot.startConversation(message, askFlavor);
 });
 
 // Similar string.
