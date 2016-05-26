@@ -109,21 +109,21 @@ controller.hears("test location", 'message_received', function(bot, message) {
 });
 
 controller.hears("aaa", 'message_received', function(bot, message) {
-     askFlavor = function(response, convo) {
+     var askFlavor = function(response, convo) {
       convo.ask('What flavor ?', function(response, convo) {
         convo.say('ok1.');
         askSize(response, convo);
         convo.next();
       });
     }
-    askSize = function(response, convo) {
+    var askSize = function(response, convo) {
       convo.ask('What size ?', function(response, convo) {
         convo.say('ok2.')
         askWhereDeliver(response, convo);
         convo.next();
       });
     }
-    askWhereDeliver = function(response, convo) {
+    var askWhereDeliver = function(response, convo) {
       convo.ask('Where ?', function(response, convo) {
         convo.say('ok3, bye.');
         convo.next();
