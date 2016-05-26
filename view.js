@@ -125,12 +125,12 @@ view.buildMainMenu = function() {
   elements.push(element);
 
   element = {}
-  element.title = "בראנץ'";
+  element.title = "'בראנץ";
   element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg";
   element.buttons = [];
   element.buttons.push({
     'type': 'postback',
-    'title': "בראנץ'",
+    'title': "'בראנץ",
     'payload': 'showBrunch'
   });
   elements.push(element);
