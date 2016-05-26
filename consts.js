@@ -42,6 +42,69 @@ var consts = {
 		db_name: "aa",
 		payload: "showBrunch",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
+	}],
+	TIMES: [{
+		title_en: "Today",
+		title: "היום",
+		db_name: "aa",
+		payload: "showToday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
+	},
+	{
+		title_en: "Right Now",
+		title: "עכשיו",
+		db_name: "aa",
+		payload: "showRightNow",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
+	},
+	{
+		title_en: "Sunday",
+		title: "יום ראשון",
+		db_name: "aa",
+		payload: "showSunday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
+	},
+	{
+		title_en: "Monday",
+		title: "יום שני",
+		db_name: "aa",
+		payload: "showMonday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg"
+	},
+	{
+		title_en: "Tuesday",
+		title: "יום שלישי",
+		db_name: "aa",
+		payload: "showTuesday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
+	},
+	{
+		title_en: "Wednesday",
+		title: "יום רביעי",
+		db_name: "aa",
+		payload: "showWednesday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
+	},
+	{
+		title_en: "Thursday",
+		title: "יום חמישי",
+		db_name: "aa",
+		payload: "showThursday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
+	},
+	{
+		title_en: "Friday",
+		title: "יום שישי",
+		db_name: "aa",
+		payload: "showFriday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
+	},
+	{
+		title_en: "Saturday",
+		title: "יום שבת",
+		db_name: "aa",
+		payload: "showSaturday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
 	}]
 };
 

@@ -113,7 +113,6 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       convo.say('Please choose which deal are you interested in:');
       convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
         console.log("response: " + JSON.stringify(response));
-
         // TODO check if this a valid response
         if (response.text) {
 
@@ -123,8 +122,8 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       });
     }
     var askWhen = function(response, convo) {
-      convo.say('When ?');
-      convo.ask('This should show options to choose the relevant day', function(response, convo) {
+      convo.say('When do you want to go ?');
+      convo.ask(FacebookHelper.buildGenericTemplate(View.buildTimesMenu()), function(response, convo) {
         console.log("response: " + JSON.stringify(response));
         // TODO check if this a valid response
         if (response.text) {

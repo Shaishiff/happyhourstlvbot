@@ -103,4 +103,26 @@ view.showCategoryMenu = function(bot, message) {
   FacebookHelper.sendGenericTemplate(bot, message, view.buildCategoryMenu());
 }
 
+
+view.buildTimesMenu = function() {
+  var elements = [];
+  var element;
+
+  for (var i=0; i < Consts.TIMES.length; i++) {
+    var time = Consts.TIMES[i];
+    element = {}
+    element.title = "" + (i+1);
+    element.image_url = time.image_url;
+    element.buttons = [];
+    element.buttons.push({
+      'type': 'postback',
+      'title': time.title,
+      'payload': time.payload
+    });
+    elements.push(element);
+  }
+
+  return elements;
+}
+
 module.exports = view;
