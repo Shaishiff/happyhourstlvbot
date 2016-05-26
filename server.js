@@ -113,7 +113,7 @@ controller.hears(["menu","תפריט"], 'message_received', function(bot, messag
   View.showMainMenu(bot, message);
 });
 
-controller.hears(['pizzatime'], 'message_recieved', function(bot,message) {
+controller.hears(["pizzatime"], 'message_recieved', function(bot,message) {
     askFlavor = function(response, convo) {
       convo.ask('What flavor of pizza do you want?', function(response, convo) {
         if (response) console.log(JSON.stringify(response));
@@ -137,7 +137,7 @@ controller.hears(['pizzatime'], 'message_recieved', function(bot,message) {
         convo.next();
       });
     }
-
+    bot.reply(message, "Pizzatime !");
     bot.startConversation(message, askFlavor);
 });
 
