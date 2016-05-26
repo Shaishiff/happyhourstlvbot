@@ -136,7 +136,7 @@ controller.hears("aaa", 'message_received', function(bot, message) {
 
 // Main menu.
 controller.hears(["menu","תפריט"], 'message_received', function(bot, message) {
-  View.showMainMenu(bot, message);
+  View.showCategoryMenu(bot, message);
 });
 
 // Similar string.
