@@ -111,6 +111,7 @@ controller.hears("test location", 'message_received', function(bot, message) {
 controller.hears("aaa", 'message_received', function(bot, message) {
      var askCategory = function(response, convo) {
       convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
+        console.log("response: " + JSON.stringify(response));
         convo.say('ok1.');
         askSize(response, convo);
         convo.next();
@@ -118,12 +119,14 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     }
     var askSize = function(response, convo) {
       convo.ask('What size ?', function(response, convo) {
+        console.log("response: " + JSON.stringify(response));
         convo.say('ok2.')
         askWhereDeliver(response, convo);
         convo.next();
       });
     }
     var askWhereDeliver = function(response, convo) {
+      console.log("response: " + JSON.stringify(response));
       convo.ask('Where ?', function(response, convo) {
         convo.say('ok3, bye.');
         convo.next();
