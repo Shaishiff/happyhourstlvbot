@@ -25,7 +25,9 @@ api.getDataByStringSimilarity = function(userText, lang, callback) {
 			dealName = dealName.replace(/[A-z]/g, "").trim();
 		}
 		sortedData[i].stringSimilarity = Utils.getEditDistance(userText, dealName);
+		console.log("userText: " + userText + ", dealName: " + dealName + ", stringSimilarity: " + sortedData[i].stringSimilarity);
 		if (userText.length >= 4 && dealName.indexOf(userText) === 0) {
+			console.log("Giving this option extra points");
 			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity*2);
 		}
 	}
