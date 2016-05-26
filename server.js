@@ -142,11 +142,13 @@ controller.hears(['pizzatime'], 'message_recieved', function(bot,message) {
 });
 
 // Similar string.
+/*
 controller.hears(["(.*)"], 'message_received', function(bot, message) {
     if(message.text && message.text.length > 0) {
       View.showDealsByStringSimilarity(bot, message, "", message.text);
     }
 });
+*/
 
 // Not sure what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
