@@ -96,50 +96,6 @@ view.buildCategoryMenu = function() {
     elements.push(element);
   }
 
-  element = {}
-  element.title = "2";
-  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg";
-  element.buttons = [];
-  element.buttons.push({
-    'type': 'postback',
-    'title': 'לייט נייט',
-    'payload': 'showLateNight'
-  });
-  elements.push(element);
-
-  element = {}
-  element.title = "3";
-  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg";
-  element.buttons = [];
-  element.buttons.push({
-    'type': 'postback',
-    'title': 'שעה שמחה',
-    'payload': 'showHappyHour'
-  });
-  elements.push(element);
-
-  element = {}
-  element.title = "4";
-  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg";
-  element.buttons = [];
-  element.buttons.push({
-    'type': 'postback',
-    'title': 'עסקית צהריים',
-    'payload': 'showLunch'
-  });
-  elements.push(element);
-
-  element = {}
-  element.title = "5";
-  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg";
-  element.buttons = [];
-  element.buttons.push({
-    'type': 'postback',
-    'title': "'בראנץ",
-    'payload': 'showBrunch'
-  });
-  elements.push(element);
-
   return elements;
 }
 
