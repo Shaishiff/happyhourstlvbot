@@ -34,7 +34,7 @@ facebookHelper.setWelcomeMessageStructuredMessage = function(elements) {
   });
 }
 
-facebookHelper.setWelcomeMessage = function(text) {
+facebookHelper.setWelcomeMessageText = function(text) {
   request({
     url: Consts.FACEBOOK_WELCOME_MSG_URL,
     method: 'POST',
