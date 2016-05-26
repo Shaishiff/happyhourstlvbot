@@ -113,8 +113,8 @@ controller.hears(["menu","תפריט"], 'message_received', function(bot, messag
   View.showMainMenu(bot, message);
 });
 
-controller.hears(["pizza"], 'message_recieved', function(bot,message) {
-    bot.reply(message, "Pizzatime !");
+controller.hears(["pizza","piza"], 'message_recieved', function(bot,message) {
+  bot.reply(message, "Pizzatime !");
 });
 
 // Similar string.
