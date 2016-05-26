@@ -108,6 +108,11 @@ controller.hears("test location", 'message_received', function(bot, message) {
     View.showDealsByDistance(bot, message, "", lat, lon);
 });
 
+// Main menu.
+controller.hears(["menu","תפריט"], 'message_received', function(bot, message) {
+  View.showMainMenu(bot, message);
+});
+
 // Similar string.
 controller.hears(["(.*)"], 'message_received', function(bot, message) {
     if(message.text && message.text.length > 0) {

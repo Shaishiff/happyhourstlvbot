@@ -77,36 +77,65 @@ view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
 }
 
 view.buildMainMenu = function() {
-  var gamesElement = {}
-  gamesElement.title = "Matches";
-  gamesElement.image_url = "http://www.clipartbest.com/cliparts/ncB/rjq/ncBrjqRcA.png";
-  gamesElement.buttons = [];
-  gamesElement.buttons.push({
-    'type': 'postback',
-    'title': 'Matches',
-    'payload': 'showMatchesMenu'
-  });
+  var elements = [];
+  var element;
 
-  var teamsElement = {}
-  teamsElement.title = "Teams";
-  teamsElement.image_url = "https://upload.wikimedia.org/wikipedia/commons/b/bc/Europe_flags.png";
-  teamsElement.buttons = [];
-  teamsElement.buttons.push({
+  element = {}
+  element.title = "הכל";
+  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg";
+  element.buttons = [];
+  element.buttons.push({
     'type': 'postback',
-    'title': 'Teams',
-    'payload': 'showAllGroups'
+    'title': 'הכל',
+    'payload': 'showEverything'
   });
+  elements.push(element);
 
-  var stadiumsElement = {}
-  stadiumsElement.title = "Stadiums";
-  stadiumsElement.image_url = "http://img.uefa.com/MultimediaFiles/Photo/competitions/Venues/02/04/30/30/2043030_w1.jpg";
-  stadiumsElement.buttons = [];
-  stadiumsElement.buttons.push({
+  element = {}
+  element.title = "לייט נייט";
+  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg";
+  element.buttons = [];
+  element.buttons.push({
     'type': 'postback',
-    'title': 'Stadiums',
-    'payload': 'showStadiums'
+    'title': 'לייט נייט',
+    'payload': 'showLateNight'
   });
-  return [gamesElement, teamsElement, stadiumsElement];
+  elements.push(element);
+
+  element = {}
+  element.title = "שעה שמחה";
+  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg";
+  element.buttons = [];
+  element.buttons.push({
+    'type': 'postback',
+    'title': 'שעה שמחה',
+    'payload': 'showHappyHour'
+  });
+  elements.push(element);
+
+  element = {}
+  element.title = "עסקית צהריים";
+  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg";
+  element.buttons = [];
+  element.buttons.push({
+    'type': 'postback',
+    'title': 'עסקית צהריים',
+    'payload': 'showLunch'
+  });
+  elements.push(element);
+
+  element = {}
+  element.title = "בראנץ'";
+  element.image_url = "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg";
+  element.buttons = [];
+  element.buttons.push({
+    'type': 'postback',
+    'title': "בראנץ'",
+    'payload': 'showBrunch'
+  });
+  elements.push(element);
+
+  return elements;
 }
 
 view.showMainMenu = function(bot, message) {
