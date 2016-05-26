@@ -5,6 +5,30 @@ var Api = require('./api');
 var FacebookHelper = require('./facebookHelper');
 var view = {};
 
+view.buildLanguageMenu = function() {
+  console.log("buildLanguageMenu");
+  var element = {}
+  element.title = "Choose your language";
+  element.image_url = "http://www.happyhourstlv.com/assets/cover_long.jpg";
+  element.buttons = [];
+  element.buttons.push({
+    type: "postback",
+    title: "עברית",
+    payload: "showFirstMessage-he"
+  });
+  element.buttons.push({
+    type: "postback",
+    title: "English",
+    payload: "showFirstMessage-en"
+  });
+
+  return element;
+}
+
+view.showLanguageMenu = function(bot, message) {
+  FacebookHelper.sendGenericTemplate(bot, message, view.buildLanguageMenu());
+}
+
 view.showDealNumber = function(bot, message, postbackData) {
   if (!postbackData) return;
   if (postbackData.indexOf(",") === -1) postbackData += ",";

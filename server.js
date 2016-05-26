@@ -181,13 +181,12 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     });
   }
 
-  bot.reply(message, "aaa");
   bot.startConversation(message, askCategory);
 });
 
 // Main menu.
 controller.hears(["menu","תפריט"], 'message_received', function(bot, message) {
-  View.showCategoryMenu(bot, message);
+  View.showLanguageMenu(bot, message);
 });
 
 // Similar string.
