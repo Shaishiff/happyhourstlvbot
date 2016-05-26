@@ -135,9 +135,9 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       convo.say('When do you want to go ?');
     } else {
       if (message.userInfo.gender === "female") {
-        convo.say('מתי את רוצה ללכת ?');
+        convo.say('מתי את רוצה ללכת ? (לחצי על הכפתור או שלחי את המספר המתאים)');
       } else {
-        convo.say('מתי אתה רוצה ללכת ?');
+        convo.say('מתי אתה רוצה ללכת ? (לחץ על הכפתור או שלח את המספר המתאים)');
       }
     }
     convo.ask(FacebookHelper.buildGenericTemplate(View.buildTimesMenu()), function(response, convo) {
