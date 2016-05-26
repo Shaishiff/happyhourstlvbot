@@ -131,7 +131,7 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     }
 
     bot.reply(message, "aaa");
-    bot.startConversation(message, askFlavor);
+    bot.startConversation(message, askCategory);
 });
 
 // Main menu.
