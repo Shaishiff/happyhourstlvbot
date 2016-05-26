@@ -108,8 +108,8 @@ controller.hears("test location", 'message_received', function(bot, message) {
     View.showDealsByDistance(bot, message, "", lat, lon);
 });
 
-controller.hears(["pizza","piza"], 'message_recieved', function(bot,message) {
-  bot.reply(message, "Pizzatime !");
+controller.hears("aaa", 'message_received', function(bot, message) {
+    bot.reply(message, "aaa");
 });
 
 // Main menu.
