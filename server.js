@@ -191,13 +191,11 @@ controller.hears(["menu","תפריט"], 'message_received', function(bot, messag
 });
 
 // Similar string.
-/*
 controller.hears(["(.*)"], 'message_received', function(bot, message) {
-    if(message.text && message.text.length > 0) {
+    if(typeof message.text === "string" && message.text.length > 0) {
       View.showDealsByStringSimilarity(bot, message, "", message.text);
     }
 });
-*/
 
 // Not sure what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
