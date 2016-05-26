@@ -111,7 +111,7 @@ controller.hears("test location", 'message_received', function(bot, message) {
 // Similar string.
 controller.hears(["(.*)"], 'message_received', function(bot, message) {
     if(message.text && message.text.length > 0) {
-      View.showDealsByStringSimilarity(bot, message, message.text);
+      View.showDealsByStringSimilarity(bot, message, "", message.text);
     }
 });
 
