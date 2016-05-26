@@ -109,7 +109,7 @@ controller.hears("test location", 'message_received', function(bot, message) {
 });
 
 controller.hears("aaa", 'message_received', function(bot, message) {
-     var askFlavor = function(response, convo) {
+     var askCategory = function(response, convo) {
       convo.ask('What flavor ?', function(response, convo) {
         convo.say('ok1.');
         askSize(response, convo);

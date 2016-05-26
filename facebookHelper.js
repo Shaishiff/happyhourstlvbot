@@ -56,11 +56,8 @@ facebookHelper.setWelcomeMessage = function(text) {
   });
 }
 
-facebookHelper.sendGenericTemplate = function(bot, message, elements, callback) {
-  if (!(elements instanceof Array)) {
-    elements = [elements];
-  }
-  bot.reply(message, {
+facebookHelper.buildGenericTemplate = function(elements) {
+  return {
     attachment: {
       type: 'template',
       payload: {
@@ -68,8 +65,14 @@ facebookHelper.sendGenericTemplate = function(bot, message, elements, callback) 
         elements: elements
       }
     }
-  },
-  callback);
+  }
+}
+
+facebookHelper.sendGenericTemplate = function(bot, message, elements, callback) {
+  if (!(elements instanceof Array)) {
+    elements = [elements];
+  }
+  bot.reply(message, facebookHelper.buildGenericTemplate(elements), callback);
 }
 
 facebookHelper.sendMultipleGenericTemplates = function(bot, message, arr, index) {
