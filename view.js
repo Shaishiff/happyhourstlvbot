@@ -66,6 +66,8 @@ view.buildDealElements = function(dealsData, lang) {
 
 view.showDealsByDistance = function(bot, message, lang, lat, lon) {
   console.log("showDealsByDistance started: " + lat + "," + lon);
+  console.log(typeof Api);
+  console.log(typeof Api.getDataByDistanceFromUser);
   Api.getDataByDistanceFromUser(lat, lon, function(dealsData) {
     FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
   });
