@@ -109,44 +109,81 @@ controller.hears("test location", 'message_received', function(bot, message) {
 });
 
 controller.hears("aaa", 'message_received', function(bot, message) {
-     var askCategory = function(response, convo) {
-      convo.say('Please choose which deal are you interested in:');
-      convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
-        console.log("response: " + JSON.stringify(response));
-        // TODO check if this a valid response
-        if (response.text) {
-
-        }
-        askWhen(response, convo);
-        convo.next();
-      });
+  var lang = "";
+  var askCategory = function(response, convo) {
+    if (lang.length != 0) {
+      convo.say('Please choose which deal are you interested in:');  
+    } else {
+      if (message.userInfo.gender === "female") {
+        convo.say('איזה סוג של דיל את רוצה ? (לחצי על הכפתור או שלחי את המספר המתאים)');
+      } else {
+        convo.say('איזה סוג של דיל אתה רוצה ? (לחץ על הכפתור או שלח את המספר המתאים)');
+      }
     }
-    var askWhen = function(response, convo) {
+    convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
+      console.log("response: " + JSON.stringify(response));
+      // TODO check if this a valid response
+      if (response.text) {
+
+      }
+      askWhen(response, convo);
+      convo.next();
+    });
+  }
+  var askWhen = function(response, convo) {
+    if (lang.length != 0) {
       convo.say('When do you want to go ?');
-      convo.ask(FacebookHelper.buildGenericTemplate(View.buildTimesMenu()), function(response, convo) {
-        console.log("response: " + JSON.stringify(response));
-        // TODO check if this a valid response
-        if (response.text) {
-
-        }
-        askWhere(response, convo);
-        convo.next();
-      });
+    } else {
+      if (message.userInfo.gender === "female") {
+        convo.say('מתי את רוצה ללכת ?');
+      } else {
+        convo.say('מתי אתה רוצה ללכת ?');
+      }
     }
-    var askWhere = function(response, convo) {
-      convo.ask("Do you want to find a place based on your location ?\nIf so, please enter street name and number or you can just send your GPS location. Send \"no\" if location doesn't matter to you.", function(response, convo) {
-        console.log("response: " + JSON.stringify(response));
-        // TODO check if this a valid response
-        if (response.text) {
+    convo.ask(FacebookHelper.buildGenericTemplate(View.buildTimesMenu()), function(response, convo) {
+      console.log("response: " + JSON.stringify(response));
+      // TODO check if this a valid response
+      if (response.text) {
 
-        }
-        convo.say('All done !');
-        convo.next();
-      });
+      }
+      askWhere(response, convo);
+      convo.next();
+    });
+  }
+  var askWhere = function(response, convo) {
+    if (lang.length != 0) {
+      convo.say("Do you want to find a place based on your location ?");
+    } else {
+      if (message.userInfo.gender === "female") {
+        convo.say('את רוצה למצוא מקום לפי המיקום שלך ?');
+      } else {
+        convo.say('אתה רוצה למצוא מקום לפי המיקום שלך ?');
+      }
     }
 
-    bot.reply(message, "aaa");
-    bot.startConversation(message, askCategory);
+    var pleaseEnter = "";
+    if (lang.length != 0) {
+      pleaseEnter = "If so, please enter street name and number or you can just send your GPS location.\nSend \"no\" if location doesn't matter to you.";
+      if (message.userInfo.gender === "female") {
+        pleaseEnter = "If so, please enter street name and number or you can just send your GPS location.\nSend \"no\" if location doesn't matter to you.";
+      } else {
+        pleaseEnter = "If so, please enter street name and number or you can just send your GPS location.\nSend \"no\" if location doesn't matter to you.";
+      }
+    }
+
+    convo.ask(pleaseEnter, function(response, convo) {
+      console.log("response: " + JSON.stringify(response));
+      // TODO check if this a valid response
+      if (response.text) {
+
+      }
+      convo.say('All done !');
+      convo.next();
+    });
+  }
+
+  bot.reply(message, "aaa");
+  bot.startConversation(message, askCategory);
 });
 
 // Main menu.
