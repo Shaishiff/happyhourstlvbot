@@ -124,17 +124,24 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     }
     var askWhen = function(response, convo) {
       convo.say('When ?');
-      convo.ask('What size ?', function(response, convo) {
+      convo.ask('This should show options to choose the relevant day', function(response, convo) {
         console.log("response: " + JSON.stringify(response));
-        convo.say('ok2.')
-        askWhereDeliver(response, convo);
+        // TODO check if this a valid response
+        if (response.text) {
+
+        }
+        askWhere(response, convo);
         convo.next();
       });
     }
-    var askWhereDeliver = function(response, convo) {
-      console.log("response: " + JSON.stringify(response));
-      convo.ask('Where ?', function(response, convo) {
-        convo.say('ok3, bye.');
+    var askWhere = function(response, convo) {
+      convo.ask("Do you want to find a place based on your location ?\nIf so, please enter street name and number or you can just send your GPS location. Send \"no\" if location doesn't matter to you.", function(response, convo) {
+        console.log("response: " + JSON.stringify(response));
+        // TODO check if this a valid response
+        if (response.text) {
+
+        }
+        convo.say('All done !');
         convo.next();
       });
     }
