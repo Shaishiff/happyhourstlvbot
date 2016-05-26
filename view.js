@@ -69,6 +69,13 @@ view.showDealsByDistance = function(bot, message, lang, lat, lon) {
   });
 }
 
+view.showDealsByStringSimilarity = function(bot, message, userText) {
+  console.log("showDealsByStringSimilarity started: " + userText);
+  Api.getDataByStringSimilarity(userText, function(dealsData) {
+    FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+  });
+}
+
 view.buildMainMenu = function() {
   var gamesElement = {}
   gamesElement.title = "Matches";

@@ -2,6 +2,7 @@
 
 var Mysql = require('mysql');
 var Consts = require('./consts');
+var Utils = require('./utils');
 var api = {};
 var data = null;
 
@@ -15,12 +16,23 @@ api.getDataByObjectId = function(objectId, callback) {
 	callback();
 }
 
+api.getDataByStringSimilarity = function(userText, callback) {
+	var sortedData = data;
+	for(var i = 0; i < sortedData.length; i++) {
+		sortedData[i].stringSimilarity = Utils.getEditDistance(userText, sortedData[i]["headline"]);
+	}
+	callback(sortedData.sort(function(a, b) {
+		if(a.stringSimilarity == b.stringSimilarity) return 0;
+		else return (a.stringSimilarity > b.stringSimilarity ? 1 : -1);
+	}));
+}
+
 api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 	var sortedData = data;
 	for(var i = 0; i < sortedData.length; i++) {
 		sortedData[i].distance = Math.sqrt(Math.pow(sortedData[i].lat - userLat, 2) + Math.pow(sortedData[i].lon - userLon, 2), 2);
 	}
-	callback(sortedData.sort(function(a, b) {		
+	callback(sortedData.sort(function(a, b) {
 		if(a.distance == b.distance) return 0;
 		else return (a.distance > b.distance ? 1 : -1);
 	}));
