@@ -13,7 +13,7 @@ api.getDataByObjectId = function(objectId, callback) {
 			return;
 		}
 	}
-	callback();
+	callback(null);
 }
 
 api.getDataByHeadline = function(userText, lang, callback) {
@@ -23,7 +23,7 @@ api.getDataByHeadline = function(userText, lang, callback) {
 			return;
 		}
 	}
-	callback();
+	callback(null);
 }
 
 api.getDataByStringSimilarity = function(userText, lang, callback) {
