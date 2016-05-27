@@ -164,6 +164,7 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     var pleaseEnter = "";
     if (lang.length != 0) {
       pleaseEnter = "If so, please enter street name and number or you can just send your GPS location.\nSend \"no\" if location doesn't matter to you.";
+    } else {
       if (message.userInfo.gender === "female") {
         pleaseEnter = "אם כן, הכנסי את שם הרחוב ומספר הבית או שלחי את מיקום ה-גי.פי.אס.\nכתבי \"לא\" אם המיקום לא משנה לך.";
       } else {
