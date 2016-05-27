@@ -114,9 +114,23 @@ view.showDealsByDistance = function(bot, message, lang, lat, lon) {
 
 view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
   console.log("showDealsByStringSimilarity started: " + userText);
-  Api.getDataByStringSimilarity(userText, lang, function(dealsData) {
-    FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
-  });
+  Api.getDataByHeadline(userText, lang, function(dealData)) {
+    if (!dealData) {
+      FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, lang));
+      return;
+    }
+    var messageToUser = "";
+    if (lang.length != 0) {
+      messageToUser = "Could not find an exact match, here are the closest options...";
+    } else {
+      messageToUser = "לא נמצאה התאמה מדויקת, הנה האופציות הקרובות ביותר...";
+    }
+    bot.reply(message, messageToUser, function() {
+      Api.getDataByStringSimilarity(userText, lang, function(dealsData) {
+        FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+      });
+    });
+  }
 }
 
 view.buildCategoryMenu = function() {

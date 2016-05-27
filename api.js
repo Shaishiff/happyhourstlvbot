@@ -16,6 +16,16 @@ api.getDataByObjectId = function(objectId, callback) {
 	callback();
 }
 
+api.getDataByHeadline = function(userText, lang, callback) {
+	for(var i = 0; i < data.length; i++) {
+		if (data[i]["headline" + lang] === userText) {
+			callback(data[i]);
+			return;
+		}
+	}
+	callback();
+}
+
 api.getDataByStringSimilarity = function(userText, lang, callback) {
 	var sortedData = data;
 	for(var i = 0; i < sortedData.length; i++) {
