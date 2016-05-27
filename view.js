@@ -114,7 +114,7 @@ view.showDealsByDistance = function(bot, message, lang, lat, lon) {
 
 view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
   console.log("showDealsByStringSimilarity started: " + userText);
-  Api.getDataByHeadline(userText, lang, function(dealData)) {
+  Api.getDataByHeadline(userText, lang, function(dealData) {
     if (!dealData) {
       FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, lang));
       return;
@@ -130,7 +130,7 @@ view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
         FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
       });
     });
-  }
+  });
 }
 
 view.buildCategoryMenu = function() {
