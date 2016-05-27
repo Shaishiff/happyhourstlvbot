@@ -18,7 +18,12 @@ api.getDataByObjectId = function(objectId, callback) {
 
 api.getDataByHeadline = function(userText, lang, callback) {
 	for(var i = 0; i < data.length; i++) {
-		if (data[i]["headline" + lang] === userText) {
+		var dealName = data[i]["headline" + lang];
+		// Remove english chars if we're in hebrew mode.
+		if (lang.length === 0) {
+			dealName = dealName.replace(/[A-z]/g, "").trim();
+		}
+		if (dealName == userText) {
 			callback(data[i]);
 			return;
 		}
@@ -38,7 +43,7 @@ api.getDataByStringSimilarity = function(userText, lang, callback) {
 		console.log("userText: " + userText + ", dealName: " + dealName + ", stringSimilarity: " + sortedData[i].stringSimilarity);
 		if (userText.length >= 4 && dealName.indexOf(userText) === 0) {
 			console.log("Giving this option extra points");
-			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity*2);
+			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity/2.0);
 		}
 	}
 	callback(sortedData.sort(function(a, b) {
