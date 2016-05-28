@@ -234,7 +234,9 @@ controller.hears("aaa", 'message_received', function(bot, message) {
               lat = 0;
               lon = 0;
             }
-            // TODO - Get the data.
+            api.getData(lang, category, when, lat, lon, function(dealsData) {
+              FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+            });
             convo.next();
           });
           return;
@@ -249,7 +251,9 @@ controller.hears("aaa", 'message_received', function(bot, message) {
         lon = response.attachments[0].payload.coordinates.long;
       }
       if (lat >= 0 && lon >= 0) {
-        // TODO - Get the data.
+        api.getData(lang, category, when, lat, lon, function(dealsData) {
+          FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+        });
       } else {
         convo.say(invalid_response);
         convo.repeat();

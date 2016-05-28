@@ -52,8 +52,8 @@ api.getDataByStringSimilarity = function(userText, lang, callback) {
 	}));
 }
 
-api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
-	var sortedData = data;
+api.getDataByDistanceFromUser = function(dataToUse, userLat, userLon, callback) {
+	var sortedData = (dataToUse ? dataToUse : data);
 	for(var i = 0; i < sortedData.length; i++) {
 		sortedData[i].distance = Math.sqrt(Math.pow(sortedData[i].lat - userLat, 2) + Math.pow(sortedData[i].lon - userLon, 2), 2);
 	}
@@ -63,9 +63,39 @@ api.getDataByDistanceFromUser = function(userLat, userLon, callback) {
 	}));
 }
 
-function filterDataByCategory(category) {
-	var filteredData = data;
-	return filteredData.filter(function(obj) {return (obj.category === category)});
+function filterDataByCategory(dataToFilter, category) {
+	return dataToFilter.filter(function(obj) {return (obj.category === category)});
+}
+
+function filterDataByTime(dataToFilter, when) {
+	if (when == Consts.TODAY) {
+		when = (new Date()).getDay();
+	}
+	return dataToFilter.filter(function(obj) {
+		var opening_hours = null;
+		try {
+			opening_hours = JSON.parse(obj.opening_hours);
+			if (opening_hours &&
+				opening_hours.length &&
+				opening_hours.length == 7) {
+				return opening_hours[when].length > 0;
+			}
+		} catch (err) {
+			console.log("filterDataByTime caught exception: " + err.message);
+		}
+		return false;
+	});
+}
+
+api.getData = function(lang, category, when, lat, lon, callback) {
+	console.log("api.getData");
+	var processedData = data;
+	console.log("processedData.length: " + processedData.length);
+	processedData = filterDataByCategory(processedData, category);
+	console.log("After category filter processedData.length: " + processedData.length);
+	processedData = filterDataByTime(processedData, when);
+	console.log("After time filter processedData.length: " + processedData.length);
+	api.getDataByDistanceFromUser(processedData, lat, lon, callback);
 }
 
 api.collectData = function() {

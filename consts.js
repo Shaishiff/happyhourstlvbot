@@ -53,13 +53,14 @@ var consts = {
 		payload: "showToday",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
 	},
-	{
-		title_en: "Right Now",
-		title: "עכשיו",
-		db_name: vRIGHT_NOW,
-		payload: "showRightNow",
-		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
-	},
+	// TODO: Add support for this sometime...
+	// {
+	// 	title_en: "Right Now",
+	// 	title: "עכשיו",
+	// 	db_name: vRIGHT_NOW,
+	// 	payload: "showRightNow",
+	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
+	// },
 	{
 		title_en: "Sunday",
 		title: "יום ראשון",
