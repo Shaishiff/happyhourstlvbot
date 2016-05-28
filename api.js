@@ -63,11 +63,11 @@ api.getDataByDistanceFromUser = function(dataToUse, userLat, userLon, callback) 
 	}));
 }
 
-function filterDataByCategory(dataToFilter, category) {
+api.filterDataByCategory = function(dataToFilter, category) {
 	return dataToFilter.filter(function(obj) {return (obj.category === category)});
 }
 
-function filterDataByTime(dataToFilter, when) {
+api.filterDataByTime = function(dataToFilter, when) {
 	if (when == Consts.TODAY) {
 		when = (new Date()).getDay();
 	}
@@ -91,9 +91,9 @@ api.getData = function(lang, category, when, lat, lon, callback) {
 	console.log("api.getData");
 	var processedData = data;
 	console.log("processedData.length: " + processedData.length);
-	processedData = filterDataByCategory(processedData, category);
+	processedData = api.filterDataByCategory(processedData, category);
 	console.log("After category filter processedData.length: " + processedData.length);
-	processedData = filterDataByTime(processedData, when);
+	processedData = api.filterDataByTime(processedData, when);
 	console.log("After time filter processedData.length: " + processedData.length);
 	api.getDataByDistanceFromUser(processedData, lat, lon, callback);
 }
