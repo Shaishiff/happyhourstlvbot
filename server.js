@@ -109,10 +109,14 @@ controller.hears("test location", 'message_received', function(bot, message) {
 });
 
 controller.hears("aaa", 'message_received', function(bot, message) {
+  console.log("Starting conversation: " + JSON.stringify(message));
   var lang = "";
+  var category = "";
+  var when = "";
+  var where = "";
   var askCategory = function(response, convo) {
     if (lang.length != 0) {
-      convo.say('Please choose which deal are you interested in:');  
+      convo.say('Please choose which deal are you interested in:');
     } else {
       if (message.userInfo.gender === "female") {
         convo.say('איזה סוג של דיל את רוצה ? (לחצי על הכפתור או שלחי את המספר המתאים)');
@@ -122,7 +126,10 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     }
     convo.ask(FacebookHelper.buildGenericTemplate(View.buildCategoryMenu()), function(response, convo) {
       console.log("response: " + JSON.stringify(response));
-      // TODO check if this a valid response
+      // Check if this a valid response. Options are:
+      // - User clicked one of the buttons.
+      // - User entered a number.
+      // - User entered a value.
       if (response.text) {
 
       }
@@ -160,7 +167,6 @@ controller.hears("aaa", 'message_received', function(bot, message) {
         convo.say('אתה רוצה למצוא מקום לפי המיקום שלך ?');
       }
     }
-
     var pleaseEnter = "";
     if (lang.length != 0) {
       pleaseEnter = "If so, please enter street name and number or you can just send your GPS location.\nSend \"no\" if location doesn't matter to you.";
@@ -171,7 +177,6 @@ controller.hears("aaa", 'message_received', function(bot, message) {
         pleaseEnter = "אם כן, הכנס את שם הרחוב ומספר הבית או שלח את מיקום ה-גי.פי.אס.\nכתוב \"לא\" אם המיקום לא משנה לך.";
       }
     }
-
     convo.ask(pleaseEnter, function(response, convo) {
       console.log("response: " + JSON.stringify(response));
       // TODO check if this a valid response
