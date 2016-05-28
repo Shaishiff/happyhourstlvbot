@@ -1,13 +1,11 @@
 "use strict";
 
-var request = require('request');
+var Request = require('request');
 var Consts = require('./consts');
-var Sentences = require('./sentences');
-var DateFormat = require('dateformat');
 var facebookHelper = {};
 
 facebookHelper.setWelcomeMessageStructuredMessage = function(elements) {
-  request({
+  Request({
     url: Consts.FACEBOOK_WELCOME_MSG_URL,
     method: 'POST',
     json: {
@@ -35,7 +33,7 @@ facebookHelper.setWelcomeMessageStructuredMessage = function(elements) {
 }
 
 facebookHelper.setWelcomeMessageText = function(text) {
-  request({
+  Request({
     url: Consts.FACEBOOK_WELCOME_MSG_URL,
     method: 'POST',
     json: {
