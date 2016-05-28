@@ -113,7 +113,20 @@ controller.hears("aaa", 'message_received', function(bot, message) {
   var lang = "";
   var category = "";
   var when = "";
-  var where = "";
+  var lat = -1;
+  var lon = -1;
+  var invalid_response = "";
+  if (lang.length != 0) {
+      invalid_response = "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\"";
+  } else {
+    if (message.userInfo.gender === "female") {
+      // TODO
+      invalid_response = "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\"";
+    } else {
+      // TODO
+      invalid_response = "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\"";
+    }
+  }
   var askCategory = function(response, convo) {
     if (lang.length != 0) {
       convo.say('Please choose which deal are you interested in:');
@@ -131,9 +144,18 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       // - User entered a number.
       // - User entered a value.
       if (response.text) {
-
+        if (util.isUserRequestedToStop(response.text)){
+          convo.stop();
+          return;
+        }
+        category = utils.getCategoryDbNameFromText(response.text);
       }
-      askWhen(response, convo);
+      if (category.length > 0) {
+        askWhen(response, convo);
+      } else {
+        convo.say(invalid_response);
+        convo.repeat();
+      }
       convo.next();
     });
   }
@@ -149,11 +171,23 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     }
     convo.ask(FacebookHelper.buildGenericTemplate(View.buildTimesMenu()), function(response, convo) {
       console.log("response: " + JSON.stringify(response));
-      // TODO check if this a valid response
+      // Check if this a valid response. Options are:
+      // - User clicked one of the buttons.
+      // - User entered a number.
+      // - User entered a value.
       if (response.text) {
-
+        if (util.isUserRequestedToStop(response.text)){
+          convo.stop();
+          return;
+        }
+        when = utils.getTimeDbNameFromText(response.text);
       }
-      askWhere(response, convo);
+      if (lat.length > 0) {
+        askWhere(response, convo);
+      } else {
+        convo.say(invalid_response);
+        convo.repeat();
+      }
       convo.next();
     });
   }
@@ -179,9 +213,46 @@ controller.hears("aaa", 'message_received', function(bot, message) {
     }
     convo.ask(pleaseEnter, function(response, convo) {
       console.log("response: " + JSON.stringify(response));
-      // TODO check if this a valid response
-      if (response.text) {
-
+      // Check if this a valid response. Options are:
+      // - User clicked one of the buttons.
+      // - User entered a number.
+      // - User entered a value.
+      if (response.text && response.text.length > 0) {
+        if (util.isUserRequestedToStop(response.text)) {
+          convo.stop();
+          return;
+        } else if (response.text === "לא" || response.text === "no") {
+          // No need to find the exact address.
+          lat = 0;
+          lon = 0;
+        } else {
+          utils.getLatLonFromAddress(response.text, function(latFromGoogle, lonFromGoogle) {
+            if (latFromGoogle && lonFromGoogle) {
+              lat = latFromGoogle;
+              lon = lonFromGoogle;
+            } else {
+              lat = 0;
+              lon = 0;
+            }
+            // TODO - Get the data.
+            convo.next();
+          });
+          return;
+        }
+      } else if (response.attachments &&
+          response.attachments.length > 0 &&
+          response.attachments[0].payload &&
+          response.attachments[0].payload.coordinates &&
+          response.attachments[0].payload.coordinates.lat &&
+          response.attachments[0].payload.coordinates.long) {
+        lat = response.attachments[0].payload.coordinates.lat;
+        lon = response.attachments[0].payload.coordinates.long;
+      }
+      if (lat >= 0 && lon >= 0) {
+        // TODO - Get the data.
+      } else {
+        convo.say(invalid_response);
+        convo.repeat();
       }
       convo.next();
     });

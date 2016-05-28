@@ -48,3 +48,7 @@ config:
     friendly_name: MYSQL_TABLE
     type: secret
     global: true
+  - name: GOOGLE_API_KEY
+    friendly_name: GOOGLE_API_KEY
+    type: secret
+    global: true

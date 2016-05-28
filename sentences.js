@@ -6,6 +6,13 @@ var group = "(group|grup|groop|standing|table)";
 var today = "(today|todays|tonight|tonights|this evening|this evenings)";
 
 var sentences = {
+  user_requested_to_stop: [
+    "0",
+    "start over",
+    "stop",
+    "חדש",
+    "עצור"
+  ],
   page_welcome_msg: "Hey ! :)\nLet me know what kind of info you are looking for about Euro2016.\nTo get things started, you can write something like:\nShow me the groups\nOr even just write:\ngroups\n(if you're a bit lazy...)\nAnd last thing - just write:\nhelp\nto get some more info from me.\nHave fun !",
   help_message: "Don't you worry ! I'll try and help out.",
   user_welcoming_messages: [

@@ -1,9 +1,82 @@
 "use strict";
 
 var Consts = require('./consts');
+var Sentences = require('./sentences');
 var MongoHelper = require('./mongoHelper');
 var HttpHelper = require('./httpHelper');
 var utils = {};
+
+utils.getLatLonFromAddress = function(address, callback) {
+  console.log("Finding lat and lon for address: " + address);
+  var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address;
+  url += "&key=" + process.env.GOOGLE_API_KEY;
+  httpHelper.httpGetJson(url, function(jsonResponse) {
+    if (jsonResponse &&
+      jsonResponse.status &&
+      jsonResponse.status == "OK" &&
+      jsonResponse.results &&
+      jsonResponse.results.length > 0 &&
+      jsonResponse.results[0].geomatry &&
+      jsonResponse.results[0].geomatry.location &&
+      jsonResponse.results[0].geomatry.location.lat &&
+      jsonResponse.results[0].geomatry.location.lng) {
+      var lat = sonResponse.results[0].geomatry.location.lat;
+      var lng = jsonResponse.results[0].geomatry.location.lng;
+      console.log("Found lat and long from address: " + lat + "," + lng)
+      callback(lat, lng);
+    } else {
+      callback(null, null);
+    }
+  });
+}
+
+utils.isUserRequestedToStop = function(userText) {
+  var bStop = (Sentences.indexOf(userText) != -1);
+  if (bStop) {
+    console.log("User requested to stop: " + userText);
+  }
+  return bStop;
+}
+
+utils.isNormalIntegerFromMinToMax = function(str, min, max) {
+  // This will work only from 0 to 9 (min/max).
+  var regExStr = "[" + min + "-" + max + "]";
+  var bRegEx = (new RegExp(regExStr, "i")).test(str);
+  console.log("Output of regex test: " + regExStr + " => " + bRegEx + " - for str: " + str);
+  return bRegEx;
+}
+
+utils.getTimeDbNameFromText = function(userText) {
+  if (utils.isNormalIntegerFromMinToMax(userText, 1, Consts.TIMES.length)) {
+    return Consts.TIMES.length[parseInt(userText) - 1].db_name;
+  }
+  for(var i = 0; i < Consts.TIMES.length; i++) {
+    var time = Consts.TIMES[i];
+    if (time.title_en == userText ||
+      time.title == userText ||
+      time.payload == userText) {
+      return time.db_name;
+    }
+  }
+  console.log("getTimeDbNameFromText - could not find user text: " + userText);
+  return "";
+}
+
+utils.getCategoryDbNameFromText = function(userText) {
+  if (utils.isNormalIntegerFromMinToMax(userText, 1, Consts.CATEGORIES.length)) {
+    return Consts.CATEGORIES.length[parseInt(userText) - 1].db_name;
+  }
+  for(var i = 0; i < Consts.CATEGORIES.length; i++) {
+    var cat = Consts.CATEGORIES[i];
+    if (cat.title_en == userText ||
+      cat.title == userText ||
+      cat.payload == userText) {
+      return cat.db_name;
+    }
+  }
+  console.log("getCategoryDbNameFromText - could not find user text: " + userText);
+  return "";
+}
 
 // Compute the edit distance between the two given strings
 // Taken from: https://gist.github.com/andrei-m/982927
