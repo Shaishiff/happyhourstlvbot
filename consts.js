@@ -1,7 +1,9 @@
 "use strict";
+var INVALID_NUM = -999;
 var vTODAY = -1;
 var vRIGHT_NOW = -2;
 var consts = {
+	INVALID_NUM: INVALID_NUM,
 	FACEBOOK_WELCOME_MSG_URL: "https://graph.facebook.com/v2.6/" + process.env.FACEBOOK_PAGE_ID + "/thread_settings?access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	FACEBOOK_USER_PROFILE_API: "https://graph.facebook.com/v2.6/<USER_ID>?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	MONGO_DB_URL: "mongodb://" + process.env.MONGO_DB_USER + ":" + process.env.MONGO_DB_USER + "@" + process.env.MONGO_DB_HOST + ":" + process.env.MONGO_DB_PORT + "/" + process.env.MONGO_DB_NAME,
@@ -12,35 +14,35 @@ var consts = {
 	CATEGORIES: [{
 		title_en: "Everything",
 		title: "הכל",
-		db_name: "aa",
+		db_name: "everything",
 		payload: "showEverything",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
 	},
 	{
 		title_en: "Late Night",
 		title: "לייט נייט",
-		db_name: "aa",
+		db_name: "ln",
 		payload: "showLateNight",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
 	},
 	{
 		title_en: "Happy Hour",
 		title: "שעה שמחה",
-		db_name: "aa",
+		db_name: "hh",
 		payload: "showHappyHour",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
 	},
 	{
 		title_en: "Business Lunch",
 		title: "עסקית צהריים",
-		db_name: "aa",
+		db_name: "bl",
 		payload: "showLunch",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg"
 	},
 	{
 		title_en: "Brunch",
 		title: "'בראנץ",
-		db_name: "aa",
+		db_name: "br",
 		payload: "showBrunch",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
 	}],

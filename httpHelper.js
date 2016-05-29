@@ -15,11 +15,13 @@ httpHelper.httpGetJson = function(url, callback) {
     } else {
       try {
         console.log(response.body);
-        callback(JSON.parse(response.body));
-        return;
+        var parsedResponse = JSON.parse(response.body)
+        console.log("Parsed response successfully");
       } catch (e) {
         console.error('Error parsing json response from http get ' + url);
       }
+      callback(parsedResponse);
+      return;
     }
     callback();
   });
@@ -39,11 +41,14 @@ httpHelper.httpPostJson = function(url, headers, body, callback) {
     } else {
       try {
         console.log(response.body);
-        callback(JSON.parse(response.body));
+        var parsedResponse = JSON.parse(response.body);
+        console.log("Parsed response successfully");
         return;
       } catch (e) {
         console.error('Error parsing json response from http post ' + url);
       }
+      callback(parsedResponse);
+      return;
     }
     callback();
   });

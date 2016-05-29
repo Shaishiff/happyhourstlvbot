@@ -1,10 +1,54 @@
 "use strict";
 //
 var Consts = require('./consts');
+var Sentences = require('./sentences');
 var Api = require('./api');
+var Utils = require('./utils');
 var FacebookHelper = require('./facebookHelper');
 var MongoHelper = require('./mongoHelper');
 var view = {};
+
+view.buildMainMenu = function(lang) {
+  console.log("buildMainMenu");
+  var element = {}
+  element.title = Utils.getSentence("lets_start");
+  element.image_url = "http://www.happyhourstlv.com/assets/cover_long.jpg";
+  element.buttons = [];
+  element.buttons.push({
+    type: "postback",
+    title: "חיפוש",
+    payload: "showSearchMenu"
+  });
+  element.buttons.push({
+    type: "postback",
+    title: "מדריך",
+    payload: "showGuideMenu"
+  });
+  element.buttons.push({
+    type: "postback",
+    title: "Change to English",
+    payload: "showLanguageMenu"
+  });
+
+  return element;
+}
+
+view.showSearchMenu = function(bot, message) {
+  bot.startConversation(message, function(err,convo) {
+    convo.ask(Utils.getSentence("type_name_of_business"), function(response, convo) {
+      if(typeof response.text === "string" && response.text.length > 0) {
+        view.showDealsByStringSimilarity(bot, response, "", response.text, function() {
+          convo.say("Type menu to see the menu again");
+          convo.next();
+        });
+      } else {
+        convo.say(Utils.getSentence("invalid_response"));
+        convo.repeat();
+        convo.next();
+      }
+    });
+  });
+}
 
 view.buildLanguageMenu = function() {
   console.log("buildLanguageMenu");
@@ -24,6 +68,10 @@ view.buildLanguageMenu = function() {
   });
 
   return element;
+}
+
+view.showMainMenu = function(bot, message, lang) {
+  FacebookHelper.sendGenericTemplate(bot, message, view.buildMainMenu(lang));
 }
 
 view.showLanguageMenu = function(bot, message) {
@@ -97,7 +145,8 @@ view.buildDealElement = function(dealData, lang) {
 view.buildDealElements = function(dealsData, lang) {
   console.log("buildDealElements started");
   var elements = [];
-  for(var i = 0; i < 10; i++) {
+  var numOfElements = Math.min(dealsData.length, 10);
+  for(var i = 0; i < numOfElements; i++) {
     elements.push(view.buildDealElement(dealsData[i], lang));
   }
   return elements;
@@ -112,11 +161,11 @@ view.showDealsByDistance = function(bot, message, lang, lat, lon) {
   });
 }
 
-view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
+view.showDealsByStringSimilarity = function(bot, message, lang, userText, callback) {
   console.log("showDealsByStringSimilarity started: " + userText);
   Api.getDataByHeadline(userText, lang, function(dealData) {
-    if (!dealData) {
-      FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, lang));
+    if (dealData) {
+      FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, lang), callback);
       return;
     }
     var messageToUser = "";
@@ -127,7 +176,7 @@ view.showDealsByStringSimilarity = function(bot, message, lang, userText) {
     }
     bot.reply(message, messageToUser, function() {
       Api.getDataByStringSimilarity(userText, lang, function(dealsData) {
-        FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+        FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang), callback);
       });
     });
   });

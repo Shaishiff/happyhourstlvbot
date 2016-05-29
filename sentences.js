@@ -1,18 +1,40 @@
 
-var Consts = require('./consts');
-var game = "(game|match)";
-var live = "(live|ongoing|current|curent)";
-var group = "(group|grup|groop|standing|table)";
-var today = "(today|todays|tonight|tonights|this evening|this evenings)";
-
 var sentences = {
-  user_requested_to_stop: [
-    "0",
-    "start over",
-    "stop",
-    "חדש",
-    "עצור"
-  ],
+    lets_start: {
+        en: "Main Menu",
+        he: {
+            male: "תפריט ראשי",
+            female: "תפריט ראשי"
+        }
+    },
+    invalid_response: {
+        en: "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\"",
+        he: {
+            male: "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\"",
+            female: "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\""
+        }
+    },
+    type_name_of_business: {
+        en: "Please type the name of the business to see its happy hour.",
+        he: {
+            male: "בבקשה הקלד את שם המקום אותו אתה מחפש.",
+            female: "בבקשה הקלידי את שם המקום אותו את מחפשת."
+        }
+    },
+    user_requested_to_stop: [
+        "0",
+        "start over",
+        "stop",
+        "חדש",
+        "עצור"
+    ],
+    user_wants_main_menu: [
+        "99",
+        "menu",
+        "תפריט",
+        "חדש חדש",
+        "start over"
+    ],
   page_welcome_msg: "Hey ! :)\nLet me know what kind of info you are looking for about Euro2016.\nTo get things started, you can write something like:\nShow me the groups\nOr even just write:\ngroups\n(if you're a bit lazy...)\nAnd last thing - just write:\nhelp\nto get some more info from me.\nHave fun !",
   help_message: "Don't you worry ! I'll try and help out.",
   user_welcoming_messages: [
@@ -62,26 +84,6 @@ var sentences = {
     "You're welcome :)",
     "I'm Here to help.",
     "Don't worry about it."
-  ],
-  show_groups: [
-    "^Can you please show me the group",
-    "^Show me the group",
-    "^Show me group",
-    "^Show group",
-    "^What are the group",
-    "^Groups$",
-    "^Groops$",
-    "^Grops$",
-    "^Grups$",
-    "^Standings$",
-    "^Show standings$",
-    "^Show standing$",
-    "^Please show groups",
-    "^Please show me the groups",
-    "^Show groops",
-    "^Show me grups",
-    "^Show grups",
-    "^group(s)?(.*)show(.*)",
   ],
   help_me: [
     "^help$",

@@ -2,6 +2,7 @@
 
 var Botkit = require('botkit');
 var Sentences = require('./sentences');
+var Consts = require('./consts');
 var Api = require('./api');
 var View = require('./view');
 var Utils = require('./utils');
@@ -19,8 +20,8 @@ var bot = controller.spawn({});
 
 // Set up the welcome message.
 if (process.env.FACEBOOK_PAGE_ACCESS_TOKEN) {
-  FacebookHelper.setWelcomeMessageText("Welcome to happy hours TLV !");
-  //FacebookHelper.setWelcomeMessageStructuredMessage(View.buildMainMenu());
+  //FacebookHelper.setWelcomeMessageText("Welcome to happy hours TLV !");
+  FacebookHelper.setWelcomeMessageStructuredMessage(View.buildMainMenu());
 }
 
 // Set initial data store.
@@ -30,6 +31,10 @@ Api.collectData();
 var webServerPort = process.env.PORT || 8080;
 controller.setupWebserver(webServerPort, function(err, webserver) {
   controller.createWebhookEndpoints(controller.webserver, bot, function() {
+    webserver.get('/health', function(req, res) {
+      console.log(req.query);
+      res.send('OK');
+    });
   });
 });
 
@@ -43,7 +48,9 @@ function handleUserAttachment(bot, message, lang) {
     var lat = message.attachments[0].payload.coordinates.lat;
     var lon = message.attachments[0].payload.coordinates.long;
     View.showDealsByDistance(bot, message, lang, lat, lon);
+    return true;
   }
+  return false;
 }
 
 // Log the message and add more info to the message.
@@ -57,8 +64,15 @@ controller.middleware.receive.use(function(bot, message, next) {
       message.fullNameWithId = message.user;
     }
     AnalyticsHelper.sendUserMsgToAnalytics(message.fullNameWithId, message.text);
-    if (message.attachments) handleUserAttachment(bot, message, "")
-    next();
+    var bNext = true;
+    if (message.attachments) {
+      bNext = handleUserAttachment(bot, message, "");
+    }
+    if (bNext) {
+      next();
+    } else {
+      bot.reply(message, "Sorry, I don't understand these kind of stuff :(");
+    }
   });
 });
 
@@ -100,6 +114,11 @@ controller.hears(Sentences.help_me, 'message_received', function(bot, message) {
   bot.reply(message, Sentences.help_message);
 });
 
+// User wants help.
+controller.hears(["test"], 'message_received', function(bot, message) {
+  bot.reply(message, "testing 123");
+});
+
 // Test location.
 controller.hears("test location", 'message_received', function(bot, message) {
     var lat = 32.079869;
@@ -112,9 +131,9 @@ controller.hears("aaa", 'message_received', function(bot, message) {
   console.log("Starting conversation: " + JSON.stringify(message));
   var lang = "";
   var category = "";
-  var when = "";
-  var lat = -1;
-  var lon = -1;
+  var when = Consts.INVALID_NUM;
+  var lat = Consts.INVALID_NUM;
+  var lon = Consts.INVALID_NUM;
   var invalid_response = "";
   if (lang.length != 0) {
       invalid_response = "Sorry but that isn't a valid response. If you want to start over just tell me: \"start over\" or just send: \"0\"";
@@ -144,11 +163,11 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       // - User entered a number.
       // - User entered a value.
       if (response.text) {
-        if (util.isUserRequestedToStop(response.text)){
+        if (Utils.isUserRequestedToStop(response.text)){
           convo.stop();
           return;
         }
-        category = utils.getCategoryDbNameFromText(response.text);
+        category = Utils.getCategoryDbNameFromText(response.text);
       }
       if (category.length > 0) {
         askWhen(response, convo);
@@ -176,13 +195,13 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       // - User entered a number.
       // - User entered a value.
       if (response.text) {
-        if (util.isUserRequestedToStop(response.text)){
+        if (Utils.isUserRequestedToStop(response.text)){
           convo.stop();
           return;
         }
-        when = utils.getTimeDbNameFromText(response.text);
+        when = Utils.getTimeDbNameFromText(response.text);
       }
-      if (lat.length > 0) {
+      if (when != Consts.INVALID_NUM) {
         askWhere(response, convo);
       } else {
         convo.say(invalid_response);
@@ -218,7 +237,7 @@ controller.hears("aaa", 'message_received', function(bot, message) {
       // - User entered a number.
       // - User entered a value.
       if (response.text && response.text.length > 0) {
-        if (util.isUserRequestedToStop(response.text)) {
+        if (Utils.isUserRequestedToStop(response.text)) {
           convo.stop();
           return;
         } else if (response.text === "לא" || response.text === "no") {
@@ -226,16 +245,22 @@ controller.hears("aaa", 'message_received', function(bot, message) {
           lat = 0;
           lon = 0;
         } else {
-          utils.getLatLonFromAddress(response.text, function(latFromGoogle, lonFromGoogle) {
+          Utils.getLatLonFromAddress(response.text, function(latFromGoogle, lonFromGoogle) {
             if (latFromGoogle && lonFromGoogle) {
+              console.log("Found lat and lon from Google");
               lat = latFromGoogle;
               lon = lonFromGoogle;
             } else {
+              console.error("Could not find lat and lon from Google");
               lat = 0;
               lon = 0;
             }
-            api.getData(lang, category, when, lat, lon, function(dealsData) {
-              FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+            Api.getData(lang, category, when, lat, lon, function(dealsData) {
+              if (dealsData.length === 0) {
+                convo.say("No deals found :(");
+              } else {
+                FacebookHelper.sendGenericTemplate(bot, message, View.buildDealElements(dealsData, lang));
+              }
             });
             convo.next();
           });
@@ -251,8 +276,8 @@ controller.hears("aaa", 'message_received', function(bot, message) {
         lon = response.attachments[0].payload.coordinates.long;
       }
       if (lat >= 0 && lon >= 0) {
-        api.getData(lang, category, when, lat, lon, function(dealsData) {
-          FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang));
+        Api.getData(lang, category, when, lat, lon, function(dealsData) {
+          FacebookHelper.sendGenericTemplate(bot, message, View.buildDealElements(dealsData, lang));
         });
       } else {
         convo.say(invalid_response);
@@ -266,16 +291,16 @@ controller.hears("aaa", 'message_received', function(bot, message) {
 });
 
 // Main menu.
-controller.hears(["menu","תפריט"], 'message_received', function(bot, message) {
-  View.showLanguageMenu(bot, message);
+controller.hears(Sentences.user_wants_main_menu, 'message_received', function(bot, message) {
+  View.showMainMenu(bot, message);
 });
 
 // Similar string.
-controller.hears(["(.*)"], 'message_received', function(bot, message) {
-    if(typeof message.text === "string" && message.text.length > 0) {
-      View.showDealsByStringSimilarity(bot, message, "", message.text);
-    }
-});
+// controller.hears(["(.*)"], 'message_received', function(bot, message) {
+//     if(typeof message.text === "string" && message.text.length > 0) {
+//       View.showDealsByStringSimilarity(bot, message, "", message.text);
+//     }
+// });
 
 // Not sure what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {

@@ -64,7 +64,8 @@ api.getDataByDistanceFromUser = function(dataToUse, userLat, userLon, callback) 
 }
 
 api.filterDataByCategory = function(dataToFilter, category) {
-	return dataToFilter.filter(function(obj) {return (obj.category === category)});
+	if (category === "everything") return dataToFilter;
+	else return dataToFilter.filter(function(obj) {return (obj.category === category)});
 }
 
 api.filterDataByTime = function(dataToFilter, when) {

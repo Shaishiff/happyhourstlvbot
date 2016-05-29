@@ -5,6 +5,9 @@ var Consts = require('./consts');
 var facebookHelper = {};
 
 facebookHelper.setWelcomeMessageStructuredMessage = function(elements) {
+  if (!(elements instanceof Array)) {
+    elements = [elements];
+  }
   Request({
     url: Consts.FACEBOOK_WELCOME_MSG_URL,
     method: 'POST',

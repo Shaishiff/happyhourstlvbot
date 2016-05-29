@@ -6,22 +6,39 @@ var MongoHelper = require('./mongoHelper');
 var HttpHelper = require('./httpHelper');
 var utils = {};
 
+utils.getSentence = function(sentenceKey, lang, gender) {
+  if (!Sentences[sentenceKey]) return "";
+  if (typeof lang === "undefined" || lang === "") {
+    lang = "he";
+    if (typeof gender === "undefined" || gender === "") gender = "male";
+    return Sentences[sentenceKey][lang][gender];
+  } else {
+    return Sentences[sentenceKey][lang];
+  }
+}
+
 utils.getLatLonFromAddress = function(address, callback) {
   console.log("Finding lat and lon for address: " + address);
   var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address;
   url += "&key=" + process.env.GOOGLE_API_KEY;
-  httpHelper.httpGetJson(url, function(jsonResponse) {
+  HttpHelper.httpGetJson(url, function(jsonResponse) {
+    console.log("" + jsonResponse);
+    console.log("" + jsonResponse.status);
+    console.log("" + jsonResponse.results);
+    console.log("" + jsonResponse.results.length);
+    console.log("" + jsonResponse.results[0].geometry);
+    console.log("" + jsonResponse.results[0].geometry.location);
     if (jsonResponse &&
       jsonResponse.status &&
       jsonResponse.status == "OK" &&
       jsonResponse.results &&
       jsonResponse.results.length > 0 &&
-      jsonResponse.results[0].geomatry &&
-      jsonResponse.results[0].geomatry.location &&
-      jsonResponse.results[0].geomatry.location.lat &&
-      jsonResponse.results[0].geomatry.location.lng) {
-      var lat = sonResponse.results[0].geomatry.location.lat;
-      var lng = jsonResponse.results[0].geomatry.location.lng;
+      jsonResponse.results[0].geometry &&
+      jsonResponse.results[0].geometry.location &&
+      jsonResponse.results[0].geometry.location.lat &&
+      jsonResponse.results[0].geometry.location.lng) {
+      var lat = jsonResponse.results[0].geometry.location.lat;
+      var lng = jsonResponse.results[0].geometry.location.lng;
       console.log("Found lat and long from address: " + lat + "," + lng)
       callback(lat, lng);
     } else {
@@ -31,7 +48,7 @@ utils.getLatLonFromAddress = function(address, callback) {
 }
 
 utils.isUserRequestedToStop = function(userText) {
-  var bStop = (Sentences.indexOf(userText) != -1);
+  var bStop = (Sentences.user_requested_to_stop.indexOf(userText) != -1);
   if (bStop) {
     console.log("User requested to stop: " + userText);
   }
@@ -48,10 +65,11 @@ utils.isNormalIntegerFromMinToMax = function(str, min, max) {
 
 utils.getTimeDbNameFromText = function(userText) {
   if (utils.isNormalIntegerFromMinToMax(userText, 1, Consts.TIMES.length)) {
-    return Consts.TIMES.length[parseInt(userText) - 1].db_name;
+    return Consts.TIMES[parseInt(userText) - 1].db_name;
   }
   for(var i = 0; i < Consts.TIMES.length; i++) {
     var time = Consts.TIMES[i];
+    console.log("getTimeDbNameFromText: " + JSON.stringify(time));
     if (time.title_en == userText ||
       time.title == userText ||
       time.payload == userText) {
@@ -59,12 +77,12 @@ utils.getTimeDbNameFromText = function(userText) {
     }
   }
   console.log("getTimeDbNameFromText - could not find user text: " + userText);
-  return "";
+  return Consts.INVALID_NUM;
 }
 
 utils.getCategoryDbNameFromText = function(userText) {
   if (utils.isNormalIntegerFromMinToMax(userText, 1, Consts.CATEGORIES.length)) {
-    return Consts.CATEGORIES.length[parseInt(userText) - 1].db_name;
+    return Consts.CATEGORIES[parseInt(userText) - 1].db_name;
   }
   for(var i = 0; i < Consts.CATEGORIES.length; i++) {
     var cat = Consts.CATEGORIES[i];
