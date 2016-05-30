@@ -7,6 +7,13 @@ var sentences = {
             female: "תפריט ראשי"
         }
     },
+    no_deals_found: {
+        en: "No deals found :(",
+        he: {
+            male: "לא נמצאו עסקאות :(",
+            female: "לא נמצאו עסקאות :("
+        }
+    },
     type_menu_to_see_menu: {
         en: "Type \"menu\" to see the main menu again.",
         he: {
@@ -24,7 +31,7 @@ var sentences = {
     invalid_response: {
         en: "Sorry but that is not a valid response. If you want to quit the guide just tell me: \"stop\", \"exit\" or just send: \"0\"",
         he: {
-            male: "מצטער אבל זאת לא בחירה תקינה. אם אתה רוצה לצאת מהמדריך פשוט הקליד \"עצור\", \"יציאה\" או שלח את הספרה \"0\".",
+            male: "מצטער אבל זאת לא בחירה תקינה. אם אתה רוצה לצאת מהמדריך פשוט הקלד \"עצור\", \"יציאה\" או שלח את הספרה \"0\".",
             female: "מצטער אבל זאת לא בחירה תקינה. אם את רוצה לצאת מהמדריך פשוט הקלידי \"עצור\", \"יציאה\" או שלחי את הספרה \"0\"."
         }
     },

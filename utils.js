@@ -8,8 +8,8 @@ var userInfoCache = {};
 var utils = {};
 
 utils.getUserLang = function(userId) {
-  if (userInfoCache[userId] && UserInfoCache[userId].lang) {
-    return UserInfoCache[userId].lang;
+  if (userInfoCache[userId] && userInfoCache[userId].lang) {
+    return userInfoCache[userId].lang;
   } else {
     return "";
   }
@@ -81,6 +81,7 @@ utils.isNormalIntegerFromMinToMax = function(str, min, max) {
 }
 
 utils.getTimeDbNameFromText = function(userText) {
+  console.log("getTimeDbNameFromText - " + userText);
   if (utils.isNormalIntegerFromMinToMax(userText, 1, Consts.TIMES.length)) {
     return Consts.TIMES[parseInt(userText) - 1].db_name;
   }
@@ -98,6 +99,7 @@ utils.getTimeDbNameFromText = function(userText) {
 }
 
 utils.getCategoryDbNameFromText = function(userText) {
+  console.log("getCategoryDbNameFromText - " + userText);
   if (utils.isNormalIntegerFromMinToMax(userText, 1, Consts.CATEGORIES.length)) {
     return Consts.CATEGORIES[parseInt(userText) - 1].db_name;
   }
@@ -192,6 +194,21 @@ utils.getUserInfo = function(userId, callback) {
 
 utils.randomFromArray = function(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+utils.shuffleArray = function(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
 }
 
 module.exports = utils;

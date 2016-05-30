@@ -56,6 +56,7 @@ api.getDataByDistanceFromUser = function(dataToUse, userLat, userLon, callback) 
 	var sortedData = (dataToUse ? dataToUse : data);
 	for(var i = 0; i < sortedData.length; i++) {
 		sortedData[i].distance = Math.sqrt(Math.pow(sortedData[i].lat - userLat, 2) + Math.pow(sortedData[i].lon - userLon, 2), 2);
+		console.log("getDataByDistanceFromUser - distance from " + sortedData[i].headline_en + ": " + sortedData[i].distance);
 	}
 	callback(sortedData.sort(function(a, b) {
 		if(a.distance == b.distance) return 0;
@@ -96,7 +97,13 @@ api.getData = function(lang, category, when, lat, lon, callback) {
 	console.log("After category filter processedData.length: " + processedData.length);
 	processedData = api.filterDataByTime(processedData, when);
 	console.log("After time filter processedData.length: " + processedData.length);
-	api.getDataByDistanceFromUser(processedData, lat, lon, callback);
+	if (lat != 0 && lon != 0) {
+		console.log("Sorting according to distance from user");
+		api.getDataByDistanceFromUser(processedData, lat, lon, callback);
+	} else {
+		console.log("Sorting randomly");
+		callback(Utils.shuffleArray(processedData));
+	}
 }
 
 api.collectData = function() {

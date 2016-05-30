@@ -121,9 +121,11 @@ controller.hears(["test"], 'message_received', function(bot, message) {
 
 // Main menu.
 controller.hears(Sentences.user_wants_main_menu_he, 'message_received', function(bot, message) {
+  Utils.setUserLang(message.user, "");
   View.showMainMenu(bot, message, "");
 });
 controller.hears(Sentences.user_wants_main_menu_en, 'message_received', function(bot, message) {
+  Utils.setUserLang(message.user, "en");
   View.showMainMenu(bot, message, "en");
 });
 
@@ -136,14 +138,14 @@ controller.hears(Sentences.user_wants_main_menu_en, 'message_received', function
 
 // Not sure what the users wants. Final fallback.
 controller.on('message_received', function(bot, message) {
-  //console.log("Reached unknown user message");
-  //if (message.text) notSureWhatUserWants(bot, message);
-  //return false;
+  console.log("Reached unknown user message");
+  if (message.text) notSureWhatUserWants(bot, message);
+  return false;
 });
 
 function notSureWhatUserWants(bot, message) {
   console.log("No idea what the user wants...");
-  bot.reply(message, Utils.randomFromArray(Sentences.bot_not_sure_what_user_means));
+  bot.reply(message, Utils.getSentence("type_menu_to_see_menu", Utils.getUserLang(message.user)));
   AnalyticsHelper.sendUserMsgToAnalytics("unknown_msgs", message.text);
 }
 

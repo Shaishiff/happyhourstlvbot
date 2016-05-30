@@ -85,4 +85,25 @@ facebookHelper.sendMultipleGenericTemplates = function(bot, message, arr, index)
   });
 }
 
+facebookHelper.buildButtonTemplate = function(text, elements) {
+  return {
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'button',
+        text: text,
+        buttons: elements
+      }
+    }
+  }
+}
+
+facebookHelper.sendButtonTemplate = function(bot, message, text, elements, callback) {
+  if (!(elements instanceof Array)) {
+    elements = [elements];
+  }
+  bot.reply(message, facebookHelper.buildButtonTemplate(text, elements), callback);
+}
+
+
 module.exports = facebookHelper;

@@ -118,7 +118,7 @@ view.buildDealElement = function(dealData, lang) {
     element.buttons.push({
       type: 'web_url',
       title: (lang.length === 0 ? 'פתח במפה' : "Show in map"),
-      url: "http://maps.google.com/?q=" + dealData["address" + lang]
+      url: "http://maps.google.com/?q=" + dealData["address" + (lang === "en" ? "_en" : "")] + (lang === "en" ? "+Tel+Aviv+Israel" : "+תל+אביב+ישראל")
       // SHAISH: This will show the location with lat+lon instead of address...
       // I think it's not as nice as using the address but will probably be more accurate.
       //url: "http://maps.google.com/maps?q=" + dealData.lat + "," + dealData.lon
@@ -128,7 +128,7 @@ view.buildDealElement = function(dealData, lang) {
 }
 
 view.buildDealElements = function(dealsData, lang) {
-  console.log("buildDealElements started");
+  console.log("buildDealElements started with number of deals: " + dealsData.length);
   var elements = [];
   var numOfElements = Math.min(dealsData.length, 10);
   for(var i = 0; i < numOfElements; i++) {
@@ -200,6 +200,27 @@ view.buildTimesMenu = function(lang) {
   return elements;
 }
 
+view.buildStartMainMenu = function(lang) {
+  return [{
+    title: (lang === "en" ? "Menu" : "תפריט"),
+    type: "postback",
+    payload: "showMainMenu-" + (lang === "en" ? "en" : "")
+  }];
+}
+
+view.showStartMainMenu = function(bot, message, lang, gender, callback) {
+  FacebookHelper.sendButtonTemplate(bot, message, Utils.getSentence("type_menu_to_see_menu", lang, gender), view.buildStartMainMenu(lang), callback);
+}
+
+view.buildBasedOnLocationQuestion = function(lang, gender) {
+  return FacebookHelper.buildButtonTemplate(Utils.getSentence("do_you_want_based_on_your_location", lang, gender) + "\n" + Utils.getSentence("please_enter_your_location", lang, gender),
+  [{
+    title: (lang === "en" ? "No" : "לא"),
+    type: "postback",
+    payload: (lang === "en" ? "no" : "לא")
+  }]);
+}
+
 view.showGuideMenu = function(bot, message, lang) {
   console.log("showGuideMenu - " + JSON.stringify(message));
   var gender = "";
@@ -208,17 +229,22 @@ view.showGuideMenu = function(bot, message, lang) {
   var lat = Consts.INVALID_NUM;
   var lon = Consts.INVALID_NUM;
   var invalid_response = Utils.getSentence("invalid_response", lang, gender);
-
+  var stopping_the_guide = Utils.getSentence("stopping_the_guide", lang, gender) + "\n" + Utils.getSentence("type_menu_to_see_menu", lang);
+  // DEBUG
+  console.log("stopping_the_guide: " + stopping_the_guide);
+  //
   var askCategory = function(response, convo) {
+    console.log("askCategory started");
     convo.say(Utils.getSentence("please_choose_category", lang, gender));
     convo.ask(FacebookHelper.buildGenericTemplate(view.buildCategoryMenu(lang)), function(response, convo) {
       if (Utils.isUserRequestedToStop(response.text)) {
-        convo.say(Utils.getSentence("stopping_the_guide", lang, gender) + "\n" + Utils.getSentence("type_menu_to_see_menu", lang));
-        convo.stop();
+        convo.say(stopping_the_guide);
+        convo.next();
         return;
       }
       if (response.text) {
         category = Utils.getCategoryDbNameFromText(response.text);
+        console.log("askCategory - user selected category: " + category);
       }
       if (category.length > 0) {
         askWhen(response, convo);
@@ -231,14 +257,17 @@ view.showGuideMenu = function(bot, message, lang) {
   }
 
   var askWhen = function(response, convo) {
+    console.log("askWhen started");
     convo.say(Utils.getSentence("please_choose_the_time", lang, gender));
-    convo.ask(FacebookHelper.buildGenericTemplate(View.buildTimesMenu(lang)), function(response, convo) {
+    convo.ask(FacebookHelper.buildGenericTemplate(view.buildTimesMenu(lang)), function(response, convo) {
       if (Utils.isUserRequestedToStop(response.text)) {
-        convo.stop();
+        convo.say(stopping_the_guide);
+        convo.next();
         return;
       }
       if (response.text) {
         when = Utils.getTimeDbNameFromText(response.text);
+        console.log("askWhen - user selected time: " + when);
       }
       if (when != Consts.INVALID_NUM) {
         askWhere(response, convo);
@@ -251,10 +280,12 @@ view.showGuideMenu = function(bot, message, lang) {
   }
 
   var askWhere = function(response, convo) {
-    convo.say(Utils.getSentence("do_you_want_based_on_your_location", lang, gender));
-    convo.ask(convo.say(Utils.getSentence("please_enter_your_location", lang, gender)), function(response, convo) {
+    console.log("askWhere started");
+    //convo.say(Utils.getSentence("do_you_want_based_on_your_location", lang, gender));
+    convo.ask(view.buildBasedOnLocationQuestion(lang, gender), function(response, convo) {
       if (Utils.isUserRequestedToStop(response.text)) {
-          convo.stop();
+          convo.say(stopping_the_guide);
+          convo.next();
           return;
       }
       if (response.text && response.text.length > 0) {
@@ -270,11 +301,12 @@ view.showGuideMenu = function(bot, message, lang) {
               lon = lonFromGoogle;
             } else {
               console.error("Could not find lat and lon from Google");
+              // TODO add translations:
+              convo.say("Could not find lat and lon from Google");
               lat = 0;
               lon = 0;
             }
-            showDeals();
-            convo.next();
+            showDeals(convo);
           });
           return;
         }
@@ -283,12 +315,12 @@ view.showGuideMenu = function(bot, message, lang) {
         lon = response.attachments[0].payload.coordinates.long;
       }
       if (lat >= 0 && lon >= 0) {
-        showDeals();
+        showDeals(convo);
       } else {
         convo.say(invalid_response);
         convo.repeat();
+        convo.next();
       }
-      convo.next();
     });
   }
 
@@ -301,15 +333,22 @@ view.showGuideMenu = function(bot, message, lang) {
     response.attachments[0].payload.coordinates.long);
   }
 
-  var showDeals = function() {
+  var showDeals = function(convo) {
     Api.getData(lang, category, when, lat, lon, function(dealsData) {
       if (dealsData.length === 0) {
-        convo.say("No deals found :(");
+        convo.say(Utils.getSentence("no_deals_found", lang, gender));
+        convo.next();
       } else {
-        FacebookHelper.sendGenericTemplate(bot, message, View.buildDealElements(dealsData, lang));
+        FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang), function() {
+          //convo.say(Utils.getSentence("type_menu_to_see_menu", lang, gender));
+          view.showStartMainMenu(bot, message, lang, gender, function() {
+            convo.next();
+          });
+        });
       }
     });
   }
+
   bot.startConversation(message, askCategory);
 }
 
