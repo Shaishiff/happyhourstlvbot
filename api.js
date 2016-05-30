@@ -18,7 +18,7 @@ api.getDataByObjectId = function(objectId, callback) {
 
 api.getDataByHeadline = function(userText, lang, callback) {
 	for(var i = 0; i < data.length; i++) {
-		var dealName = data[i]["headline" + lang];
+		var dealName = data[i]["headline" + (lang === "en" ? "_en" : "")];
 		// Remove english chars if we're in hebrew mode.
 		if (lang.length === 0) {
 			dealName = dealName.replace(/[A-z]/g, "").trim();
@@ -34,7 +34,7 @@ api.getDataByHeadline = function(userText, lang, callback) {
 api.getDataByStringSimilarity = function(userText, lang, callback) {
 	var sortedData = data;
 	for(var i = 0; i < sortedData.length; i++) {
-		var dealName = sortedData[i]["headline" + lang];
+		var dealName = sortedData[i]["headline" + (lang === "en" ? "_en" : "")];
 		// Remove english chars if we're in hebrew mode.
 		if (lang.length === 0) {
 			dealName = dealName.replace(/[A-z]/g, "").trim();
