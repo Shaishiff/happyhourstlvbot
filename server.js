@@ -31,7 +31,6 @@ var webServerPort = process.env.PORT || 8080;
 controller.setupWebserver(webServerPort, function(err, webserver) {
   controller.createWebhookEndpoints(controller.webserver, bot, function() {
     webserver.get('/health', function(req, res) {
-      console.log(req.query);
       res.send('OK');
     });
   });
@@ -65,7 +64,9 @@ controller.middleware.receive.use(function(bot, message, next) {
     AnalyticsHelper.sendUserMsgToAnalytics(message.fullNameWithId, message.text);
     var bNext = true;
     if (message.attachments) {
-      bNext = handleUserAttachment(bot, message, "");
+      // SHAISH: For now we'll disable this. If we want to enable it we will need
+      // to make sure it doesn't conflict with the guide flow.
+      //bNext = handleUserAttachment(bot, message, "");
     }
     if (bNext) {
       next();
@@ -90,29 +91,29 @@ controller.middleware.send.use(function(bot, message, next) {
 });
 
 // User clicked the send-to-messenger plugin.
-controller.on('facebook_optin', function(bot, message) {
-  bot.reply(message, 'Hey, welcome !');
-});
+// controller.on('facebook_optin', function(bot, message) {
+//   bot.reply(message, 'Hey, welcome !');
+// });
 
 // User said hello.
-controller.hears(Sentences.user_welcoming_messages, 'message_received', function(bot, message) {
-  bot.reply(message, Utils.randomFromArray(Sentences.bot_welcoming_messages));
-});
+// controller.hears(Sentences.user_welcoming_messages, 'message_received', function(bot, message) {
+//   bot.reply(message, Utils.randomFromArray(Sentences.bot_welcoming_messages));
+// });
 
 // User said thanks.
-controller.hears(Sentences.user_says_thanks, 'message_received', function(bot, message) {
-  bot.reply(message, Utils.randomFromArray(Sentences.bot_says_you_are_welcome));
-});
+// controller.hears(Sentences.user_says_thanks, 'message_received', function(bot, message) {
+//   bot.reply(message, Utils.randomFromArray(Sentences.bot_says_you_are_welcome));
+// });
 
 // User wants help.
-controller.hears(Sentences.help_me, 'message_received', function(bot, message) {
-  bot.reply(message, Sentences.help_message);
-});
+// controller.hears(Sentences.help_me, 'message_received', function(bot, message) {
+//   bot.reply(message, Sentences.help_message);
+// });
 
 // User wants help.
-controller.hears(["test"], 'message_received', function(bot, message) {
-  bot.reply(message, "testing 123");
-});
+// controller.hears(["test"], 'message_received', function(bot, message) {
+//   bot.reply(message, "testing 123");
+// });
 
 // Test location.
 // controller.hears(["test location"], 'message_received', function(bot, message) {
@@ -121,10 +122,14 @@ controller.hears(["test"], 'message_received', function(bot, message) {
 
 // Main menu.
 controller.hears(Sentences.user_wants_main_menu_he, 'message_received', function(bot, message) {
+  if (PostBackHelper.isPostBack(message)) return;
+  console.log("user requested hebrew menu: " + message.text);
   Utils.setUserLang(message.user, "");
   View.showMainMenu(bot, message, "");
 });
 controller.hears(Sentences.user_wants_main_menu_en, 'message_received', function(bot, message) {
+  if (PostBackHelper.isPostBack(message)) return;
+  console.log("user requested english menu: " + message.text);
   Utils.setUserLang(message.user, "en");
   View.showMainMenu(bot, message, "en");
 });
@@ -144,8 +149,10 @@ controller.on('message_received', function(bot, message) {
 });
 
 function notSureWhatUserWants(bot, message) {
+  if (PostBackHelper.isPostBack(message)) return;
   console.log("No idea what the user wants...");
-  bot.reply(message, Utils.getSentence("type_menu_to_see_menu", Utils.getUserLang(message.user)));
+  //bot.reply(message, Utils.getSentence("type_menu_to_see_menu", Utils.getUserLang(message.user)));
+  View.showStartMainMenu(bot, message, Utils.getUserLang(message.user), "");
   AnalyticsHelper.sendUserMsgToAnalytics("unknown_msgs", message.text);
 }
 

@@ -15,10 +15,10 @@ var sentences = {
         }
     },
     type_menu_to_see_menu: {
-        en: "Type \"menu\" to see the main menu again.",
+        en: "Type \"menu\" or click the button to see the main menu.",
         he: {
-            male: "הקלד \"תפריט\" על מנת לראות את התפריט הראשי שוב.",
-            female: "הקילדי \"תפריט\" על מנת לראות את התפריט הראשי שוב."
+            male: "הקלד \"תפריט\" או הקלק על הכפתור על מנת לראות את התפריט הראשי.",
+            female: "הקילדי \"תפריט\" או הקליקי על הכפתור על מנת לראות את התפריט הראשי."
         }
     },
     switching_to_language: {
@@ -36,10 +36,10 @@ var sentences = {
         }
     },
     type_name_of_business: {
-        en: "Please type the name of the business to see its happy hour.",
+        en: "Please type the name of the business to see its happy hour:",
         he: {
-            male: "בבקשה הקלד את שם המקום אותו אתה מחפש.",
-            female: "בבקשה הקלידי את שם המקום אותו את מחפשת."
+            male: "בבקשה הקלד את שם המקום אותו אתה מחפש:",
+            female: "בבקשה הקלידי את שם המקום אותו את מחפשת:"
         }
     },
     please_choose_category: {
@@ -64,10 +64,10 @@ var sentences = {
         }
     },
     please_enter_your_location: {
-        en: "If so, please enter street name and number or you can just send your GPS location.\nSend \"no\" if location doesn't matter to you.",
+        en: "If so, please enter street name and number or you can just send your GPS location.\nType \"no\" or click the button if the location doesn't matter to you.",
         he: {
-            male: "אם כן, הכנס את שם הרחוב ומספר הבית או שלח את מיקום ה-גי.פי.אס.\nכתוב \"לא\" אם המיקום לא משנה לך.",
-            female: "אם כן, הכנסי את שם הרחוב ומספר הבית או שלחי את מיקום ה-גי.פי.אס.\nכתבי \"לא\" אם המיקום לא משנה לך."
+            male: "אם כן, הכנס את שם הרחוב ומספר הבית או שלח את מיקום ה-גי.פי.אס שלך.\nכתוב \"לא\" או הקלק על הכפתור אם המיקום לא משנה לך.",
+            female: "אם כן, הכנסי את שם הרחוב ומספר הבית או שלחי את מיקום ה-גי.פי.אס שלך.\nכתבי \"לא\" או הקליקי על הכפתור אם המיקום לא משנה לך."
         }
     },
     cant_find_exact_match_here_are_best_options: {
@@ -93,7 +93,7 @@ var sentences = {
     ],
     user_wants_main_menu_en: [
         "99",
-        "menu",
+        "^menu", // SHAISH: Important to check for "^menu" and not just "menu" otherwise it will mess things up.
         "start over"
     ],
     user_wants_main_menu_he: [

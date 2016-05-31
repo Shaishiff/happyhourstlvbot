@@ -16,4 +16,16 @@ postBackHelper.handlePostBack = function(bot, message, payload) {
 	}
 }
 
+postBackHelper.isPostBack = function(message) {
+	if (typeof message.text !== "string") return false;
+	var payload = message.text;
+	if(payload.indexOf("-") === -1 ) payload += "-";
+	var postBackId = payload.split("-")[0];
+	if (typeof View[postBackId] === "function") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 module.exports = postBackHelper;

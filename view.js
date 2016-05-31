@@ -34,13 +34,15 @@ view.buildMainMenu = function(lang) {
 }
 
 view.showSearchMenu = function(bot, message, lang) {
+  var gender = "";
   console.log("showSearchMenu - " + lang);
   bot.startConversation(message, function(err,convo) {
     convo.ask(Utils.getSentence("type_name_of_business", lang), function(response, convo) {
       if(typeof response.text === "string" && response.text.length > 0) {
         view.showDealsByStringSimilarity(bot, response, lang, response.text, function() {
-          convo.say(Utils.getSentence("type_menu_to_see_menu", lang));
-          convo.next();
+          view.showStartMainMenu(bot, message, lang, gender, function() {
+            convo.next();
+          });
         });
       } else {
         convo.say(Utils.getSentence("invalid_response", lang));
@@ -103,21 +105,21 @@ view.buildDealElement = function(dealData, lang) {
   if (dealData.link) {
     element.buttons.push({
       type: 'web_url',
-      title: (lang.length === 0 ? 'לאתר' : "Web site"),
+      title: (lang.length === 0 ? 'אתר' : "Site"),
       url: dealData.link
     });
   }
   if (dealData.phone) {
     element.buttons.push({
       type: 'postback',
-      title: (lang.length === 0 ? 'מספר טלפון' : "Phone number"),
+      title: (lang.length === 0 ? 'טלפון' : "Number"),
       payload: 'showDealNumber-' + dealData.object_id + "," + lang
     });
   }
   if (dealData.lat && dealData.lon && dealData.address) {
     element.buttons.push({
       type: 'web_url',
-      title: (lang.length === 0 ? 'פתח במפה' : "Show in map"),
+      title: (lang.length === 0 ? 'מפה' : "Map"),
       url: "http://maps.google.com/?q=" + dealData["address" + (lang === "en" ? "_en" : "")] + (lang === "en" ? "+Tel+Aviv+Israel" : "+תל+אביב+ישראל")
       // SHAISH: This will show the location with lat+lon instead of address...
       // I think it's not as nice as using the address but will probably be more accurate.
@@ -200,7 +202,7 @@ view.buildTimesMenu = function(lang) {
   return elements;
 }
 
-view.buildStartMainMenu = function(lang) {
+view.buildStartMainMenuButton = function(lang) {
   return [{
     title: (lang === "en" ? "Menu" : "תפריט"),
     type: "postback",
@@ -208,8 +210,12 @@ view.buildStartMainMenu = function(lang) {
   }];
 }
 
+view.buildStartMainMenu = function(lang, gender) {
+  return FacebookHelper.buildButtonTemplate(Utils.getSentence("type_menu_to_see_menu", lang, gender), view.buildStartMainMenuButton(lang));
+}
+
 view.showStartMainMenu = function(bot, message, lang, gender, callback) {
-  FacebookHelper.sendButtonTemplate(bot, message, Utils.getSentence("type_menu_to_see_menu", lang, gender), view.buildStartMainMenu(lang), callback);
+  FacebookHelper.sendButtonTemplate(bot, message, Utils.getSentence("type_menu_to_see_menu", lang, gender), view.buildStartMainMenuButton(lang), callback);
 }
 
 view.buildBasedOnLocationQuestion = function(lang, gender) {
@@ -229,17 +235,20 @@ view.showGuideMenu = function(bot, message, lang) {
   var lat = Consts.INVALID_NUM;
   var lon = Consts.INVALID_NUM;
   var invalid_response = Utils.getSentence("invalid_response", lang, gender);
-  var stopping_the_guide = Utils.getSentence("stopping_the_guide", lang, gender) + "\n" + Utils.getSentence("type_menu_to_see_menu", lang);
-  // DEBUG
-  console.log("stopping_the_guide: " + stopping_the_guide);
-  //
+  var stopping_the_guide = Utils.getSentence("stopping_the_guide", lang, gender);
+
+  var stopTheGuide = function(convo) {
+    convo.say(stopping_the_guide);
+    convo.say(view.buildStartMainMenu(lang, gender));
+    convo.next();
+  }
+
   var askCategory = function(response, convo) {
     console.log("askCategory started");
     convo.say(Utils.getSentence("please_choose_category", lang, gender));
     convo.ask(FacebookHelper.buildGenericTemplate(view.buildCategoryMenu(lang)), function(response, convo) {
       if (Utils.isUserRequestedToStop(response.text)) {
-        convo.say(stopping_the_guide);
-        convo.next();
+        stopTheGuide(convo);
         return;
       }
       if (response.text) {
@@ -261,8 +270,7 @@ view.showGuideMenu = function(bot, message, lang) {
     convo.say(Utils.getSentence("please_choose_the_time", lang, gender));
     convo.ask(FacebookHelper.buildGenericTemplate(view.buildTimesMenu(lang)), function(response, convo) {
       if (Utils.isUserRequestedToStop(response.text)) {
-        convo.say(stopping_the_guide);
-        convo.next();
+        stopTheGuide(convo);
         return;
       }
       if (response.text) {
@@ -284,8 +292,7 @@ view.showGuideMenu = function(bot, message, lang) {
     //convo.say(Utils.getSentence("do_you_want_based_on_your_location", lang, gender));
     convo.ask(view.buildBasedOnLocationQuestion(lang, gender), function(response, convo) {
       if (Utils.isUserRequestedToStop(response.text)) {
-          convo.say(stopping_the_guide);
-          convo.next();
+          stopTheGuide(convo);
           return;
       }
       if (response.text && response.text.length > 0) {
@@ -339,6 +346,7 @@ view.showGuideMenu = function(bot, message, lang) {
         convo.say(Utils.getSentence("no_deals_found", lang, gender));
         convo.next();
       } else {
+        convo.next();
         FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang), function() {
           //convo.say(Utils.getSentence("type_menu_to_see_menu", lang, gender));
           view.showStartMainMenu(bot, message, lang, gender, function() {
