@@ -39,11 +39,11 @@ utils.getLatLonFromAddress = function(address, callback) {
   url += "&key=" + process.env.GOOGLE_API_KEY;
   HttpHelper.httpGetJson(url, function(jsonResponse) {
     console.log("" + jsonResponse);
-    console.log("" + jsonResponse.status);
-    console.log("" + jsonResponse.results);
-    console.log("" + jsonResponse.results.length);
-    console.log("" + jsonResponse.results[0].geometry);
-    console.log("" + jsonResponse.results[0].geometry.location);
+    // console.log("" + jsonResponse.status);
+    // console.log("" + jsonResponse.results);
+    // console.log("" + jsonResponse.results.length);
+    // console.log("" + jsonResponse.results[0].geometry);
+    // console.log("" + jsonResponse.results[0].geometry.location);
     if (jsonResponse &&
       jsonResponse.status &&
       jsonResponse.status == "OK" &&
