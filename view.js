@@ -308,7 +308,7 @@ view.showGuideMenu = function(bot, message, lang) {
               lon = lonFromGoogle;
             } else {
               console.error("Could not find lat and lon from Google");
-              convo.say(Utils.getSentence("no_deals_found", lang, gender));
+              convo.say(Utils.getSentence("no_lat_lon_from_google", lang, gender));
               lat = 0;
               lon = 0;
             }
