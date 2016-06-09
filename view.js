@@ -301,7 +301,7 @@ view.showGuideMenu = function(bot, message, lang) {
           lat = 0;
           lon = 0;
         } else {
-          Utils.getLatLonFromAddress(response.text, function(latFromGoogle, lonFromGoogle) {
+          Utils.getLatLonFromAddress(response.text, lang, function(latFromGoogle, lonFromGoogle) {
             if (latFromGoogle && lonFromGoogle) {
               console.log("Found lat and lon from Google");
               lat = latFromGoogle;
