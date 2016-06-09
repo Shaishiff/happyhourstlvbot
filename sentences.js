@@ -84,6 +84,13 @@ var sentences = {
             female: "עוצר את המדריך."
         }
     },
+    no_lat_lon_from_google: {
+        en: "Could not find lat and lon from Google.",
+        he: {
+            male: "כתובת לא נמצאה.",
+            female: "כתובת לא נמצאה."
+        }
+    },
     user_requested_to_stop: [
         "0",
         "stop",

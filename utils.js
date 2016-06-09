@@ -37,6 +37,7 @@ utils.getLatLonFromAddress = function(address, callback) {
   console.log("Finding lat and lon for address: " + address);
   var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address;
   url += "&key=" + process.env.GOOGLE_API_KEY;
+  console.log(url);
   HttpHelper.httpGetJson(url, function(jsonResponse) {
     console.log("" + jsonResponse);
     // console.log("" + jsonResponse.status);
