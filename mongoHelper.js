@@ -23,7 +23,6 @@ var insertIntoMongo = function(docToInsert, collection, callback) {
 	});
 }
 
-
 var upsertIntoMongo = function(docToFind, docToUpsert, collection, callback) {
 	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
 		if(errConnect) {
