@@ -9,7 +9,7 @@ var consts = {
 	MONGO_DB_URL: "mongodb://" + process.env.MONGO_DB_USER + ":" + process.env.MONGO_DB_USER + "@" + process.env.MONGO_DB_HOST + ":" + process.env.MONGO_DB_PORT + "/" + process.env.MONGO_DB_NAME,
 	MONGO_DB_USER_INFO_COL: "user_info",
 	ANALYTICS_API: "http://api.bot-metrics.com/v1/messages",
-	HAPPY_HOURS_DOMAIN: "http://happyhourstlv.com",
+	HAPPY_HOURS_DOMAIN: "https://happyhourstlv.com",
 	DEALS_IN_CAROUSEL: 5,
 	CATEGORIES: [{
 		title_en: "Everything",
