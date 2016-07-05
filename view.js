@@ -12,7 +12,7 @@ view.buildMainMenu = function(lang) {
   console.log("buildMainMenu - " + lang);
   var element = {}
   element.title = Utils.getSentence("lets_start", lang);
-  element.image_url = "http://www.happyhourstlv.com/assets/cover_long.jpg";
+  element.image_url = "https://www.happyhourstlv.com/assets/cover_long.jpg";
   element.buttons = [];
   element.buttons.push({
     type: "postback",
@@ -120,7 +120,7 @@ view.buildDealElement = function(dealData, lang) {
     element.buttons.push({
       type: 'web_url',
       title: (lang.length === 0 ? 'מפה' : "Map"),
-      url: "http://maps.google.com/?q=" + dealData["address" + (lang === "en" ? "_en" : "")] + (lang === "en" ? "+Tel+Aviv+Israel" : "+תל+אביב+ישראל")
+      url: "https://maps.google.com/?q=" + dealData["address" + (lang === "en" ? "_en" : "")] + (lang === "en" ? "+Tel+Aviv+Israel" : "+תל+אביב+ישראל")
       // SHAISH: This will show the location with lat+lon instead of address...
       // I think it's not as nice as using the address but will probably be more accurate.
       //url: "http://maps.google.com/maps?q=" + dealData.lat + "," + dealData.lon
