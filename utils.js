@@ -188,6 +188,7 @@ utils.getUserInfo = function(userId, callback) {
         } else {
           console.log("getUserInfo - Got the user info from the facebook API.");
           fbUserInfo.user_id = userId;
+          userInfoCache[userId] = {};
           userInfoCache[userId].info = fbUserInfo;
           MongoHelper.insertUserInfoToMongo(fbUserInfo, callback);
         }
