@@ -71,10 +71,10 @@ var sentences = {
         }
     },
     cant_find_exact_match_here_are_best_options: {
-        en: "Could not find an exact match, here are the closest options...",
+        en: "Could not find an exact match, here are the most resembling options...",
         he: {
-            male: "לא נמצאה התאמה מדויקת, הנה האופציות הקרובות ביותר...",
-            female: "לא נמצאה התאמה מדויקת, הנה האופציות הקרובות ביותר..."
+            male: "לא נמצאה התאמה מדויקת, הנה האופציות הדומות ביותר...",
+            female: "לא נמצאה התאמה מדויקת, הנה האופציות הדומות ביותר..."
         }
     },
     stopping_the_guide: {

@@ -88,7 +88,7 @@ utils.getAddressFromLatLon = function(lat, lon, lang, callback) {
       jsonResponse.results.length > 0 &&
       jsonResponse.results[0].formatted_address) {
       var address = jsonResponse.results[0].formatted_address;
-      console.log("Found address: " + address)
+      //console.log("Found address: " + address)
       callback(address);
     } else {
       callback(null);

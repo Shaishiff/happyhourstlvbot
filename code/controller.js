@@ -40,7 +40,6 @@ controller.init = function(botkit, callback) {
 	// });
 
 	function handleUserAttachment(bot, message) {
-		console.log("handleUserAttachment started");
 		if (message.attachments.length === 1 &&
 			message.attachments[0].payload &&
 			message.attachments[0].payload.coordinates &&

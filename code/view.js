@@ -223,7 +223,7 @@ view.showMainQuestion = function(bot, message, callback) {
 
 view.showHowToSendMyLocation = function(bot, message, callback) {
   var locationInstructionsUrl = "https://www.facebook.com/help/messenger-app/1394730427523556";
-  var text = (message.lang === "en" ? "Click on the Help button and follow the instructions" : "הקלק על כפתור עזרה ועקוב אחר ההוראות הבאות");
+  var text = (message.lang === "en" ? "Click on the Help button and follow the instructions" : "הקלק על כפתור עזרה ועקוב אחר ההוראות");
   var button = { type: "web_url", "title": (message.lang === "en" ? "Help" : "עזרה"), url: locationInstructionsUrl};
   FacebookHelper.sendButtonTemplate(bot, message, text, button, callback);
 }
