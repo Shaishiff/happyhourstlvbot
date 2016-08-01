@@ -1,5 +1,5 @@
 "use strict";
-//
+
 var Consts = require('./consts');
 var Sentences = require('./sentences');
 var Api = require('./api');
@@ -7,6 +7,11 @@ var Utils = require('./utils');
 var FacebookHelper = require('./facebookHelper');
 var MongoHelper = require('./mongoHelper');
 var view = {};
+
+view.buildPersistentMainMenu = function() {
+  // TODO
+  return {};
+}
 
 view.buildMainMenu = function(lang) {
   console.log("buildMainMenu - " + lang);

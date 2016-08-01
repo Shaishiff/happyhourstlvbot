@@ -1,5 +1,6 @@
 "use strict";
 
+var GlobalConsts = require('./globalConsts');
 var Mysql = require('mysql');
 var Consts = require('./consts');
 var Utils = require('./utils');
@@ -108,6 +109,7 @@ api.getData = function(lang, category, when, lat, lon, callback) {
 
 api.collectData = function() {
 	try {
+		console.log("started collecting data", new Date());
 		var connection = Mysql.createConnection({
 			host     : process.env.MYSQL_HOST,
 			user     : process.env.MYSQL_USER,
@@ -127,6 +129,10 @@ api.collectData = function() {
 	} catch(err) {
 		console.error("Caught exception while trying to retrieve data from DB: " + err.message);
 	}
+
+	setTimeout(function() {
+		api.collectData();
+	}, GlobalConsts.READ_HAPPY_HOURS_INTERVAL);
 }
 
 module.exports = api;

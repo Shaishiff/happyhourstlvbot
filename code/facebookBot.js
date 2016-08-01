@@ -141,7 +141,7 @@ function Facebookbot(configuration) {
     facebook_botkit.createWebhookEndpoints = function(webserver, bot, cb) {
 
         setWebhook(webserver, 'post', ['/facebook/receive','/messenger'], function(req, res) {
-            console.log("RECEIVED POST FROM FB", (new Date()).getTime());
+            console.log("RECEIVED POST FROM FB", new Date());
             if (GlobaConsts.XHUB_VALIDATION && (!req.isXHub || !req.isXHubValid())) {
                 console.error('Warning - request header X-Hub-Signature not present or invalid');
                 res.send('Failed to verify');

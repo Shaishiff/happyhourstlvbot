@@ -173,7 +173,6 @@ function Botkit(configuration) {
         };
 
         this.trigger = function(event, data) {
-            console.log("trigger3", (new Date()).getTime());
             if (this.events[event]) {
                 for (var e = 0; e < this.events[event].length; e++) {
                     var res = this.events[event][e].apply(this, data);
@@ -182,8 +181,6 @@ function Botkit(configuration) {
                     }
                 }
             } else {
-                console.log("No handler for", event, (new Date()).getTime());
-                botkit.debug('No handler for', event);
             }
         };
 
@@ -196,7 +193,6 @@ function Botkit(configuration) {
             if (this.sent.length) {
                 this.messages.push(this.sent[this.sent.length - 1]);
             } else {
-                // console.log('TRIED TO REPEAT, NOTHING TO SAY');
             }
         };
 
@@ -398,17 +394,14 @@ function Botkit(configuration) {
                         if (typeof(this.messages[0].timestamp) == 'undefined' ||
                             this.messages[0].timestamp <= now.getTime()) {
                             var message = this.messages.shift();
-                            //console.log('HANDLING NEW MESSAGE',message);
                             // make sure next message is delayed appropriately
                             if (this.messages.length && this.messages[0].delay) {
                                 this.messages[0].timestamp = now.getTime() + this.messages[0].delay;
                             }
                             if (message.handler) {
-                                //console.log(">>>>>> SET HANDLER IN TICK");
                                 this.handler = message.handler;
                             } else {
                                 this.handler = null;
-                                //console.log(">>>>>>> CLEARING HANDLER BECAUSE NO HANDLER NEEDED");
                             }
                             if (message.capture_options) {
                                 this.capture_options = message.capture_options;
@@ -466,7 +459,6 @@ function Botkit(configuration) {
                                 }
                             }
                         } else {
-                            //console.log('Waiting to send next message...');
                         }
 
                         // end immediately instad of waiting til next tick.
@@ -566,7 +558,6 @@ function Botkit(configuration) {
         };
 
         this.trigger = function(event, data) {
-            console.log("trigger1", (new Date()).getTime());
             if (this.events[event]) {
                 for (var e = 0; e < this.events[event].length; e++) {
                     var res = this.events[event][e].apply(this, data);
@@ -713,18 +704,13 @@ function Botkit(configuration) {
     };
 
     botkit.trigger = function(event, data) {
-        //console.log("trigger2", (new Date()).getTime());
-        if (event != "tick") console.log("trigger2", event);
         if (this.events[event]) {
-            console.log("trigger2", "start loop");
             for (var e = 0; e < this.events[event].length; e++) {
-                console.log("trigger2-eventId-" + e);
                 var res = this.events[event][e].apply(this, data);
                 if (res === false) {
                     return;
                 }
             }
-            console.log("trigger2", "end loop");
         } else {
             botkit.debug('No handler for', event);
         }
@@ -791,13 +777,10 @@ function Botkit(configuration) {
     };
 
     botkit.receiveMessage = function(bot, message) {
-        console.log("receiveMessage", (new Date()).getTime());
-        botkit.debug('TEST');
         botkit.middleware.receive.run(bot, message, function(err, bot, message) {
             if (err) {
-                console.log('ERROR IN RECEIVE MIDDLEWARE: ', err);
+                console.error('ERROR IN RECEIVE MIDDLEWARE: ', err);
             } else {
-                console.log('RECEIVED MESSAGE');
                 bot.findConversation(message, function(convo) {
                     if (convo) {
                         convo.handle(message);

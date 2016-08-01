@@ -10,7 +10,6 @@ botInitializer.init = function(callback) {
 	var fbBot = FacebookBot({
 		access_token: process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 		verify_token: process.env.FACEBOOK_VERIFY_TOKEN
-		//,debug: true
 	})
 
 	// Log the message and add more info to the message.
@@ -37,10 +36,6 @@ botInitializer.init = function(callback) {
 	// Facebook postsbacks.
 	fbBot.on('facebook_postback', function(bot, message) {
 	  PostBackHelper.handlePostBack(bot, message, message.payload);
-	});
-
-	fbBot.on('facebook_account_linking', function(bot, message) {
-	  Controller.accountLinking(bot, message);
 	});
 
 	Controller.init(fbBot, function() {

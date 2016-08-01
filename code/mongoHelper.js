@@ -1,77 +1,161 @@
 "use strict";
 
-var Consts = require('./consts');
+var GlobalConsts = require('./globalConsts');
 var MongoClient = require('mongodb').MongoClient;
 var mongoHelper = {};
 
-var insertIntoMongo = function(docToInsert, collection, callback) {
-	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
+mongoHelper.insert = function(docToInsert, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
 		if(errConnect) {
 			console.error("insertIntoMongo - Could not connect to server with error: " + errConnect);
-			callback(false);
+			if (typeof callback === "function") callback(false);
 			return;
 		}
 		db.collection(collection).insertOne(docToInsert, function(errInsert, r) {
 			db.close();
-			if(!errInsert) {
-				console.error("insertIntoMongo - Insert complete with error: " + errInsert);
-				callback(false);
+			if(errInsert) {
+				console.error("insertIntoMongo - error: " + errInsert);
+				if (typeof callback === "function") callback(false);
 				return;
 			}
-			callback(true);
+			if (typeof callback === "function") callback(true, r.ops[0]);
 		});
 	});
 }
 
-var upsertIntoMongo = function(docToFind, docToUpsert, collection, callback) {
-	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
+mongoHelper.upsert = function(docToFind, docToUpsert, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
 		if(errConnect) {
 			console.error("upsertIntoMongo - Could not connect to server with error: " + errConnect);
-			callback(false);
+			if (typeof callback === "function") callback(false);
 			return;
 		}
-		db.collection(collection).update(docToInsert, docToUpsert, {upsert: true}, function(errUpsert, r) {
+		db.collection(collection).update(docToFind, docToUpsert, {upsert: true, multi: false}, function(errUpsert, r) {
 			db.close();
-			if(!errUpsert) {
-				console.error("upsertIntoMongo - Upsert complete with error: " + errUpsert);
-				callback(false);
+			if(errUpsert) {
+				console.error("upsertIntoMongo - error: " + errUpsert);
+				if (typeof callback === "function") callback(false);
 				return;
 			}
-			callback(true);
+			if (typeof callback === "function") callback(true);
 		});
 	});
 }
 
-var getFromMongo = function(docToFind, collection, callback) {
-	MongoClient.connect(Consts.MONGO_DB_URL, function(errConnect, db) {
+mongoHelper.get = function(docToFind, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
 		if(errConnect) {
 			console.error("getFromMongo - Could not connect to server with error: " + errConnect);
-			callback();
+			if (typeof callback === "function") callback(null);
 			return;
 		}
 		db.collection(collection).find(docToFind).limit(1).toArray(function(errFind, docs) {
 			db.close();
 			if (docs instanceof Array && docs.length == 1) {
-				console.log("getFromMongo - Found the document: " + JSON.stringify(docs[0]));
-				callback(docs[0]);
+				if (typeof callback === "function") callback(docs[0]);
 			} else {
-				console.log("getFromMongo - Could not find the document: " + errFind);
-				callback();
+				if (typeof callback === "function") callback(null);
 			}
 		});
 	});
 }
 
-mongoHelper.insertUserInfoToMongo = function(userInfo, callback) {
-	insertIntoMongo(userInfo, Consts.MONGO_DB_USER_INFO_COL, callback);
+mongoHelper.findOne = function(docToFind, fields, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
+		if(errConnect) {
+			console.error("findOne - Could not connect to server with error: " + errConnect);
+			if (typeof callback === "function") callback(null);
+			return;
+		}
+		db.collection(collection).findOne(docToFind, fields, function(errFind, doc) {
+			db.close();
+			if (typeof callback === "function") {
+				if (!errFind) callback(doc);
+				else callback(null);
+			}
+		});
+	});
 }
 
-mongoHelper.getUserInfoFromMongo = function(userId, callback) {
- 	getFromMongo({user_id : userId}, Consts.MONGO_DB_USER_INFO_COL, callback);
+mongoHelper.getMultiple = function(selector, fields, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
+		if(errConnect) {
+			console.error("getMultiple - Could not connect to server with error: " + errConnect);
+			if (typeof callback === "function") callback(null);
+			return;
+		}
+		db.collection(collection).find(selector, fields).toArray(function(err, docs) {
+			db.close();
+			if (typeof callback === "function") callback((docs instanceof Array && docs.length >= 1) ? docs : null);
+		});
+	});
 }
 
-mongoHelper.upsertUserInfoToMongo = function(userId, userInfo, callback) {
-	upsertIntoMongo({user_id : userId}, userInfo, Consts.MONGO_DB_USER_INFO_COL, callback);
+mongoHelper.delete = function(docToFind, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
+		if(errConnect) {
+			console.error("deleteFromMongo - Could not connect to server with error: " + errConnect);
+			if (typeof callback === "function") callback(false);
+			return;
+		}
+		db.collection(collection).deleteMany(docToFind, function(err, results) {
+			db.close();
+			if (err) {
+				console.log("deleteFromMongo - err: " + err);
+				if (typeof callback === "function") callback(false);
+			} else {
+				if (typeof callback === "function") callback(true);
+			}
+		});
+	});
+}
+
+mongoHelper.findAndModify = function(docToFind, docToInsert, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
+		if(errConnect) {
+			console.error("findAndModify - Could not connect to server with error: " + errConnect);
+			if (typeof callback === "function") callback(null);
+			return;
+		}
+		var res = db.collection(collection).findAndModify(
+			docToFind,
+			null,
+			{
+				$setOnInsert: docToInsert
+			},
+			{
+				new: true,   // return new doc if one is upserted
+				upsert: true // insert the document if it does not exist
+			}, function(err, doc) {
+				if (typeof callback === "function") {
+					var value = (doc && (typeof doc === "object") && (typeof doc.value == "object")) ? doc.value : null;
+					callback(value);
+				}
+			});
+	});
+}
+
+mongoHelper.findAndRemove = function(docToFind, collection, callback) {
+	MongoClient.connect(GlobalConsts.MONGO_DB_URL, function(errConnect, db) {
+		if(errConnect) {
+			console.error("findAndRemove - Could not connect to server with error: " + errConnect);
+			if (typeof callback === "function") callback(null);
+			return;
+		}
+		var res = db.collection(collection).findAndModify(
+			docToFind,
+			null,
+			{
+			},
+			{
+				remove: true
+			}, function(err, doc) {
+				if (typeof callback === "function") {
+					var value = (doc && (typeof doc === "object") && (typeof doc.value == "object")) ? doc.value : null;
+					callback(value);
+				}
+			});
+	});
 }
 
 module.exports = mongoHelper;
