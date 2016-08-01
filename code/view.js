@@ -1,6 +1,6 @@
 "use strict";
 
-var Consts = require('./consts');
+var GlobalConsts = require('./globalConsts');
 var Sentences = require('./sentences');
 var Api = require('./api');
 var Utils = require('./utils');
@@ -44,7 +44,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
 view.showLinks = function(bot, message, callback) {
   FacebookHelper.sendButtonTemplate(bot,
     message,
-    "Here are a few helpful links...",
+    (message.lang === "en" ? "Here are a few helpful links..." : "הנה כמה קישורים שימושיים..."),
     [{
       "type": "web_url",
       "title": "happyhourstlv.com",
@@ -62,7 +62,7 @@ view.changeLanguage = function(bot, message, callback) {
   FacebookHelper.sendTextWithQuickReplies(bot,
     message,
     "Please choose your preferred language:\n"
-    + ":בבקשה בחר את השפה המועדפת עליך\n",
+    + "בבקשה בחר את השפה המועדפת עליך:\n",
     [{
       "type":"postback",
       "title": "English",
@@ -121,6 +121,77 @@ view.showSearchMenu = function(bot, message, lang) {
   });
 }
 
+view.showMainQuestion = function(bot, message, callback) {
+  console.log("showMainQuestion");
+  var category = Utils.getTitleFromDbName(GlobalConsts.CATEGORIES, message.dealCategory, message.lang);
+  var time = Utils.getTitleFromDbName(GlobalConsts.TIMES, message.dealTime, message.lang);
+  var options = [];
+  options.push({
+    'title': "Yeah, find options !",
+    'payload': "findOptions"
+  });
+  options.push({
+    'title': (message.lang === "en" ? "Change deal category" : "Change Category"),
+    'payload': "showCategories"
+  });
+  options.push({
+    'title': (message.lang === "en" ? "Change deal time" : "Change my time"),
+    'payload': "showTimes"
+  });
+  FacebookHelper.sendTextWithQuickReplies(bot,
+    message,
+    "Hey" + (message.firstName ? " " + message.firstName : "") + ". Looking for " + category + " deals for " + time + " ?"
+    + "\n" + "Send me your location to see what's near you."
+    + "\n" + "If you know the name of the place you are looking for, just type it's name."
+    + "\n" + "Or if you are feeling lucky we can just find you some random options :)",
+    options,
+    callback);
+}
+
+view.showCategories = function(bot, message, callback) {
+  var options = [];
+  for (var i = 0; i < GlobalConsts.CATEGORIES.length; i++) {
+    options.push({
+      'title': GlobalConsts.CATEGORIES[i]["title" + (message.lang === "en" ? "_en" : "")],
+      'payload': "choseCategory-" + GlobalConsts.CATEGORIES[i].db_name
+    });
+  }
+  FacebookHelper.sendTextWithQuickReplies(bot,
+    message,
+    "Set your category",
+    options,
+    callback);
+}
+
+view.showTimes = function(bot, message, callback) {
+  var options = [];
+  for (var i = 0; i < GlobalConsts.TIMES.length; i++) {
+    options.push({
+      'title': GlobalConsts.TIMES[i]["title" + (message.lang === "en" ? "_en" : "")],
+      'payload': "choseTime-" + GlobalConsts.TIMES[i].db_name
+    });
+  }
+  FacebookHelper.sendTextWithQuickReplies(bot,
+    message,
+    "Set relevant time",
+    options,
+    callback);
+}
+
+view.showDeal = function(bot, message) {
+  Api.getData(message, 0, 0, function(dealsData) {
+    if (dealsData.length === 0) {
+      FacebookHelper.sendText(bot, message, Utils.getSentence("no_deals_found", message.lang, message.gender), function() {
+        view.showMainQuestion(bot, message);
+      });
+    } else {
+      FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, message.lang), function() {
+        view.showMainQuestion(bot, message);
+      });
+    }
+  });
+}
+
 view.showMainMenu = function(bot, message, lang) {
   FacebookHelper.sendGenericTemplate(bot, message, view.buildMainMenu(lang));
 }
@@ -166,22 +237,31 @@ view.buildDealElement = function(dealData, lang) {
   var element = {}
   element.title = dealData["headline" + (lang === "en" ? "_en" : "")];
   if (dealData.image_url) {
-    element.image_url = Consts.HAPPY_HOURS_DOMAIN + "/images/" + dealData.image_url;
+    element.image_url = GlobalConsts.HAPPY_HOURS_DOMAIN + "/images/" + dealData.image_url;
   }
-  element.subtitle = dealData["address" + (lang === "en" ? "_en" : "")] + " - " + dealData["main_offer" + (lang === "en" ? "_en" : "")];
+  element.item_url = dealData.link;
+  element.subtitle = dealData["address" + (lang === "en" ? "_en" : "")] + " - "
+  + dealData["main_offer" + (lang === "en" ? "_en" : "")] + " - "
+  + dealData["days" + (lang === "en" ? "_en" : "")] ;
   element.buttons = [];
-  if (dealData.link) {
+  // if (dealData.link) {
+  //   element.buttons.push({
+  //     type: 'web_url',
+  //     title: (lang.length === 0 ? 'אתר' : "Site"),
+  //     url: dealData.link
+  //   });
+  // }
+  if (dealData.phone && typeof dealData.phone === "string" && dealData.phone.length > 6) {
+    var phoneNumber = dealData.phone;
+    phoneNumber = phoneNumber.replace(/-/g,'');
+    if (phoneNumber[0] === "0") {
+      phoneNumber = phoneNumber.substr(1);
+    }
+    phoneNumber = ("+972" + phoneNumber);
     element.buttons.push({
-      type: 'web_url',
-      title: (lang.length === 0 ? 'אתר' : "Site"),
-      url: dealData.link
-    });
-  }
-  if (dealData.phone) {
-    element.buttons.push({
-      type: 'postback',
-      title: (lang.length === 0 ? 'טלפון' : "Number"),
-      payload: 'showDealNumber-' + dealData.object_id + "," + lang
+      type: 'phone_number',
+      title: (lang.length === 0 ? 'התקשר' : "Call"),
+      payload: phoneNumber//'showDealNumber-' + dealData.object_id + "," + lang
     });
   }
   if (dealData.lat && dealData.lon && dealData.address) {
@@ -216,26 +296,41 @@ view.showDealsByDistance = function(bot, message, lang, lat, lon) {
   });
 }
 
-view.showDealsByStringSimilarity = function(bot, message, lang, userText, callback) {
-  console.log("showDealsByStringSimilarity started: " + userText);
-  Api.getDataByHeadline(userText, lang, function(dealData) {
+view.showDealsByString = function(bot, message, callback) {
+  console.log("showDealsByStringSimilarity started: " + message.text);
+  Api.getDataByHeadline(message.text, message.lang, function(dealData) {
     if (dealData) {
-      FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, lang), callback);
+      FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, message.lang), callback);
       return;
     }
-    bot.reply(message, Utils.getSentence("cant_find_exact_match_here_are_best_options", lang), function() {
-      Api.getDataByStringSimilarity(userText, lang, function(dealsData) {
-        FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang), callback);
+    bot.reply(message, Utils.getSentence("cant_find_exact_match_here_are_best_options", message.lang), function() {
+      Api.getDataByStringSimilarity(message.text, message.lang, function(dealsData) {
+        FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, message.lang), callback);
       });
     });
   });
 }
 
+// view.showDealsByStringSimilarity = function(bot, message, lang, userText, callback) {
+//   console.log("showDealsByStringSimilarity started: " + userText);
+//   Api.getDataByHeadline(userText, lang, function(dealData) {
+//     if (dealData) {
+//       FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElement(dealData, lang), callback);
+//       return;
+//     }
+//     bot.reply(message, Utils.getSentence("cant_find_exact_match_here_are_best_options", lang), function() {
+//       Api.getDataByStringSimilarity(userText, lang, function(dealsData) {
+//         FacebookHelper.sendGenericTemplate(bot, message, view.buildDealElements(dealsData, lang), callback);
+//       });
+//     });
+//   });
+// }
+
 view.buildCategoryMenu = function(lang) {
   var elements = [];
   var element;
-  for (var i=0; i < Consts.CATEGORIES.length; i++) {
-    var category = Consts.CATEGORIES[i];
+  for (var i=0; i < GlobalConsts.CATEGORIES.length; i++) {
+    var category = GlobalConsts.CATEGORIES[i];
     element = {}
     element.title = "" + (i+1);
     element.image_url = category.image_url;
@@ -254,8 +349,8 @@ view.buildTimesMenu = function(lang) {
   var elements = [];
   var element;
 
-  for (var i=0; i < Consts.TIMES.length; i++) {
-    var time = Consts.TIMES[i];
+  for (var i=0; i < GlobalConsts.TIMES.length; i++) {
+    var time = GlobalConsts.TIMES[i];
     element = {}
     element.title = "" + (i+1);
     element.image_url = time.image_url;
@@ -299,9 +394,9 @@ view.showGuideMenu = function(bot, message, lang) {
   console.log("showGuideMenu - " + JSON.stringify(message));
   var gender = "";
   var category = "";
-  var when = Consts.INVALID_NUM;
-  var lat = Consts.INVALID_NUM;
-  var lon = Consts.INVALID_NUM;
+  var when = GlobalConsts.INVALID_NUM;
+  var lat = GlobalConsts.INVALID_NUM;
+  var lon = GlobalConsts.INVALID_NUM;
   var invalid_response = Utils.getSentence("invalid_response", lang, gender);
   var stopping_the_guide = Utils.getSentence("stopping_the_guide", lang, gender);
 
@@ -345,7 +440,7 @@ view.showGuideMenu = function(bot, message, lang) {
         when = Utils.getTimeDbNameFromText(response.text);
         console.log("askWhen - user selected time: " + when);
       }
-      if (when != Consts.INVALID_NUM) {
+      if (when != GlobalConsts.INVALID_NUM) {
         askWhere(response, convo);
       } else {
         convo.say(invalid_response);

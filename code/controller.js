@@ -1,6 +1,7 @@
 "use strict";
 
 var GlobalConsts = require('./globalConsts');
+var HttpHelper = require('./httpHelper');
 var FacebookHelper = require('./facebookHelper');
 var View = require('./view');
 var Sentences = require('./sentences');
@@ -20,7 +21,8 @@ controller.init = function(botkit, callback) {
 
 	function showMainMenu(bot, message, lang) {
 		User.setLang(message.user, lang, function() {
-			View.showMainMenu(bot, message, lang);
+			message.lang = lang;
+			View.showMainQuestion(bot, message);
 		});
 	}
 
@@ -33,6 +35,12 @@ controller.init = function(botkit, callback) {
 	botkit.hears(Sentences.user_wants_main_menu_en, 'message_received', function(bot, message) {
 		console.log("user requested english menu: " + message.text);
 		showMainMenu(bot, message, "en");
+		return false;
+	});
+
+	botkit.hears([".*"], 'message_received', function(bot, message) {
+		console.log("user requested english menu: " + message.text);
+		View.showDealsByString(bot, message);
 		return false;
 	});
 
@@ -58,9 +66,38 @@ function handleUserAttachment(bot, message, lang) {
 }
 
 controller.messageReceived = function(bot, message, callback) {
-	User.getLang(message.user, function(docFound) {
-		message.lang = (docFound && typeof docFound.lang === "string" ? docFound.lang : "");
-		if (typeof callback === "function") callback();
+
+	function queryFbForUserProfile(userId, callback) {
+		HttpHelper.getJson(GlobalConsts.FACEBOOK_USER_PROFILE_API.replace("<USER_ID>", userId), function(fbInfo) {
+			if (!fbInfo) {
+				console.error("queryFbForUserProfile - Can't get the user info from the facebook API.");
+				callback(false);
+				return;
+			}
+			console.log(fbInfo);
+			User.setFbInfo(userId, fbInfo, callback);
+			return;
+		});
+	}
+
+	User.get(message.user, function(docFound) {
+		message.lang = (docFound && typeof docFound.lang === "string" && docFound.lang.length > 0 ? docFound.lang : "");
+		message.gender = (docFound && typeof docFound.gender === "string" && docFound.gender.length > 0 ? docFound.gender : "male");
+		message.dealCategory = (docFound && typeof docFound.category === "string" && docFound.category.length > 0  ? docFound.category : GlobalConsts.CATEGORIES[0].db_name);
+		message.dealTime = (docFound && typeof docFound.time === "string" && docFound.time.length > 0  ? docFound.time : GlobalConsts.TIMES[0].db_name);
+		message.firstName = (docFound && typeof docFound.firstName === "string" && docFound.firstName.length > 0  ? docFound.firstName : null);
+		message.lastName = (docFound && typeof docFound.lastName === "string" && docFound.lastName.length > 0  ? docFound.lastName : null);
+		message.profilePic = (docFound && typeof docFound.profilePic === "string" && docFound.profilePic.length > 0  ? docFound.profilePic : null);
+		message.locale = (docFound && typeof docFound.locale === "string" && docFound.locale.length > 0  ? docFound.locale : null);
+		message.timezone = (docFound && typeof docFound.timezone === "number" ? docFound.timezone : null);
+		message.gender = (docFound && typeof docFound.gender === "string" && docFound.gender.length > 0  ? docFound.gender : null);
+		if (!docFound.gender || !docFound.timezone) {
+			queryFbForUserProfile(message.user, function() {
+				if (typeof callback === "function") callback();
+			});
+		} else {
+			if (typeof callback === "function") callback();
+		}
 	});
 }
 
@@ -90,7 +127,34 @@ controller.changeLanguage = function(bot, message) {
 
 controller.switchedLanguage = function(bot, message, lang) {
 	User.setLang(message.user, lang, function() {
-		View.showMainMenu(bot, message, lang);
+		message.lang = lang;
+		View.showMainMenu(bot, message);
+	});
+}
+
+controller.findOptions = function(bot, message) {
+	View.showDeal(bot, message);
+}
+
+controller.showCategories = function(bot, message) {
+	View.showCategories(bot, message);
+}
+
+controller.choseCategory = function(bot, message, category) {
+	message.dealCategory = category;
+	User.setDealCategory(message.user, category, function() {
+		View.showMainQuestion(bot, message);
+	});
+}
+
+controller.showTimes = function(bot, message) {
+	View.showTimes(bot, message);
+}
+
+controller.choseTime = function(bot, message, time) {
+	message.dealTime = time;
+	User.setDealTime(message.user, time, function() {
+		View.showMainQuestion(bot, message);
 	});
 }
 

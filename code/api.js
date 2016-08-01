@@ -19,12 +19,13 @@ api.getDataByObjectId = function(objectId, callback) {
 
 api.getDataByHeadline = function(userText, lang, callback) {
 	for(var i = 0; i < data.length; i++) {
-		var dealName = data[i]["headline" + (lang === "en" ? "_en" : "")];
+		var isEn = (new RegExp(/^[a-z0-9]+$/i).test(userText));
+		var dealName = data[i]["headline" + (isEn ? "_en" : "")];
 		// Remove english chars if we're in hebrew mode.
-		if (lang.length === 0) {
+		if (!isEn) {
 			dealName = dealName.replace(/[A-z]/g, "").trim();
 		}
-		if (dealName == userText) {
+		if (dealName.toLowerCase() == userText.toLowerCase()) {
 			callback(data[i]);
 			return;
 		}
@@ -32,20 +33,31 @@ api.getDataByHeadline = function(userText, lang, callback) {
 	callback(null);
 }
 
-api.getDataByStringSimilarity = function(userText, lang, callback) {
-	var sortedData = data;
-	for(var i = 0; i < sortedData.length; i++) {
-		var dealName = sortedData[i]["headline" + (lang === "en" ? "_en" : "")];
+api.getDataByStringSimilarity = function(userText, userLang, callback) {
+	function setSimilarity(lang) {
+		var dealName = sortedData[i]["headline" + (lang === "en" ? "_en" : "")].toLowerCase();
 		// Remove english chars if we're in hebrew mode.
-		if (lang.length === 0) {
+		if (lang === "") {
 			dealName = dealName.replace(/[A-z]/g, "").trim();
 		}
-		sortedData[i].stringSimilarity = Utils.getEditDistance(userText, dealName);
-		console.log("userText: " + userText + ", dealName: " + dealName + ", stringSimilarity: " + sortedData[i].stringSimilarity);
+		var stringSimilarity = Utils.getEditDistance(userText, dealName);
 		if (userText.length >= 4 && dealName.indexOf(userText) === 0) {
 			console.log("Giving this option extra points");
-			sortedData[i].stringSimilarity = (sortedData[i].stringSimilarity/2.0);
+			stringSimilarity = (stringSimilarity/3.0);
 		}
+
+		// Try without some common words:
+		var stringSimilarity = Math.min(stringSimilarity,Utils.getEditDistance(userText, dealName.replace(/bar/i,'').replace(/wine/i,'').replace(/burger/i,'')));
+
+		console.log("userText: " + userText + ", dealName: " + dealName + ", stringSimilarity: " + stringSimilarity);
+		return stringSimilarity;
+	}
+	userText = userText.toLowerCase();
+	var sortedData = data;
+	for(var i = 0; i < sortedData.length; i++) {
+		var stringSimilarityEn = setSimilarity("en");
+		var stringSimilarity = setSimilarity("");
+		sortedData[i].stringSimilarity = Math.min(stringSimilarityEn, stringSimilarity);
 	}
 	callback(sortedData.sort(function(a, b) {
 		if(a.stringSimilarity == b.stringSimilarity) return 0;
@@ -70,19 +82,47 @@ api.filterDataByCategory = function(dataToFilter, category) {
 	else return dataToFilter.filter(function(obj) {return (obj.category === category)});
 }
 
-api.filterDataByTime = function(dataToFilter, when) {
-	if (when == Consts.TODAY) {
-		when = (new Date()).getDay();
+api.filterDataByTime = function(dataToFilter, when, timezone) {
+	// TODO: Handle RIGHT_NOW
+	var timeToAdd = timezone * 60 * 60 * 1000;
+	var whenDay = null;
+	if (when == GlobalConsts.TODAY || when == GlobalConsts.RIGHT_NOW) {
+		whenDay = (new Date((new Date()).getTime() + timeToAdd)).getDay();
+	} else if (when == GlobalConsts.TOMORROW) {
+		whenDay = (new Date((new Date()).getTime() + 24 * 60 * 60 * 1000 + timeToAdd)).getDay();
 	}
+	console.log("whenDay", whenDay);
+	var whenHour = null;
+	if (when == GlobalConsts.RIGHT_NOW) {
+		whenHour = (new Date((new Date()).getTime() + timeToAdd)).getHours() * 100 + (new Date((new Date()).getTime() + timeToAdd)).getMinutes();
+	}
+	console.log("whenHour", whenHour);
 	return dataToFilter.filter(function(obj) {
 		var opening_hours = null;
 		try {
 			opening_hours = JSON.parse(obj.opening_hours);
-			if (opening_hours &&
-				opening_hours.length &&
-				opening_hours.length == 7) {
-				return opening_hours[when].length > 0;
+			var relevantDay = true;
+			if (whenDay) {
+				console.log("opening_hours[whenDay]", opening_hours[whenDay]);
+				relevantDay = (opening_hours &&
+					opening_hours.length &&
+					opening_hours.length === 7 &&
+					opening_hours[whenDay].length > 0);
 			}
+			var relevantHour = true;
+			if (whenHour) {
+				relevantHour = false;
+				if (opening_hours &&
+					opening_hours.length &&
+					opening_hours.length === 7) {
+					for (var i = 0; i < opening_hours[whenDay].length; ++i) {
+						relevantHour = (opening_hours[whenDay][i].start <= whenHour &&
+							opening_hours[whenDay][i].end >= whenHour);
+					}
+				}
+			}
+			return relevantDay && relevantHour;
+
 		} catch (err) {
 			console.log("filterDataByTime caught exception: " + err.message);
 		}
@@ -90,13 +130,13 @@ api.filterDataByTime = function(dataToFilter, when) {
 	});
 }
 
-api.getData = function(lang, category, when, lat, lon, callback) {
+api.getData = function(message, lat, lon, callback) {
 	console.log("api.getData");
 	var processedData = data;
 	console.log("processedData.length: " + processedData.length);
-	processedData = api.filterDataByCategory(processedData, category);
+	processedData = api.filterDataByCategory(processedData, message.dealCategory);
 	console.log("After category filter processedData.length: " + processedData.length);
-	processedData = api.filterDataByTime(processedData, when);
+	processedData = api.filterDataByTime(processedData, message.dealTime, message.timezone);
 	console.log("After time filter processedData.length: " + processedData.length);
 	if (lat != 0 && lon != 0) {
 		console.log("Sorting according to distance from user");
