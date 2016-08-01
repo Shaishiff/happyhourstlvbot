@@ -69,7 +69,7 @@ api.getDataByDistanceFromUser = function(dataToUse, userLat, userLon, callback) 
 	var sortedData = (dataToUse ? dataToUse : data);
 	for(var i = 0; i < sortedData.length; i++) {
 		sortedData[i].distance = Math.sqrt(Math.pow(sortedData[i].lat - userLat, 2) + Math.pow(sortedData[i].lon - userLon, 2), 2);
-		console.log("getDataByDistanceFromUser - distance from " + sortedData[i].headline_en + ": " + sortedData[i].distance);
+		//console.log("getDataByDistanceFromUser - distance from " + sortedData[i].headline_en + ": " + sortedData[i].distance);
 	}
 	callback(sortedData.sort(function(a, b) {
 		if(a.distance == b.distance) return 0;
@@ -91,19 +91,16 @@ api.filterDataByTime = function(dataToFilter, when, timezone) {
 	} else if (when == GlobalConsts.TOMORROW) {
 		whenDay = (new Date((new Date()).getTime() + 24 * 60 * 60 * 1000 + timeToAdd)).getDay();
 	}
-	console.log("whenDay", whenDay);
 	var whenHour = null;
 	if (when == GlobalConsts.RIGHT_NOW) {
 		whenHour = (new Date((new Date()).getTime() + timeToAdd)).getHours() * 100 + (new Date((new Date()).getTime() + timeToAdd)).getMinutes();
 	}
-	console.log("whenHour", whenHour);
 	return dataToFilter.filter(function(obj) {
 		var opening_hours = null;
 		try {
 			opening_hours = JSON.parse(obj.opening_hours);
 			var relevantDay = true;
 			if (whenDay) {
-				console.log("opening_hours[whenDay]", opening_hours[whenDay]);
 				relevantDay = (opening_hours &&
 					opening_hours.length &&
 					opening_hours.length === 7 &&
@@ -131,18 +128,17 @@ api.filterDataByTime = function(dataToFilter, when, timezone) {
 }
 
 api.getData = function(message, lat, lon, callback) {
-	console.log("api.getData");
 	var processedData = data;
-	console.log("processedData.length: " + processedData.length);
+	//console.log("processedData.length: " + processedData.length);
 	processedData = api.filterDataByCategory(processedData, message.dealCategory);
-	console.log("After category filter processedData.length: " + processedData.length);
+	//console.log("After category filter processedData.length: " + processedData.length);
 	processedData = api.filterDataByTime(processedData, message.dealTime, message.timezone);
-	console.log("After time filter processedData.length: " + processedData.length);
+	//console.log("After time filter processedData.length: " + processedData.length);
 	if (lat != 0 && lon != 0) {
-		console.log("Sorting according to distance from user");
+		//console.log("Sorting according to distance from user");
 		api.getDataByDistanceFromUser(processedData, lat, lon, callback);
 	} else {
-		console.log("Sorting randomly");
+		//console.log("Sorting randomly");
 		callback(Utils.shuffleArray(processedData));
 	}
 }
@@ -161,7 +157,6 @@ api.collectData = function() {
 			if (err) {
 				console.error("Failed to retrieve data from DB: " + err);
 			} else {
-				console.log("Number of rows retrieved: ", rows.length);
 				data = rows;
 			}
 		});

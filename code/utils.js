@@ -1,28 +1,29 @@
 "use strict";
 
 var Sentences = require('./sentences');
+var HttpHelper = require('./httpHelper');
 var utils = {};
 
-utils.createRandomString = function(length) {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for(var i=0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
+// utils.createRandomString = function(length) {
+//     var text = "";
+//     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//     for(var i=0; i < length; i++) {
+//       text += possible.charAt(Math.floor(Math.random() * possible.length));
+//     }
+//     return text;
+// }
 
-utils.randomBetweenMinAndMax = function(min, max) {
-  return (Math.floor(Math.random() * max) + min);
-}
+// utils.randomBetweenMinAndMax = function(min, max) {
+//   return (Math.floor(Math.random() * max) + min);
+// }
 
 utils.isArray = function(arr) {
   return (arr instanceof Array);
 }
 
-utils.randomFromArray = function(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+// utils.randomFromArray = function(arr) {
+//   return arr[Math.floor(Math.random() * arr.length)];
+// }
 
 utils.shuffleArray = function(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -53,15 +54,15 @@ utils.isNormalIntegerFromMinToMax = function(str, min, max) {
   return utils.isNormalInteger(str) && parseInt(str) >= min && parseInt(str) <= max;
 }
 
-utils.numberWithCommas = function(num) {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+// utils.numberWithCommas = function(num) {
+//   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+// }
 
-utils.padWithZeros = function(num, size) {
-    var s = num+"";
-    while (s.length < size) s = "0" + s;
-    return s;
-}
+// utils.padWithZeros = function(num, size) {
+//     var s = num+"";
+//     while (s.length < size) s = "0" + s;
+//     return s;
+// }
 
 utils.getSentence = function(sentenceKey, lang, gender) {
   if (!Sentences[sentenceKey]) return "";
@@ -74,21 +75,34 @@ utils.getSentence = function(sentenceKey, lang, gender) {
   }
 }
 
+utils.getAddressFromLatLon = function(lat, lon, lang, callback) {
+  if (lang === "") lang = "iw"; // See: https://developers.google.com/maps/faq#languagesupport
+  var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=<LAT>,<LON>&language=<LANG>&location_type=ROOFTOP";
+  url += "&key=" + process.env.GOOGLE_API_KEY;
+  url = url.replace("<LAT>", lat).replace("<LON>", lon).replace("<LANG>", lang);
+  HttpHelper.getJson(url, function(jsonResponse) {
+    if (jsonResponse &&
+      jsonResponse.status &&
+      jsonResponse.status == "OK" &&
+      jsonResponse.results &&
+      jsonResponse.results.length > 0 &&
+      jsonResponse.results[0].formatted_address) {
+      var address = jsonResponse.results[0].formatted_address;
+      console.log("Found address: " + address)
+      callback(address);
+    } else {
+      callback(null);
+    }
+  });
+}
+
 utils.getLatLonFromAddress = function(address, lang, callback) {
-  console.log("Finding lat and lon for address: " + address);
   address = address.replace(/ /g, "+");
   address += (lang === "en" ? "+Tel+Aviv+Israel" : "+תל+אביב+ישראל");
   address = encodeURIComponent(address);
   var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address;
   url += "&key=" + process.env.GOOGLE_API_KEY;
-  console.log(url);
-  HttpHelper.httpGetJson(url, function(jsonResponse) {
-    console.log("" + jsonResponse);
-    // console.log("" + jsonResponse.status);
-    // console.log("" + jsonResponse.results);
-    // console.log("" + jsonResponse.results.length);
-    // console.log("" + jsonResponse.results[0].geometry);
-    // console.log("" + jsonResponse.results[0].geometry.location);
+  HttpHelper.getJson(url, function(jsonResponse) {
     if (jsonResponse &&
       jsonResponse.status &&
       jsonResponse.status == "OK" &&
@@ -100,21 +114,11 @@ utils.getLatLonFromAddress = function(address, lang, callback) {
       jsonResponse.results[0].geometry.location.lng) {
       var lat = jsonResponse.results[0].geometry.location.lat;
       var lng = jsonResponse.results[0].geometry.location.lng;
-      console.log("Found lat and long from address: " + lat + "," + lng)
       callback(lat, lng);
     } else {
       callback(null, null);
     }
   });
-}
-
-utils.isUserRequestedToStop = function(userText) {
-  if (typeof userText !== "string") return false;
-  var bStop = (Sentences.user_requested_to_stop.indexOf(userText) != -1);
-  if (bStop) {
-    console.log("User requested to stop: " + userText);
-  }
-  return bStop;
 }
 
 utils.isNormalIntegerFromMinToMax = function(str, min, max) {
@@ -208,43 +212,43 @@ utils.changeDateFormat = function(str) {
   return date_new_format + " " + hour;
 }
 
-utils.getUserInfo = function(userId, callback) {
-  if (typeof userInfoCache[userId] !== "undefined" &&
-    typeof userInfoCache[userId].info !== "undefined" &&
-    typeof userInfoCache[userId].info.first_name === "string" &&
-    typeof userInfoCache[userId].info.last_name === "string" &&
-    typeof userInfoCache[userId].info.gender === "string") {
-    console.log("getUserInfo - Have the user info in the cache.");
-    callback(userInfoCache[userId].info);
-    return;
-  }
-  console.log("getUserInfo - Don't have the user info in the cache, getting it from Mongo.");
-  MongoHelper.getUserInfoFromMongo(userId, function(mongoUserInfo) {
-    if (typeof mongoUserInfo !== "undefined" &&
-      mongoUserInfo.first_name &&
-      mongoUserInfo.last_name &&
-      mongoUserInfo.gender) {
-      console.log("getUserInfo - Got the user info from Mongo.");
-      userInfoCache[userId] = {};
-      userInfoCache[userId].info = {};
-      userInfoCache[userId].info = mongoUserInfo;
-      callback(mongoUserInfo);
-    } else {
-      console.log("getUserInfo - Can't find the user info in the Mongo, calling the facebook API.");
-      HttpHelper.httpGetJson(Consts.FACEBOOK_USER_PROFILE_API.replace("<USER_ID>", userId), function(fbUserInfo) {
-        if (typeof fbUserInfo === "undefined") {
-          console.log("getUserInfo - Can't get the user info from the facebook API.");
-          callback(null);
-        } else {
-          console.log("getUserInfo - Got the user info from the facebook API.");
-          fbUserInfo.user_id = userId;
-          userInfoCache[userId] = {};
-          userInfoCache[userId].info = fbUserInfo;
-          MongoHelper.insertUserInfoToMongo(fbUserInfo, callback);
-        }
-      });
-    }
-  });
-}
+// utils.getUserInfo = function(userId, callback) {
+//   if (typeof userInfoCache[userId] !== "undefined" &&
+//     typeof userInfoCache[userId].info !== "undefined" &&
+//     typeof userInfoCache[userId].info.first_name === "string" &&
+//     typeof userInfoCache[userId].info.last_name === "string" &&
+//     typeof userInfoCache[userId].info.gender === "string") {
+//     console.log("getUserInfo - Have the user info in the cache.");
+//     callback(userInfoCache[userId].info);
+//     return;
+//   }
+//   console.log("getUserInfo - Don't have the user info in the cache, getting it from Mongo.");
+//   MongoHelper.getUserInfoFromMongo(userId, function(mongoUserInfo) {
+//     if (typeof mongoUserInfo !== "undefined" &&
+//       mongoUserInfo.first_name &&
+//       mongoUserInfo.last_name &&
+//       mongoUserInfo.gender) {
+//       console.log("getUserInfo - Got the user info from Mongo.");
+//       userInfoCache[userId] = {};
+//       userInfoCache[userId].info = {};
+//       userInfoCache[userId].info = mongoUserInfo;
+//       callback(mongoUserInfo);
+//     } else {
+//       console.log("getUserInfo - Can't find the user info in the Mongo, calling the facebook API.");
+//       HttpHelper.httpGetJson(Consts.FACEBOOK_USER_PROFILE_API.replace("<USER_ID>", userId), function(fbUserInfo) {
+//         if (typeof fbUserInfo === "undefined") {
+//           console.log("getUserInfo - Can't get the user info from the facebook API.");
+//           callback(null);
+//         } else {
+//           console.log("getUserInfo - Got the user info from the facebook API.");
+//           fbUserInfo.user_id = userId;
+//           userInfoCache[userId] = {};
+//           userInfoCache[userId].info = fbUserInfo;
+//           MongoHelper.insertUserInfoToMongo(fbUserInfo, callback);
+//         }
+//       });
+//     }
+//   });
+// }
 
 module.exports = utils;

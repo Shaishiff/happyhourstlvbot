@@ -7,6 +7,7 @@ var View = require('./view');
 var Sentences = require('./sentences');
 var User = require('./user');
 var Api = require('./api');
+var Utils = require('./utils');
 var controller = {};
 
 controller.init = function(botkit, callback) {
@@ -19,28 +20,69 @@ controller.init = function(botkit, callback) {
 		return false;
 	});
 
-	function showMainMenu(bot, message, lang) {
-		User.setLang(message.user, lang, function() {
-			message.lang = lang;
-			View.showMainQuestion(bot, message);
-		});
+	// function showMainMenu(bot, message, lang) {
+	// 	User.setLang(message.user, lang, function() {
+	// 		message.lang = lang;
+	// 		View.showMainQuestion(bot, message);
+	// 	});
+	// }
+
+	// botkit.hears(Sentences.user_wants_main_menu_he, 'message_received', function(bot, message) {
+	// 	console.log("user requested hebrew menu: " + message.text);
+	// 	showMainMenu(bot, message, "");
+	// 	return false;
+	// });
+
+	// botkit.hears(Sentences.user_wants_main_menu_en, 'message_received', function(bot, message) {
+	// 	console.log("user requested english menu: " + message.text);
+	// 	showMainMenu(bot, message, "en");
+	// 	return false;
+	// });
+
+	function handleUserAttachment(bot, message) {
+		console.log("handleUserAttachment started");
+		if (message.attachments.length === 1 &&
+			message.attachments[0].payload &&
+			message.attachments[0].payload.coordinates &&
+			message.attachments[0].payload.coordinates.lat &&
+			message.attachments[0].payload.coordinates.long) {
+			var lat = message.attachments[0].payload.coordinates.lat;
+			var lon = message.attachments[0].payload.coordinates.long;
+			if (GlobalConsts.GEO_LIMITS.LAT.MAX < lat ||
+				GlobalConsts.GEO_LIMITS.LAT.MIN > lat ||
+				GlobalConsts.GEO_LIMITS.LON.MAX < lon ||
+				GlobalConsts.GEO_LIMITS.LON.MIN > lon) {
+				View.weOnlySupport(bot, message);
+			} else {
+				Utils.getAddressFromLatLon(lat, lon, "en", function(address_en) {
+					Utils.getAddressFromLatLon(lat, lon, "", function(address) {
+						User.setLatLon(message.user, lat, lon, (address ? address: ""), (address_en ? address_en: ""), function() {
+							message.lat = lat;
+							message.lon = lon;
+							message.address = address;
+							message.address_en = address_en;
+							View.foundYourAddress(bot, message, (message.lang === "en" ? address_en : address), function() {
+							});
+						});
+					});
+				});
+			}
+		}
 	}
 
-	botkit.hears(Sentences.user_wants_main_menu_he, 'message_received', function(bot, message) {
-		console.log("user requested hebrew menu: " + message.text);
-		showMainMenu(bot, message, "");
-		return false;
-	});
-
-	botkit.hears(Sentences.user_wants_main_menu_en, 'message_received', function(bot, message) {
-		console.log("user requested english menu: " + message.text);
-		showMainMenu(bot, message, "en");
-		return false;
+	botkit.on('message_received', function(bot, message) {
+		if (message.attachments) {
+			console.log("message has attachments");
+			handleUserAttachment(bot, message);
+		}
 	});
 
 	botkit.hears([".*"], 'message_received', function(bot, message) {
-		console.log("user requested english menu: " + message.text);
-		View.showDealsByString(bot, message);
+		if (message.text) {
+			View.showDealsByString(bot, message, function() {
+				View.showMainQuestion(bot, message);
+			});
+		}
 		return false;
 	});
 
@@ -50,22 +92,7 @@ controller.init = function(botkit, callback) {
 	if (typeof callback === "function") callback();
 }
 
-function handleUserAttachment(bot, message, lang) {
-	console.log("handleUserAttachment started");
-	if (message.attachments.length === 1 &&
-		message.attachments[0].payload &&
-		message.attachments[0].payload.coordinates &&
-		message.attachments[0].payload.coordinates.lat &&
-		message.attachments[0].payload.coordinates.long) {
-		var lat = message.attachments[0].payload.coordinates.lat;
-		var lon = message.attachments[0].payload.coordinates.long;
-		View.showDealsByDistance(bot, message, lang, lat, lon);
-		return true;
-	}
-	return false;
-}
-
-controller.messageReceived = function(bot, message, callback) {
+function enrichMessageData(bot, message, callback) {
 
 	function queryFbForUserProfile(userId, callback) {
 		HttpHelper.getJson(GlobalConsts.FACEBOOK_USER_PROFILE_API.replace("<USER_ID>", userId), function(fbInfo) {
@@ -91,6 +118,10 @@ controller.messageReceived = function(bot, message, callback) {
 		message.locale = (docFound && typeof docFound.locale === "string" && docFound.locale.length > 0  ? docFound.locale : null);
 		message.timezone = (docFound && typeof docFound.timezone === "number" ? docFound.timezone : null);
 		message.gender = (docFound && typeof docFound.gender === "string" && docFound.gender.length > 0  ? docFound.gender : null);
+		message.lat = (docFound && typeof docFound.lat === "number" ? docFound.lat : null);
+		message.lon = (docFound && typeof docFound.lon === "number" ? docFound.lon : null);
+		message.address = (docFound && typeof docFound.address === "string" && docFound.address.length > 0 ? docFound.address : null);
+		message.address_en = (docFound && typeof docFound.address_en === "string" && docFound.address_en.length > 0 ? docFound.address_en : null);
 		if (!docFound.gender || !docFound.timezone) {
 			queryFbForUserProfile(message.user, function() {
 				if (typeof callback === "function") callback();
@@ -99,6 +130,16 @@ controller.messageReceived = function(bot, message, callback) {
 			if (typeof callback === "function") callback();
 		}
 	});
+}
+
+controller.messageReceived = function(bot, message, callback) {
+	//console.log("controller.messageReceived");
+	enrichMessageData(bot, message, callback);
+}
+
+controller.postbackReceived = function(bot, message, callback) {
+	//console.log("controller.postbackReceived");
+	enrichMessageData(bot, message, callback);
 }
 
 controller.messageSent = function(bot, message, callback) {
@@ -117,8 +158,14 @@ controller.defaultPostBackDataHandler = function(bot, message, postBackId, postB
 	console.error("Could not find a postback callback");
 }
 
+controller.showMainQuestion = function(bot, message) {
+	View.showMainQuestion(bot, message);
+}
+
 controller.showLinks = function(bot, message) {
-	View.showLinks(bot, message);
+	View.showLinks(bot, message, function() {
+		View.showMainQuestion(bot, message);
+	});
 }
 
 controller.changeLanguage = function(bot, message) {
@@ -128,12 +175,12 @@ controller.changeLanguage = function(bot, message) {
 controller.switchedLanguage = function(bot, message, lang) {
 	User.setLang(message.user, lang, function() {
 		message.lang = lang;
-		View.showMainMenu(bot, message);
+		View.showMainQuestion(bot, message);
 	});
 }
 
 controller.findOptions = function(bot, message) {
-	View.showDeal(bot, message);
+	View.showDeals(bot, message);
 }
 
 controller.showCategories = function(bot, message) {
@@ -154,6 +201,12 @@ controller.showTimes = function(bot, message) {
 controller.choseTime = function(bot, message, time) {
 	message.dealTime = time;
 	User.setDealTime(message.user, time, function() {
+		View.showMainQuestion(bot, message);
+	});
+}
+
+controller.showHowToSendMyLocation = function(bot, message) {
+	View.showHowToSendMyLocation(bot, message, function() {
 		View.showMainQuestion(bot, message);
 	});
 }

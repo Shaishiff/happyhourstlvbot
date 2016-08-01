@@ -25,6 +25,10 @@ user.setFbInfo = function(userId, fbInfo, callback) {
 	callback);
 }
 
+user.setLatLon = function(userId, lat, lon, address, address_en, callback) {
+	MongoHelper.upsert({userId: userId},{$set: {userId: userId, lat: lat, lon: lon, address: address, address_en: address_en, latLonLastUpdateTime: new Date()}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
+}
+
 user.setLang = function(userId, lang, callback) {
 	MongoHelper.upsert({userId: userId},{$set: {userId: userId, lang: lang, langLastUpdateTime: new Date()}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }

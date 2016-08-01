@@ -1,9 +1,9 @@
 "use strict";
 
 var INVALID_NUM = -999;
-var vTODAY = "-1";
-var vRIGHT_NOW = "-2";
-var vTOMORROW = "-3";
+var vTODAY = "vTODAY";
+var vRIGHT_NOW = "vRIGHT_NOW";
+var vTOMORROW = "vTOMORROW";
 
 var globalConsts = {
 	INVALID_NUM: INVALID_NUM,
@@ -17,36 +17,46 @@ var globalConsts = {
 	HAPPY_HOURS_DOMAIN: "https://happyhourstlv.com",
 	READ_HAPPY_HOURS_INTERVAL: 1000*60*60,
 	DEALS_IN_CAROUSEL: 5,
+	GEO_LIMITS: {
+		LAT: {
+			MAX: 32.146092,
+			MIN: 31.954432
+		},
+		LON: {
+			MAX: 34.838289,
+			MIN: 34.715694
+		}
+	},
 	CATEGORIES: [{
-		title_en: "Happy Hour",
+		title_en: "a happy hour",
 		title: "שעה שמחה",
 		db_name: "hh",
 		payload: "showHappyHour",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
 	},
 	{
-		title_en: "All",
-		title: "הכל",
+		title_en: "all deals",
+		title: "את כל הדילים",
 		db_name: "everything",
 		payload: "showEverything",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
 	},
 	{
-		title_en: "Late Night",
+		title_en: "a late night",
 		title: "לייט נייט",
 		db_name: "ln",
 		payload: "showLateNight",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
 	},
 	{
-		title_en: "Business Lunch",
+		title_en: "a business lunch",
 		title: "עסקית צהריים",
 		db_name: "bl",
 		payload: "showLunch",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg"
 	},
 	{
-		title_en: "Brunch",
+		title_en: "a brunch",
 		title: "'בראנץ",
 		db_name: "br",
 		payload: "showBrunch",
@@ -56,21 +66,21 @@ var globalConsts = {
 	RIGHT_NOW: vRIGHT_NOW,
 	TOMORROW: vTOMORROW,
 	TIMES: [{
-		title_en: "Now",
+		title_en: "right now",
 		title: "עכשיו",
 		db_name: vRIGHT_NOW,
 		payload: "showNow",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
 	},
 	{
-		title_en: "Today",
+		title_en: "today",
 		title: "היום",
 		db_name: vTODAY,
 		payload: "showToday",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
 	},
 	{
-		title_en: "Tomorrow",
+		title_en: "tomorrow",
 		title: "מחר",
 		db_name: vTOMORROW,
 		payload: "showTomorrow",

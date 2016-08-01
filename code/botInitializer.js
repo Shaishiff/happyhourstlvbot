@@ -35,7 +35,9 @@ botInitializer.init = function(callback) {
 
 	// Facebook postsbacks.
 	fbBot.on('facebook_postback', function(bot, message) {
-	  PostBackHelper.handlePostBack(bot, message, message.payload);
+		Controller.postbackReceived(bot, message, function() {
+	  		PostBackHelper.handlePostBack(bot, message, message.payload);
+	  	});
 	});
 
 	Controller.init(fbBot, function() {
