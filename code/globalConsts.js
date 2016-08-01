@@ -6,6 +6,7 @@ var vRIGHT_NOW = -2;
 
 var globalConsts = {
 	INVALID_NUM: INVALID_NUM,
+	FACEBOOK_PERSISTENT_MAIN_MENU_URL: "https://graph.facebook.com/v2.6/me/thread_settings?access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	FACEBOOK_GET_STARTED_BUTTON_URL: "https://graph.facebook.com/v2.6/me/thread_settings?access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	FACEBOOK_WELCOME_MSG_URL: "https://graph.facebook.com/v2.6/" + process.env.FACEBOOK_PAGE_ID + "/thread_settings?access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	FACEBOOK_USER_PROFILE_API: "https://graph.facebook.com/v2.6/<USER_ID>?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,

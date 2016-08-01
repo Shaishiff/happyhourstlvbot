@@ -9,8 +9,71 @@ var MongoHelper = require('./mongoHelper');
 var view = {};
 
 view.buildPersistentMainMenu = function() {
-  // TODO
-  return {};
+  var elements = [];
+  elements.push({
+    "type": "postback",
+    "title": "מדריך / Guide",
+    "payload": "startGuide"
+  });
+  elements.push({
+    "type": "postback",
+    "title": "חיפוש / Search",
+    "payload": "startSearch"
+  });
+  elements.push({
+    "type": "postback",
+    "title": "שפה / Language",
+    "payload": "changeLanguage"
+  });
+  elements.push({
+    "type": "postback",
+    "title": "קישורים / Links",
+    "payload": "showLinks"
+  });
+  return elements;
+}
+
+view.showGetStartedMessage = function(bot, message, callback) {
+  FacebookHelper.sendText(bot,
+    message,
+    "הי ! ברוך הבא ל-HappyHoursTLV !\n"
+    + ".To change the language go to the menu below\n",
+    callback);
+}
+
+view.showLinks = function(bot, message, callback) {
+  FacebookHelper.sendButtonTemplate(bot,
+    message,
+    "Here are a few helpful links...",
+    [{
+      "type": "web_url",
+      "title": "happyhourstlv.com",
+      "url": "https://happyhourstlv.com"
+    },
+    {
+      "type": "web_url",
+      "title": "Our fb page",
+      "url": "https://www.facebook.com/happyhourstlv"
+    }],
+    callback);
+}
+
+view.changeLanguage = function(bot, message, callback) {
+  FacebookHelper.sendTextWithQuickReplies(bot,
+    message,
+    "Please choose your preferred language:\n"
+    + ":בבקשה בחר את השפה המועדפת עליך\n",
+    [{
+      "type":"postback",
+      "title": "English",
+      "payload": "switchedLanguage-en"
+    },
+    {
+      "type":"postback",
+      "title": "עברית",
+      "payload": "switchedLanguage-"
+    }],
+    callback);
 }
 
 view.buildMainMenu = function(lang) {

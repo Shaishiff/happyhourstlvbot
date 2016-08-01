@@ -9,9 +9,9 @@ var Api = require('./api');
 var controller = {};
 
 controller.init = function(botkit, callback) {
-	// FacebookHelper.setGetStartedButton(function() {
-	// 	FacebookHelper.setPersistentMainMenu(View.buildPersistentMainMenu());
-	// });
+	FacebookHelper.setGetStartedButton(function() {
+		FacebookHelper.setPersistentMainMenu(View.buildPersistentMainMenu());
+	});
 
 	botkit.hears(["test"], 'message_received', function(bot, message) {
 		FacebookHelper.sendText(bot, message, "test back");
@@ -58,7 +58,10 @@ function handleUserAttachment(bot, message, lang) {
 }
 
 controller.messageReceived = function(bot, message, callback) {
-	if (typeof callback === "function") callback();
+	User.getLang(message.user, function(docFound) {
+		message.lang = (docFound && typeof docFound.lang === "string" ? docFound.lang : "");
+		if (typeof callback === "function") callback();
+	});
 }
 
 controller.messageSent = function(bot, message, callback) {
@@ -70,10 +73,25 @@ controller.unknownUserMessage = function(bot, message, callback) {
 }
 
 controller.getStartedButtonWasClicked = function(bot, message) {
+	View.showGetStartedMessage(bot, message);
 }
 
 controller.defaultPostBackDataHandler = function(bot, message, postBackId, postBackData) {
 	console.error("Could not find a postback callback");
+}
+
+controller.showLinks = function(bot, message) {
+	View.showLinks(bot, message);
+}
+
+controller.changeLanguage = function(bot, message) {
+	View.changeLanguage(bot, message);
+}
+
+controller.switchedLanguage = function(bot, message, lang) {
+	User.setLang(message.user, lang, function() {
+		View.showMainMenu(bot, message, lang);
+	});
 }
 
 module.exports = controller;
