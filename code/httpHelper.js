@@ -3,7 +3,7 @@
 var Request = require('request');
 var httpHelper = {};
 
-httpHelper.httpGetJson = function(url, callback) {
+httpHelper.getJson = function(url, callback) {
   Request({
     url: url,
     method: 'GET'
@@ -14,16 +14,16 @@ httpHelper.httpGetJson = function(url, callback) {
       console.error('Error in response body for http get ' + url, response.body.error);
     } else {
       try {
-        console.log(response.body);
+        //console.log(response.body);
         var parsedResponse = JSON.parse(response.body)
-        console.log("Parsed response successfully");
+        //console.log("Parsed response successfully");
       } catch (e) {
         console.error('Error parsing json response from http get ' + url);
       }
       callback(parsedResponse);
       return;
     }
-    callback();
+    callback(null);
   });
 }
 
@@ -40,9 +40,9 @@ httpHelper.httpPostJson = function(url, headers, body, callback) {
       console.error('Error in response body for http post ' + url, response.body.error);
     } else {
       try {
-        console.log(response.body);
+        //console.log(response.body);
         var parsedResponse = JSON.parse(response.body);
-        console.log("Parsed response successfully");
+        //console.log("Parsed response successfully");
         return;
       } catch (e) {
         console.error('Error parsing json response from http post ' + url);
@@ -50,7 +50,7 @@ httpHelper.httpPostJson = function(url, headers, body, callback) {
       callback(parsedResponse);
       return;
     }
-    callback();
+    callback(null);
   });
 }
 

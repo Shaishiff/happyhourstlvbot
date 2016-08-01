@@ -1,12 +1,14 @@
 "use strict";
+
 var INVALID_NUM = -999;
 var vTODAY = -1;
 var vRIGHT_NOW = -2;
-var consts = {
+
+var globalConsts = {
 	INVALID_NUM: INVALID_NUM,
 	FACEBOOK_WELCOME_MSG_URL: "https://graph.facebook.com/v2.6/" + process.env.FACEBOOK_PAGE_ID + "/thread_settings?access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
 	FACEBOOK_USER_PROFILE_API: "https://graph.facebook.com/v2.6/<USER_ID>?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=" + process.env.FACEBOOK_PAGE_ACCESS_TOKEN,
-	MONGO_DB_URL: "mongodb://" + process.env.MONGO_DB_USER + ":" + process.env.MONGO_DB_USER + "@" + process.env.MONGO_DB_HOST + ":" + process.env.MONGO_DB_PORT + "/" + process.env.MONGO_DB_NAME,
+	MONGO_DB_URL: process.env.MONGO_DB_URL,
 	MONGO_DB_USER_INFO_COL: "user_info",
 	ANALYTICS_API: "https://api.bot-metrics.com/v1/messages",
 	HAPPY_HOURS_DOMAIN: "https://happyhourstlv.com",
@@ -114,4 +116,8 @@ var consts = {
 	}]
 };
 
-module.exports = consts;
+globalConsts.init = function(callback) {
+	if (typeof callback === "function") callback();
+}
+
+module.exports = globalConsts;
