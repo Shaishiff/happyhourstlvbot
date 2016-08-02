@@ -20,11 +20,11 @@ view.buildPersistentMainMenu = function() {
   //   "title": "חיפוש / Search",
   //   "payload": "startSearch"
   // });
-  elements.push({
-    "type": "postback",
-    "title": "שפה / Language",
-    "payload": "changeLanguage"
-  });
+  // elements.push({
+  //   "type": "postback",
+  //   "title": "שפה / Language",
+  //   "payload": "changeLanguage"
+  // });
   elements.push({
     "type": "postback",
     "title": "קישורים / Links",
@@ -34,10 +34,9 @@ view.buildPersistentMainMenu = function() {
 }
 
 view.showGetStartedMessage = function(bot, message, callback) {
-  var welcomeText = (message.firstName ? "Hey " + message.firstName + " !" : "");
-  FacebookHelper.sendText(bot, message, welcomeText, function() {
+  FacebookHelper.sendText(bot, message, (message.firstName ? "Hey " + message.firstName + " !" : ""), function() {
   FacebookHelper.sendText(bot, message, "ברוך הבא ל-HappyHoursTLV !", function() {
-  FacebookHelper.sendText(bot, message, "To change the language go to the menu below.", function() {
+  //FacebookHelper.sendText(bot, message, "To change the language go to the menu in the bottom left corner.", function() {
   FacebookHelper.sendTextWithQuickReplies(bot,
     message,
     "דבר ראשון, על מנת לקבל תוצאות רלוונטיות הכי טוב שתשלח את מיקומך.",
@@ -50,6 +49,11 @@ view.showGetStartedMessage = function(bot, message, callback) {
       "type":"postback",
       "title": "לא תודה",
       "payload": "showMainQuestion"
+    },
+    {
+      "type":"postback",
+      "title": (message.lang !== "en" ? "Change language" : "שנה שפה"),
+      "payloa": "changeLanguage"
     }
     // {
     //   "type":"postback",
@@ -64,7 +68,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
     ],
     callback);
   });
-  });
+  //});
   });
 }
 
@@ -197,6 +201,10 @@ view.showMainQuestion = function(bot, message, callback) {
   options.push({
     'title': (message.lang === "en" ? "Set new location ?" : "איך לעדכן מיקום ?"),
     'payload': "showHowToSendMyLocation"
+  });
+  options.push({
+    'title': (message.lang !== "en" ? "Change language" : "שנה שפה"),
+    'payload': "changeLanguage"
   });
   var address = message["address" + (message.lang === "en" ? "_en" : "")];
   var textForSpecificPlace = (message.lang === "en" ? "If you are looking for a specific place, simply text it's name." : "אם אתה מחפש מידע על מקום ספציפי, פשוט שלח הודעה עם השם שלו.");
