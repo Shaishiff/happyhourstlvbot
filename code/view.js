@@ -53,7 +53,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
     {
       "type":"postback",
       "title": (message.lang !== "en" ? "Change language" : "שנה שפה"),
-      "payloa": "changeLanguage"
+      "payload": "changeLanguage"
     }
     // {
     //   "type":"postback",
