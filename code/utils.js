@@ -26,8 +26,8 @@ utils.isArray = function(arr) {
 // }
 
 utils.shuffleArray = function(array) {
-  console.log("before");
-  console.log(array);
+  // console.log("before");
+  // console.log(array);
   var currentIndex = array.length, temporaryValue, randomIndex;
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -39,8 +39,8 @@ utils.shuffleArray = function(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-  console.log("after");
-  console.log(array);
+  // console.log("after");
+  // console.log(array);
   return array;
 }
 
