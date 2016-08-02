@@ -134,6 +134,7 @@ function enrichMessageData(bot, message, callback) {
 		message.lon = (docFound && typeof docFound.lon === "number" ? docFound.lon : null);
 		message.address = (docFound && typeof docFound.address === "string" && docFound.address.length > 0 ? docFound.address : null);
 		message.address_en = (docFound && typeof docFound.address_en === "string" && docFound.address_en.length > 0 ? docFound.address_en : null);
+		message.onBoardMessageShowed = (docFound ? docFound.onBoardMessageShowed : false);
 		if (!docFound || !docFound.gender || !docFound.timezone) {
 			queryFbForUserProfile(message.user, function() {
 				if (typeof callback === "function") callback();
@@ -171,7 +172,17 @@ controller.defaultPostBackDataHandler = function(bot, message, postBackId, postB
 }
 
 controller.showMainQuestion = function(bot, message) {
-	View.showMainQuestion(bot, message);
+	if (message.onBoardMessageShowed) {
+		View.showMainQuestion(bot, message);
+		return;
+	} else {
+		message.onBoardMessageShowed = true;
+		User.setOnBoardMessageShowed(message.user, function() {
+			View.showOnBoardingMessage(bot, message, function() {
+				View.showMainQuestion(bot, message);
+			});
+		});
+	}
 }
 
 controller.showLinks = function(bot, message) {

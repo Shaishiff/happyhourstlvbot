@@ -72,6 +72,13 @@ view.showGetStartedMessage = function(bot, message, callback) {
   });
 }
 
+view.showOnBoardingMessage = function(bot, message, callback) {
+  FacebookHelper.sendText(bot,
+    message,
+    (message.lang === "en" ? "If you are looking for a specific place, simply text it's name." : "אם אתה מחפש מידע על מקום ספציפי, פשוט שלח הודעה עם השם שלו."),
+    callback);
+}
+
 view.showLinks = function(bot, message, callback) {
   FacebookHelper.sendButtonTemplate(bot,
     message,
@@ -207,7 +214,7 @@ view.showMainQuestion = function(bot, message, callback) {
     'payload': "changeLanguage"
   });
   var address = message["address" + (message.lang === "en" ? "_en" : "")];
-  var textForSpecificPlace = (message.lang === "en" ? "If you are looking for a specific place, simply text it's name." : "אם אתה מחפש מידע על מקום ספציפי, פשוט שלח הודעה עם השם שלו.");
+  var textForSpecificPlace = ""; //(message.lang === "en" ? "If you are looking for a specific place, simply text it's name." : "אם אתה מחפש מידע על מקום ספציפי, פשוט שלח הודעה עם השם שלו.");
   var textForSearch = (message.lang === "en" ? "If you are looking for " : "אם אתה מחפש ")
       + category +
       (message.lang === "en" ? " for " : " ל")

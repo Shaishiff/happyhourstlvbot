@@ -53,6 +53,10 @@ user.getDealTime = function(userId, callback) {
 	MongoHelper.findOne({userId: userId, time: { $exists: true}}, {time:1}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }
 
+user.setOnBoardMessageShowed = function(userId, callback) {
+	MongoHelper.upsert({userId: userId},{$set: {userId: userId, onBoardMessageShowed: true, onBoardMessageShowedUpdateTime: new Date()}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
+}
+
 user.setDealType = function(userId, type, callback) {
 	MongoHelper.upsert({userId: userId},{$set: {userId: userId, type: type, typeLastUpdateTime: new Date()}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }
