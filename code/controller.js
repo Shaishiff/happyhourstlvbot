@@ -80,7 +80,7 @@ controller.init = function(botkit, callback) {
 
 	botkit.on('message_received', function(bot, message) {
 		if (message.attachments) {
-			console.log("message has attachments");
+			//console.log("message has attachments");
 			handleUserAttachment(bot, message);
 		}
 	});
