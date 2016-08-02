@@ -213,7 +213,7 @@ view.showMainQuestion = function(bot, message, callback) {
       (message.lang === "en" ? " for " : " ל")
       + time +
       (address ? (message.lang === "en" ? " around " : " באזור ") + address : "") +
-      (message.lang === "en" ? ", click on \"find deals\" !" : ", הקלק על \"מצא דילים\" !")
+      (message.lang === "en" ? ", click on \"Find deals\" !" : ", הקלק על \"מצא דילים\" !")
     + (address ? "" :
       "\n" + (message.lang === "en" ? "Note: We don't have your location !\nPlease send it to receive relevant results.\nYou can always update it later." :
         "שים לב: אין לנו את המיקום שלך !\nבבקשה שלח אותו על מנת לקבל תוצאות רלוונטיות.\nתמיד תוכל לעדכן אותו אחר כן."));
