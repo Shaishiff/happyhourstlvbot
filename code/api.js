@@ -48,8 +48,7 @@ api.getDataByStringSimilarity = function(userText, userLang, callback) {
 
 		// Try without some common words:
 		var stringSimilarity = Math.min(stringSimilarity,Utils.getEditDistance(userText, dealName.replace(/bar/i,'').replace(/wine/i,'').replace(/burger/i,'')));
-
-		console.log("userText: " + userText + ", dealName: " + dealName + ", stringSimilarity: " + stringSimilarity);
+		//console.log("userText: " + userText + ", dealName: " + dealName + ", stringSimilarity: " + stringSimilarity);
 		return stringSimilarity;
 	}
 	userText = userText.toLowerCase();

@@ -219,7 +219,7 @@ controller.choseTime = function(bot, message, time) {
 
 controller.showHowToSendMyLocation = function(bot, message) {
 	View.showHowToSendMyLocation(bot, message, function() {
-		View.showMainQuestion(bot, message);
+//		View.showMainQuestion(bot, message);
 	});
 }
 
