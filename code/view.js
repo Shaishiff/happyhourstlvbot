@@ -308,19 +308,19 @@ view.showDeals = function(bot, message) {
 //   });
 // }
 
-view.showDealNumber = function(bot, message, postbackData) {
-  if (!postbackData) return;
-  if (postbackData.indexOf(",") === -1) postbackData += ",";
-  var objectId = postbackData.split(",")[0];
-  var lang = postbackData.split(",")[1];
-  Api.getDataByObjectId(objectId, function(dealData) {
-    if (!dealData || !dealData.phone) {
-      bot.reply(message, "Sorry but I don't have the number :(");
-      return;
-    }
-    bot.reply(message, dealData["headline" + (lang === "en" ? "_en" : "")] + "\n" + dealData.phone);
-  });
-}
+// view.showDealNumber = function(bot, message, postbackData) {
+//   if (!postbackData) return;
+//   if (postbackData.indexOf(",") === -1) postbackData += ",";
+//   var objectId = postbackData.split(",")[0];
+//   var lang = postbackData.split(",")[1];
+//   Api.getDataByObjectId(objectId, function(dealData) {
+//     if (!dealData || !dealData.phone) {
+//       bot.reply(message, "Sorry but I don't have the number :(");
+//       return;
+//     }
+//     bot.reply(message, dealData["headline" + (lang === "en" ? "_en" : "")] + "\n" + dealData.phone);
+//   });
+// }
 
 view.buildDealElement = function(dealData, lang) {
   //console.log("buildDealElement for: " + dealData["headline" + (lang === "en" ? "_en" : "")]);

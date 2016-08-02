@@ -8,10 +8,10 @@ var sentences = {
         }
     },
     no_deals_found: {
-        en: "No deals found :(",
+        en: "No relevant deals found :(",
         he: {
-            male: "לא נמצאו עסקאות :(",
-            female: "לא נמצאו עסקאות :("
+            male: "לא נמצאו דילים רלוונטים :(",
+            female: "לא נמצאו דילים רלוונטים :("
         }
     },
     type_menu_to_see_menu: {
