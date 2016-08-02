@@ -1,23 +1,22 @@
 {
-  "name": "beepboopfirstbot",
+  "name": "HappyHoursTLV",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "./code/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shaishiff/beepboopfirstbot.git"
+    "url": "git+https://github.com/Shaishiff/happyhourstlvbot.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Shaishiff/beepboopfirstbot/issues"
+    "url": "https://github.com/Shaishiff/happyhourstlvbot/issues"
   },
-  "homepage": "https://github.com/Shaishiff/beepboopfirstbot#readme",
+  "homepage": "https://github.com/Shaishiff/happyhourstlvbot#readme",
   "description": "",
   "dependencies": {
-    "botkit": "^0.1.1",
     "dateformat": "^1.0.12",
     "mongodb": "^2.1.18",
     "mysql": "^2.10.2",
