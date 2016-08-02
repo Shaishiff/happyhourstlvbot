@@ -135,10 +135,10 @@ api.getData = function(message, lat, lon, callback) {
 	processedData = api.filterDataByTime(processedData, message.dealTime, message.timezone);
 	//console.log("After time filter processedData.length: " + processedData.length);
 	if (lat != 0 && lon != 0) {
-		//console.log("Sorting according to distance from user");
+		console.log("Sorting according to distance from user");
 		api.getDataByDistanceFromUser(processedData, lat, lon, callback);
 	} else {
-		//console.log("Sorting randomly");
+		console.log("Sorting randomly");
 		callback(Utils.shuffleArray(processedData));
 	}
 }
