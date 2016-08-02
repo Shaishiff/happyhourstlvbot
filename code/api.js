@@ -2,7 +2,7 @@
 
 var GlobalConsts = require('./globalConsts');
 var Mysql = require('mysql');
-var Consts = require('./consts');
+var GlobalConsts = require('./globalConsts');
 var Utils = require('./utils');
 var api = {};
 var data = null;
