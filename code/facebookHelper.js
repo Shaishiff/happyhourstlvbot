@@ -242,7 +242,7 @@ facebookHelper.buildTextWithQuickReplies = function(text, replies) {
 
 facebookHelper.sendTextWithQuickReplies = function(bot, message, text, replies, callback) {
   if (typeof text !== "string" || text.length === 0) {
-    callback();
+    if (typeof callback === "function") callback();
     return;
   }
   bot.reply(message, facebookHelper.buildTextWithQuickReplies(text, replies), callback);

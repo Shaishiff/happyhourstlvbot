@@ -34,38 +34,38 @@ view.buildPersistentMainMenu = function() {
 }
 
 view.showGetStartedMessage = function(bot, message, callback) {
-  FacebookHelper.sendText(bot,
+  var welcomeText = (message.firstName ? "Hey " + message.firstName + " !" : "");
+  FacebookHelper.sendText(bot, message, welcomeText, function() {
+  FacebookHelper.sendText(bot, message, "ברוך הבא ל-HappyHoursTLV !", function() {
+  FacebookHelper.sendText(bot, message, "To change the language go to the menu below.", function() {
+  FacebookHelper.sendTextWithQuickReplies(bot,
     message,
-    "Hey" + (message.firstName ? " " + message.firstName : "") + ",\n"
-    + "ברוך הבא ל-HappyHoursTLV !\n"
-    + ".To change the language go to the menu below\n",
-    function() {
-        FacebookHelper.sendTextWithQuickReplies(bot,
-          message,
-          "דבר ראשון, על מנת לקבל תוצאות רלוונטיות הכי טוב שתשלח את מיקומך.\n"
-          + "First thing, to get the most relevant results please send us you location.\n",
-          [{
-            "type":"postback",
-            "title": "עדכן את המיקום שלי ?",
-            "payload": "showHowToSendMyLocation"
-          },
-          {
-            "type":"postback",
-            "title": "לא תודה",
-            "payload": "showMainQuestion"
-          },
-          {
-            "type":"postback",
-            "title": "Update my location ?",
-            "payload": "showHowToSendMyLocation"
-          },
-          {
-            "type":"postback",
-            "title": "No thanks",
-            "payload": "showMainQuestion"
-          }],
-          callback);
-    });
+    "דבר ראשון, על מנת לקבל תוצאות רלוונטיות הכי טוב שתשלח את מיקומך.",
+    [{
+      "type":"postback",
+      "title": "איך עושים את זה ?",
+      "payload": "showHowToSendMyLocation"
+    },
+    {
+      "type":"postback",
+      "title": "לא תודה",
+      "payload": "showMainQuestion"
+    }
+    // {
+    //   "type":"postback",
+    //   "title": "Update my location ?",
+    //   "payload": "showHowToSendMyLocation"
+    // },
+    // {
+    //   "type":"postback",
+    //   "title": "No thanks",
+    //   "payload": "showMainQuestion"
+    // }
+    ],
+    callback);
+  });
+  });
+  });
 }
 
 view.showLinks = function(bot, message, callback) {

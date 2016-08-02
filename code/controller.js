@@ -15,8 +15,17 @@ controller.init = function(botkit, callback) {
 		FacebookHelper.setPersistentMainMenu(View.buildPersistentMainMenu());
 	});
 
-	botkit.hears(["test"], 'message_received', function(bot, message) {
+	botkit.hears(["^test$"], 'message_received', function(bot, message) {
 		FacebookHelper.sendText(bot, message, "test back");
+		return false;
+	});
+
+	botkit.hears(["^delete me$", "^start over$"], 'message_received', function(bot, message) {
+		User.delete(message.user, function() {
+			FacebookHelper.sendText(bot, message, "*** Deleted all your past info, starting over... ***", function() {
+				controller.getStartedButtonWasClicked(bot, message);
+			});
+		});
 		return false;
 	});
 
@@ -100,9 +109,13 @@ function enrichMessageData(bot, message, callback) {
 				callback(false);
 				return;
 			}
-			console.log(fbInfo);
+			message.firstName = (fbInfo && typeof fbInfo.first_name === "string" && fbInfo.first_name.length > 0  ? fbInfo.first_name : null);
+			message.lastName = (fbInfo && typeof fbInfo.last_name === "string" && fbInfo.last_name.length > 0  ? fbInfo.last_name : null);
+			message.profilePic = (fbInfo && typeof fbInfo.profile_pic === "string" && fbInfo.profile_pic.length > 0  ? fbInfo.profile_pic : null);
+			message.locale = (fbInfo && typeof fbInfo.locale === "string" && fbInfo.locale.length > 0  ? fbInfo.locale : null);
+			message.timezone = (fbInfo && typeof fbInfo.timezone === "number" ? fbInfo.timezone : null);
+			message.gender = (fbInfo && typeof fbInfo.gender === "string" && fbInfo.gender.length > 0  ? fbInfo.gender : null);
 			User.setFbInfo(userId, fbInfo, callback);
-			return;
 		});
 	}
 
@@ -121,7 +134,7 @@ function enrichMessageData(bot, message, callback) {
 		message.lon = (docFound && typeof docFound.lon === "number" ? docFound.lon : null);
 		message.address = (docFound && typeof docFound.address === "string" && docFound.address.length > 0 ? docFound.address : null);
 		message.address_en = (docFound && typeof docFound.address_en === "string" && docFound.address_en.length > 0 ? docFound.address_en : null);
-		if (!docFound.gender || !docFound.timezone) {
+		if (!docFound || !docFound.gender || !docFound.timezone) {
 			queryFbForUserProfile(message.user, function() {
 				if (typeof callback === "function") callback();
 			});

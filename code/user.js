@@ -61,4 +61,8 @@ user.getDealTime = function(userId, callback) {
 	MongoHelper.findOne({userId: userId, type: { $exists: true}}, {type:1}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }
 
+user.delete = function(userId, callback) {
+	MongoHelper.delete({userId: userId}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
+}
+
 module.exports = user;
