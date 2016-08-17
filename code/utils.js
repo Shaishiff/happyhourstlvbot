@@ -135,7 +135,7 @@ utils.isNormalIntegerFromMinToMax = function(str, min, max) {
 
 utils.getTitleFromDbName = function(array, dbName, lang) {
   for(var i = 0; i < array.length; i++) {
-    if (array[i].db_name === dbName) {
+    if (array[i].db_name == dbName) {
       return array[i]["title" + (lang === "en" ? "_en" : "")];
     }
   }
