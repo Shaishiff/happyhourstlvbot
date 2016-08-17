@@ -85,7 +85,7 @@ var globalConsts = {
 		db_name: vTOMORROW,
 		payload: "showTomorrow",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
-	}
+	},
 	{
 		title_en: "Sunday",
 		title: "יום ראשון",
