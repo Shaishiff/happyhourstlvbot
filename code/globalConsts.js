@@ -86,63 +86,55 @@ var globalConsts = {
 		payload: "showTomorrow",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
 	}
-	// TODO: Add support for this sometime...
-	// {
-	// 	title_en: "Right Now",
-	// 	title: "עכשיו",
-	// 	db_name: vRIGHT_NOW,
-	// 	payload: "showRightNow",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
-	// },
-	// {
-	// 	title_en: "Sunday",
-	// 	title: "יום ראשון",
-	// 	db_name: 0,
-	// 	payload: "showSunday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
-	// },
-	// {
-	// 	title_en: "Monday",
-	// 	title: "יום שני",
-	// 	db_name: 1,
-	// 	payload: "showMonday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
-	// },
-	// {
-	// 	title_en: "Tuesday",
-	// 	title: "יום שלישי",
-	// 	db_name: 2,
-	// 	payload: "showTuesday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg"
-	// },
-	// {
-	// 	title_en: "Wednesday",
-	// 	title: "יום רביעי",
-	// 	db_name: 3,
-	// 	payload: "showWednesday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
-	// },
-	// {
-	// 	title_en: "Thursday",
-	// 	title: "יום חמישי",
-	// 	db_name: 4,
-	// 	payload: "showThursday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
-	// },
-	// {
-	// 	title_en: "Friday",
-	// 	title: "יום שישי",
-	// 	db_name: 5,
-	// 	payload: "showFriday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
-	// },
-	// {
-	// 	title_en: "Saturday",
-	// 	title: "יום שבת",
-	// 	db_name: 6,
-	// 	payload: "showSaturday",
-	// 	image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
-	// }
+	{
+		title_en: "Sunday",
+		title: "יום ראשון",
+		db_name: 0,
+		payload: "showSunday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
+	},
+	{
+		title_en: "Monday",
+		title: "יום שני",
+		db_name: 1,
+		payload: "showMonday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
+	},
+	{
+		title_en: "Tuesday",
+		title: "יום שלישי",
+		db_name: 2,
+		payload: "showTuesday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg"
+	},
+	{
+		title_en: "Wednesday",
+		title: "יום רביעי",
+		db_name: 3,
+		payload: "showWednesday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/brunch.jpg"
+	},
+	{
+		title_en: "Thursday",
+		title: "יום חמישי",
+		db_name: 4,
+		payload: "showThursday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
+	},
+	{
+		title_en: "Friday",
+		title: "יום שישי",
+		db_name: 5,
+		payload: "showFriday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
+	},
+	{
+		title_en: "Saturday",
+		title: "יום שבת",
+		db_name: 6,
+		payload: "showSaturday",
+		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
+	}
 	]
 };
 

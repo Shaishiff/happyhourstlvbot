@@ -82,13 +82,15 @@ api.filterDataByCategory = function(dataToFilter, category) {
 }
 
 api.filterDataByTime = function(dataToFilter, when, timezone) {
-	// TODO: Handle RIGHT_NOW
+
 	var timeToAdd = timezone * 60 * 60 * 1000;
 	var whenDay = null;
 	if (when == GlobalConsts.TODAY || when == GlobalConsts.RIGHT_NOW) {
 		whenDay = (new Date((new Date()).getTime() + timeToAdd)).getDay();
 	} else if (when == GlobalConsts.TOMORROW) {
 		whenDay = (new Date((new Date()).getTime() + 24 * 60 * 60 * 1000 + timeToAdd)).getDay();
+	} else {
+		whenDay	= when;
 	}
 	var whenHour = null;
 	if (when == GlobalConsts.RIGHT_NOW) {
@@ -99,7 +101,7 @@ api.filterDataByTime = function(dataToFilter, when, timezone) {
 		try {
 			opening_hours = JSON.parse(obj.opening_hours);
 			var relevantDay = true;
-			if (whenDay) {
+			if (whenDay !== null) {
 				relevantDay = (opening_hours &&
 					opening_hours.length &&
 					opening_hours.length === 7 &&
