@@ -81,7 +81,7 @@ utils.getSentence = function(sentenceKey, lang, gender) {
 
 utils.getAddressFromLatLon = function(lat, lon, lang, callback) {
   if (lang === "") lang = "iw"; // See: https://developers.google.com/maps/faq#languagesupport
-  var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=<LAT>,<LON>&language=<LANG>&location_type=ROOFTOP";
+  var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=<LAT>,<LON>&language=<LANG>";
   url += "&key=" + process.env.GOOGLE_API_KEY;
   url = url.replace("<LAT>", lat).replace("<LON>", lon).replace("<LANG>", lang);
   HttpHelper.getJson(url, function(jsonResponse) {
@@ -89,14 +89,16 @@ utils.getAddressFromLatLon = function(lat, lon, lang, callback) {
       jsonResponse.status &&
       jsonResponse.status == "OK" &&
       jsonResponse.results &&
-      jsonResponse.results.length > 0 &&
-      jsonResponse.results[0].formatted_address) {
-      var address = jsonResponse.results[0].formatted_address;
-      //console.log("Found address: " + address)
-      callback(address);
-    } else {
-      callback(null);
+      jsonResponse.results.length > 0) {
+      for(var i = 0; i < jsonResponse.results.length; ++i) {
+        if (jsonResponse.results[i].formatted_address) {
+          var address = jsonResponse.results[i].formatted_address;
+          callback(address);
+          return;
+        }
+      }
     }
+    callback(null);
   });
 }
 
