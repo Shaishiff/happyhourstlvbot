@@ -28,35 +28,35 @@ var globalConsts = {
 		}
 	},
 	CATEGORIES: [{
-		title_en: "a happy hour",
+		title_en: "Happy hour",
 		title: "שעה שמחה",
 		db_name: "hh",
 		payload: "showHappyHour",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/happyhour.jpg"
 	},
 	{
-		title_en: "all deals",
+		title_en: "All deals",
 		title: "את כל הדילים",
 		db_name: "everything",
 		payload: "showEverything",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/everything.jpg"
 	},
 	{
-		title_en: "a late night",
+		title_en: "Late night",
 		title: "לייט נייט",
 		db_name: "ln",
 		payload: "showLateNight",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/latenight.jpg"
 	},
 	{
-		title_en: "a business lunch",
+		title_en: "Business lunch",
 		title: "עסקית צהריים",
 		db_name: "bl",
 		payload: "showLunch",
 		image_url: "https://raw.githubusercontent.com/Shaishiff/happyhourstlvbot/master/images/lunch.jpg"
 	},
 	{
-		title_en: "a brunch",
+		title_en: "Brunch",
 		title: "'בראנץ",
 		db_name: "br",
 		payload: "showBrunch",
