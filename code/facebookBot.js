@@ -7,6 +7,7 @@ var CoreBot = require('./coreBot.js');
 var HttpHelper = require('./httpHelper');
 var GlobaConsts = require('./globalConsts');
 var Utils = require('./utils');
+var Fs = require('fs');
 
 function Facebookbot(configuration) {
 
@@ -225,6 +226,14 @@ function Facebookbot(configuration) {
             } else {
                 res.send('INVALID GET - NO HUB PARAMS');
             }
+        });
+
+        setWebhook(webserver, 'get', ['/privacy'], function(req, res) {
+            Fs.readFile('./code/privacy.html', function (err, html) {
+                res.writeHeader(200, {"Content-Type": "text/html"});
+                res.write(html);
+                res.end();
+            });
         });
 
         setWebhook(webserver, 'get', ['/health','/'], function(req, res) {
