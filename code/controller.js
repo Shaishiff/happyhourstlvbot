@@ -166,7 +166,6 @@ controller.getStartedButtonWasClicked = function(bot, message) {
 	}
 }
 
-
 controller.attachmentReceived = function(bot, message) {
 
 	function handleUserAttachment(bot, message, callback) {
@@ -224,7 +223,11 @@ controller.showThankYouForContactingEn = function(bot, message) {
 	console.log("controller.showThankYouForContactingEn");
 	User.setLang(message.user, "en", function() {
 		message.lang = "en";
-		View.showThankYouForContactingEn(bot, message);
+		if (!message.isExploringUser) {
+			View.showThankYouForContactingEn(bot, message);
+		} else {
+			View.showMainQuestion(bot, message);
+		}
 	});
 }
 
