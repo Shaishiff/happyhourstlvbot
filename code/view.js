@@ -18,20 +18,57 @@ view.buildPersistentMainMenu = function() {
   return elements;
 }
 
+view.showThankYouForContacting = function(bot, message, callback) {
+  var text = "תודה שפנית לשעות שמחות תל-אביב !"
+  + "\nאם רצית ליצור קשר עם מנהלי העמוד, פשוט שלח את ההודעה שלך ונחזור אליך בהקדם."
+  + "\nאם אתה רוצה למצוא עסקאות טובות לחץ על הכפתור בוא נתחיל !";
+
+  FacebookHelper.sendButtonTemplate(bot,
+    message,
+    text,
+    [{
+      "type": "postback",
+      "title": "בוא נתחיל !",
+      "payload": "letsExplore"
+    },
+    {
+      "type": "postback",
+      "title": "English Please",
+      "payload": "showThankYouForContactingEn"
+    }],
+    callback);
+}
+
+view.showThankYouForContactingEn = function(bot, message, callback) {
+  var text = "Thank you for contacting HappyHoursTLV !"
+  + "\nIf you want to contact the page admin, please write your message and we will get back to you shortly."
+  + "\nIf you are looking to explore great new deals then click on Let's Explore !";
+
+  FacebookHelper.sendButtonTemplate(bot,
+    message,
+    text,
+    [{
+      "type": "postback",
+      "title": "Let's Explore !",
+      "payload": "letsExploreEn"
+    }],
+    callback);
+}
+
 view.showGetStartedMessage = function(bot, message, callback) {
-  FacebookHelper.sendText(bot, message, (message.firstName ? "Hey " + message.firstName + " !" : ""), function() {
-  FacebookHelper.sendText(bot, message, "ברוך הבא ל-HappyHoursTLV !", function() {
+  FacebookHelper.sendText(bot, message, (message.firstName ? (message.lang === "en" ? "Hey " : "הי ") + message.firstName + " !" : ""), function() {
+  // FacebookHelper.sendText(bot, message, (message.lang === "en" ? "Welcome to HappyHoursTLV !" : "ברוך הבא ל-HappyHoursTLV !"), function() {
   FacebookHelper.sendTextWithQuickReplies(bot,
     message,
-    "דבר ראשון, על מנת לקבל תוצאות רלוונטיות הכי טוב שתשלח את מיקומך.",
+    (message.lang === "en" ? "First things first, in order to get the most relevant results it will be best if you could send us your location." : "דבר ראשון, על מנת לקבל תוצאות רלוונטיות הכי טוב שתשלח את מיקומך."),
     [{
       "type":"postback",
-      "title": "איך עושים את זה ?",
+      "title": (message.lang === "en" ? "How do I do that ?" : "איך עושים את זה ?"),
       "payload": "showHowToSendMyLocation"
     },
     {
       "type":"postback",
-      "title": "לא תודה",
+      "title": (message.lang === "en" ? "No thanks" : "לא תודה"),
       "payload": "showMainQuestion"
     },
     {
@@ -41,7 +78,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
     }
     ],
     callback);
-  });
+  // });
   });
 }
 
@@ -65,7 +102,13 @@ view.showLinks = function(bot, message, callback) {
       "type": "web_url",
       "title": (message.lang === "en" ? "Our fb page" : "עמוד הפייסבוק שלנו"),
       "url": "https://www.facebook.com/happyhourstlv"
-    }],
+    },
+    {
+      "type": "web_url",
+      "title": (message.lang === "en" ? "Add your business" : "הוסף את העסק שלך"),
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLScz3QshGRoJzbbn8Ztb6VW4T2QbdeZG6LhekajLCs18n7i_Gg/viewform"
+    }
+    ],
     callback);
 }
 

@@ -142,7 +142,6 @@ function Facebookbot(configuration) {
     facebook_botkit.createWebhookEndpoints = function(webserver, bot, cb) {
 
         setWebhook(webserver, 'post', ['/facebook/receive','/messenger'], function(req, res) {
-            //console.log("RECEIVED POST FROM FB", new Date());
             if (GlobaConsts.XHUB_VALIDATION && (!req.isXHub || !req.isXHubValid())) {
                 console.error('Warning - request header X-Hub-Signature not present or invalid');
                 res.send('Failed to verify');
@@ -150,21 +149,26 @@ function Facebookbot(configuration) {
             }
             var obj = req.body;
             if (obj.entry) {
+                console.log("WEBHOOK RECEIVED MESSAGE", JSON.stringify(req.body.entry));
                 for (var e = 0; e < obj.entry.length; e++) {
                     for (var m = 0; m < obj.entry[e].messaging.length; m++) {
                         var facebook_message = obj.entry[e].messaging[m];
                         if (facebook_message.message) {
-                            var message = {
-                                text: facebook_message.message.text,
-                                user: facebook_message.sender.id,
-                                channel: facebook_message.sender.id,
-                                timestamp: facebook_message.timestamp,
-                                seq: facebook_message.message.seq,
-                                mid: facebook_message.message.mid,
-                                attachments: facebook_message.message.attachments,
-                                quick_reply: facebook_message.message.quick_reply
-                            };
-                            facebook_botkit.receiveMessage(bot, message);
+                            if (facebook_message.message.is_echo) {
+                                console.log('got message echo');
+                            } else {
+                                var message = {
+                                    text: facebook_message.message.text,
+                                    user: facebook_message.sender.id,
+                                    channel: facebook_message.sender.id,
+                                    timestamp: facebook_message.timestamp,
+                                    seq: facebook_message.message.seq,
+                                    mid: facebook_message.message.mid,
+                                    attachments: facebook_message.message.attachments,
+                                    quick_reply: facebook_message.message.quick_reply
+                                };
+                                facebook_botkit.receiveMessage(bot, message);
+                            }
                         } else if (facebook_message.postback) {
                             // trigger BOTH a facebook_postback event
                             // and a normal message received event.
@@ -195,14 +199,14 @@ function Facebookbot(configuration) {
                                 timestamp: facebook_message.timestamp,
                             };
                             facebook_botkit.trigger('facebook_optin', [bot, message]);
-                        } else if (facebook_message.delivery) {
-                            var message = {
-                                optin: facebook_message.delivery,
-                                user: facebook_message.sender.id,
-                                channel: facebook_message.sender.id,
-                                timestamp: facebook_message.timestamp,
-                            };
-                            facebook_botkit.trigger('message_delivered', [bot, message]);
+                        // } else if (facebook_message.delivery) {
+                        //     var message = {
+                        //         optin: facebook_message.delivery,
+                        //         user: facebook_message.sender.id,
+                        //         channel: facebook_message.sender.id,
+                        //         timestamp: facebook_message.timestamp,
+                        //     };
+                        //     facebook_botkit.trigger('message_delivered', [bot, message]);
                         } else if (facebook_message.account_linking) {
                             var message = {
                                 user: facebook_message.sender.id,
@@ -211,6 +215,10 @@ function Facebookbot(configuration) {
                                 account_linking: facebook_message.account_linking
                             };
                             facebook_botkit.trigger('facebook_account_linking', [bot, message]);
+                        }  else if (facebook_message.read) {
+                            console.log('got message read');
+                        } else if (facebook_message.delivery) {
+                            console.log('got message delivery');
                         } else {
                             facebook_botkit.log('Got an unexpected message from Facebook: ', facebook_message);
                         }

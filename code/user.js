@@ -61,6 +61,14 @@ user.setDealType = function(userId, type, callback) {
 	MongoHelper.upsert({userId: userId},{$set: {userId: userId, type: type, typeLastUpdateTime: new Date()}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }
 
+user.setStartTime = function(userId, callback) {
+	MongoHelper.upsert({userId: userId},{$set: {userId: userId, startTime: new Date()}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
+}
+
+user.setExploringUser = function(userId, callback) {
+	MongoHelper.upsert({userId: userId},{$set: {userId: userId, isExploringUser: true}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
+}
+
 user.getDealTime = function(userId, callback) {
 	MongoHelper.findOne({userId: userId, type: { $exists: true}}, {type:1}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }

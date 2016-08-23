@@ -3,7 +3,6 @@
 var GlobalConsts = require('./globalConsts');
 var FacebookBot = require('./facebookBot');
 var Controller = require('./controller');
-var PostBackHelper = require('./postBackHelper');
 var botInitializer = {};
 
 botInitializer.init = function(callback) {
@@ -28,7 +27,10 @@ botInitializer.init = function(callback) {
 	// Not sure what the users wants. Final fallback.
 	fbBot.on("message_received", function(bot, message) {
 		if (typeof message.quick_reply === "object" && typeof message.quick_reply.payload === "string") {
-			PostBackHelper.handlePostBack(bot, message, message.quick_reply.payload);
+			Controller.handlePostBack(bot, message, message.quick_reply.payload);
+			return false;
+		} else if (typeof message.attachments === "object") {
+			Controller.attachmentReceived(bot, message);
 			return false;
 		}
 	});
@@ -36,7 +38,7 @@ botInitializer.init = function(callback) {
 	// Facebook postsbacks.
 	fbBot.on('facebook_postback', function(bot, message) {
 		Controller.postbackReceived(bot, message, function() {
-	  		PostBackHelper.handlePostBack(bot, message, message.payload);
+	  		Controller.handlePostBack(bot, message, message.payload);
 	  	});
 	});
 
