@@ -14,6 +14,11 @@ view.buildPersistentMainMenu = function() {
     "type": "postback",
     "title": "קישורים / Links",
     "payload": "showLinks"
+  },
+  {
+      "type": "postback",
+      "title": "Let's Explore / בוא נתחיל",
+      "payload": "letsExploreInDefaultLang"
   });
   return elements;
 }
@@ -51,6 +56,32 @@ view.showThankYouForContactingEn = function(bot, message, callback) {
       "type": "postback",
       "title": "Let's Explore !",
       "payload": "letsExploreEn"
+    },
+    {
+      "type": "postback",
+      "title": "בעברית בבקשה",
+      "payload": "showThankYouForContacting"
+    }],
+    callback);
+}
+
+view.showContactUs = function(bot, message) {
+  var text = "";
+  if (message.lang === "en") {
+    text = "Please write your message and we will get back to you shortly."
+    + "\nTo go back and explore great new deals click on Let's Explore !";
+  } else {
+    text = "אם רצית ליצור קשר עם מנהלי העמוד, פשוט שלח את ההודעה שלך ונחזור אליך בהקדם."
+    + "\nעל מנת לחזור ולחפש עסקאות טובות לחץ על הכפתור בוא נתחיל !";
+  }
+
+  FacebookHelper.sendButtonTemplate(bot,
+    message,
+    text,
+    [{
+      "type": "postback",
+      "title": (message.lang === "en" ? "Let's Explore !" : "בוא נתחיל !"),
+      "payload": (message.lang === "en" ? "letsExploreEn" : "letsExplore")
     }],
     callback);
 }
@@ -74,6 +105,11 @@ view.showGetStartedMessage = function(bot, message, callback) {
     {
       "type":"postback",
       "title": (message.lang !== "en" ? "Change language" : "שנה שפה"),
+      "payload": "changeLanguage"
+    },
+    {
+      "type":"postback",
+      "title": (message.lang !== "en" ? "Contact Page Admin" : "צור קשר"),
       "payload": "changeLanguage"
     }
     ],

@@ -219,6 +219,18 @@ controller.attachmentReceived = function(bot, message) {
 	});
 }
 
+controller.showThankYouForContacting = function(bot, message) {
+	console.log("controller.showThankYouForContacting");
+	User.setLang(message.user, "", function() {
+		message.lang = "";
+		if (!message.isExploringUser) {
+			View.showThankYouForContactingEn(bot, message);
+		} else {
+			View.showMainQuestion(bot, message);
+		}
+	});
+}
+
 controller.showThankYouForContactingEn = function(bot, message) {
 	console.log("controller.showThankYouForContactingEn");
 	User.setLang(message.user, "en", function() {
@@ -228,6 +240,14 @@ controller.showThankYouForContactingEn = function(bot, message) {
 		} else {
 			View.showMainQuestion(bot, message);
 		}
+	});
+}
+
+controller.contactUs = function(bot, message) {
+	console.log("controller.contactUs");
+	User.setNotExploringUser(message.user, function() {
+		message.user.isExploringUser = false;
+		View.showContactUs(bot, message);
 	});
 }
 
@@ -257,6 +277,15 @@ controller.letsExploreEn = function(bot, message) {
 			}
 		});
 	});
+}
+
+controller.letsExploreInDefaultLang = function(bot, message) {
+	console.log("controller.letsExploreInDefaultLang");
+	if (message.lang === "en") {
+		controller.letsExploreEn(bot, message);
+	} else {
+		controller.letsExplore(bot, message);
+	}
 }
 
 controller.defaultPostBackDataHandler = function(bot, message, postBackId, postBackData) {
