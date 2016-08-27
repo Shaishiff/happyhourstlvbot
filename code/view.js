@@ -109,7 +109,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
     },
     {
       "type":"postback",
-      "title": (message.lang !== "en" ? "Contact Page Admin" : "צור קשר"),
+      "title": (message.lang === "en" ? "Contact Page Admin" : "צור קשר"),
       "payload": "contactUs"
     }
     ],
@@ -221,7 +221,7 @@ view.showMainQuestion = function(bot, message, callback) {
   });
   options.push({
       "type":"postback",
-      "title": (message.lang !== "en" ? "Contact Page Admin" : "צור קשר"),
+      "title": (message.lang === "en" ? "Contact Page Admin" : "צור קשר"),
       "payload": "contactUs"
   });
   var address = message["address" + (message.lang === "en" ? "_en" : "")];

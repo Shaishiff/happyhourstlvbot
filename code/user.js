@@ -69,6 +69,10 @@ user.setExploringUser = function(userId, callback) {
 	MongoHelper.upsert({userId: userId},{$set: {userId: userId, isExploringUser: true}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }
 
+user.setNotExploringUser = function(userId, callback) {
+	MongoHelper.upsert({userId: userId},{$set: {userId: userId, isExploringUser: false}}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
+}
+
 user.getDealTime = function(userId, callback) {
 	MongoHelper.findOne({userId: userId, type: { $exists: true}}, {type:1}, GlobalConsts.MONGO_DB_USER_INFO_COL, callback);
 }
