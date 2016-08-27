@@ -17,7 +17,7 @@ view.buildPersistentMainMenu = function() {
   },
   {
       "type": "postback",
-      "title": "Find Deals / חפש דילים",
+      "title": "חפש דילים / Find Deals",
       "payload": "letsExploreInDefaultLang"
   });
   return elements;
