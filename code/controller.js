@@ -246,7 +246,7 @@ controller.showThankYouForContactingEn = function(bot, message) {
 controller.contactUs = function(bot, message) {
 	console.log("controller.contactUs");
 	User.setNotExploringUser(message.user, function() {
-		message.user.isExploringUser = false;
+		message.isExploringUser = false;
 		View.showContactUs(bot, message);
 	});
 }
