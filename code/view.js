@@ -110,7 +110,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
     {
       "type":"postback",
       "title": (message.lang !== "en" ? "Contact Page Admin" : "צור קשר"),
-      "payload": "changeLanguage"
+      "payload": "contactUs"
     }
     ],
     callback);
@@ -218,6 +218,11 @@ view.showMainQuestion = function(bot, message, callback) {
   options.push({
     'title': (message.lang !== "en" ? "Change language" : "שנה שפה"),
     'payload': "changeLanguage"
+  });
+  options.push({
+      "type":"postback",
+      "title": (message.lang !== "en" ? "Contact Page Admin" : "צור קשר"),
+      "payload": "contactUs"
   });
   var address = message["address" + (message.lang === "en" ? "_en" : "")];
   var textForSpecificPlace = "";
