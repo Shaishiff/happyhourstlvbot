@@ -224,7 +224,7 @@ controller.showThankYouForContacting = function(bot, message) {
 	User.setLang(message.user, "", function() {
 		message.lang = "";
 		if (!message.isExploringUser) {
-			View.showThankYouForContactingEn(bot, message);
+			View.showThankYouForContacting(bot, message);
 		} else {
 			View.showMainQuestion(bot, message);
 		}

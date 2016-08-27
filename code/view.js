@@ -17,7 +17,7 @@ view.buildPersistentMainMenu = function() {
   },
   {
       "type": "postback",
-      "title": "Let's Explore / בוא נתחיל",
+      "title": "Find Deals / חפש דילים",
       "payload": "letsExploreInDefaultLang"
   });
   return elements;
@@ -69,10 +69,10 @@ view.showContactUs = function(bot, message) {
   var text = "";
   if (message.lang === "en") {
     text = "Please write your message and we will get back to you shortly."
-    + "\nTo go back and explore great new deals click on Let's Explore !";
+    + "\nTo go back and explore great deals click on Find Deals.";
   } else {
     text = "אם רצית ליצור קשר עם מנהלי העמוד, פשוט שלח את ההודעה שלך ונחזור אליך בהקדם."
-    + "\nעל מנת לחזור ולחפש עסקאות טובות לחץ על הכפתור בוא נתחיל !";
+    + "\nעל מנת לחזור ולחפש עסקאות טובות לחץ על הכפתור חפש דילים.";
   }
 
   FacebookHelper.sendButtonTemplate(bot,
@@ -80,10 +80,9 @@ view.showContactUs = function(bot, message) {
     text,
     [{
       "type": "postback",
-      "title": (message.lang === "en" ? "Let's Explore !" : "בוא נתחיל !"),
+      "title": (message.lang === "en" ? "Find Deals" : "חפש דילים"),
       "payload": (message.lang === "en" ? "letsExploreEn" : "letsExplore")
-    }],
-    callback);
+    }]);
 }
 
 view.showGetStartedMessage = function(bot, message, callback) {
@@ -109,7 +108,7 @@ view.showGetStartedMessage = function(bot, message, callback) {
     },
     {
       "type":"postback",
-      "title": (message.lang === "en" ? "Contact Page Admin" : "צור קשר"),
+      "title": (message.lang === "en" ? "Contact page admin" : "צור קשר"),
       "payload": "contactUs"
     }
     ],
@@ -132,7 +131,7 @@ view.showLinks = function(bot, message, callback) {
     [{
       "type": "web_url",
       "title": "happyhourstlv.com",
-      "url": "https://happyhourstlv.com"
+      "url": (message.lang === "en" ? "https://happyhourstlv.com/index_en.html" : "https://happyhourstlv.com")
     },
     {
       "type": "web_url",
@@ -221,7 +220,7 @@ view.showMainQuestion = function(bot, message, callback) {
   });
   options.push({
       "type":"postback",
-      "title": (message.lang === "en" ? "Contact Page Admin" : "צור קשר"),
+      "title": (message.lang === "en" ? "Contact page admin" : "צור קשר"),
       "payload": "contactUs"
   });
   var address = message["address" + (message.lang === "en" ? "_en" : "")];
