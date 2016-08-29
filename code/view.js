@@ -1,7 +1,6 @@
 "use strict";
 
 var GlobalConsts = require('./globalConsts');
-var Sentences = require('./sentences');
 var Api = require('./api');
 var Utils = require('./utils');
 var FacebookHelper = require('./facebookHelper');

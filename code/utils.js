@@ -1,6 +1,5 @@
 "use strict";
 
-var Sentences = require('./sentences');
 var HttpHelper = require('./httpHelper');
 var utils = {};
 
@@ -68,16 +67,16 @@ utils.isNormalIntegerFromMinToMax = function(str, min, max) {
 //     return s;
 // }
 
-utils.getSentence = function(sentenceKey, lang, gender) {
-  if (!Sentences[sentenceKey]) return "";
-  if (typeof lang === "undefined" || lang === "") {
-    lang = "he";
-    if (typeof gender === "undefined" || gender === "") gender = "male";
-    return Sentences[sentenceKey][lang][gender];
-  } else {
-    return Sentences[sentenceKey][lang];
-  }
-}
+// utils.getSentence = function(sentenceKey, lang, gender) {
+//   if (!Sentences[sentenceKey]) return "";
+//   if (typeof lang === "undefined" || lang === "") {
+//     lang = "he";
+//     if (typeof gender === "undefined" || gender === "") gender = "male";
+//     return Sentences[sentenceKey][lang][gender];
+//   } else {
+//     return Sentences[sentenceKey][lang];
+//   }
+// }
 
 utils.getAddressFromLatLon = function(lat, lon, lang, callback) {
   if (lang === "") lang = "iw"; // See: https://developers.google.com/maps/faq#languagesupport

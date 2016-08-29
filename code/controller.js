@@ -4,7 +4,6 @@ var GlobalConsts = require('./globalConsts');
 var HttpHelper = require('./httpHelper');
 var FacebookHelper = require('./facebookHelper');
 var View = require('./view');
-var Sentences = require('./sentences');
 var User = require('./user');
 var Api = require('./api');
 var Utils = require('./utils');
