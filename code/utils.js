@@ -3,26 +3,9 @@
 var HttpHelper = require('./httpHelper');
 var utils = {};
 
-// utils.createRandomString = function(length) {
-//     var text = "";
-//     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//     for(var i=0; i < length; i++) {
-//       text += possible.charAt(Math.floor(Math.random() * possible.length));
-//     }
-//     return text;
-// }
-
-// utils.randomBetweenMinAndMax = function(min, max) {
-//   return (Math.floor(Math.random() * max) + min);
-// }
-
 utils.isArray = function(arr) {
   return (arr instanceof Array);
 }
-
-// utils.randomFromArray = function(arr) {
-//   return arr[Math.floor(Math.random() * arr.length)];
-// }
 
 utils.shuffleArray = function(array) {
   // console.log("before");
@@ -56,27 +39,6 @@ utils.isNormalInteger = function(str) {
 utils.isNormalIntegerFromMinToMax = function(str, min, max) {
   return utils.isNormalInteger(str) && parseInt(str) >= min && parseInt(str) <= max;
 }
-
-// utils.numberWithCommas = function(num) {
-//   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-// }
-
-// utils.padWithZeros = function(num, size) {
-//     var s = num+"";
-//     while (s.length < size) s = "0" + s;
-//     return s;
-// }
-
-// utils.getSentence = function(sentenceKey, lang, gender) {
-//   if (!Sentences[sentenceKey]) return "";
-//   if (typeof lang === "undefined" || lang === "") {
-//     lang = "he";
-//     if (typeof gender === "undefined" || gender === "") gender = "male";
-//     return Sentences[sentenceKey][lang][gender];
-//   } else {
-//     return Sentences[sentenceKey][lang];
-//   }
-// }
 
 utils.getAddressFromLatLon = function(lat, lon, lang, callback) {
   if (lang === "") lang = "iw"; // See: https://developers.google.com/maps/faq#languagesupport
@@ -216,44 +178,5 @@ utils.changeDateFormat = function(str) {
   var date_new_format = date.split("/")[1] + "/" + date.split("/")[0] + "/" + date.split("/")[2];
   return date_new_format + " " + hour;
 }
-
-// utils.getUserInfo = function(userId, callback) {
-//   if (typeof userInfoCache[userId] !== "undefined" &&
-//     typeof userInfoCache[userId].info !== "undefined" &&
-//     typeof userInfoCache[userId].info.first_name === "string" &&
-//     typeof userInfoCache[userId].info.last_name === "string" &&
-//     typeof userInfoCache[userId].info.gender === "string") {
-//     console.log("getUserInfo - Have the user info in the cache.");
-//     callback(userInfoCache[userId].info);
-//     return;
-//   }
-//   console.log("getUserInfo - Don't have the user info in the cache, getting it from Mongo.");
-//   MongoHelper.getUserInfoFromMongo(userId, function(mongoUserInfo) {
-//     if (typeof mongoUserInfo !== "undefined" &&
-//       mongoUserInfo.first_name &&
-//       mongoUserInfo.last_name &&
-//       mongoUserInfo.gender) {
-//       console.log("getUserInfo - Got the user info from Mongo.");
-//       userInfoCache[userId] = {};
-//       userInfoCache[userId].info = {};
-//       userInfoCache[userId].info = mongoUserInfo;
-//       callback(mongoUserInfo);
-//     } else {
-//       console.log("getUserInfo - Can't find the user info in the Mongo, calling the facebook API.");
-//       HttpHelper.httpGetJson(Consts.FACEBOOK_USER_PROFILE_API.replace("<USER_ID>", userId), function(fbUserInfo) {
-//         if (typeof fbUserInfo === "undefined") {
-//           console.log("getUserInfo - Can't get the user info from the facebook API.");
-//           callback(null);
-//         } else {
-//           console.log("getUserInfo - Got the user info from the facebook API.");
-//           fbUserInfo.user_id = userId;
-//           userInfoCache[userId] = {};
-//           userInfoCache[userId].info = fbUserInfo;
-//           MongoHelper.insertUserInfoToMongo(fbUserInfo, callback);
-//         }
-//       });
-//     }
-//   });
-// }
 
 module.exports = utils;
