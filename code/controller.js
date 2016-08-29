@@ -219,7 +219,7 @@ controller.attachmentReceived = function(bot, message) {
 }
 
 controller.showThankYouForContacting = function(bot, message) {
-	console.log("controller.showThankYouForContacting");
+	console.log("controller.showThankYouForContacting", message.user);
 	User.setLang(message.user, "", function() {
 		message.lang = "";
 		if (!message.isExploringUser) {
@@ -231,7 +231,7 @@ controller.showThankYouForContacting = function(bot, message) {
 }
 
 controller.showThankYouForContactingEn = function(bot, message) {
-	console.log("controller.showThankYouForContactingEn");
+	console.log("controller.showThankYouForContactingEn", message.user);
 	User.setLang(message.user, "en", function() {
 		message.lang = "en";
 		if (!message.isExploringUser) {
@@ -243,7 +243,7 @@ controller.showThankYouForContactingEn = function(bot, message) {
 }
 
 controller.contactUs = function(bot, message) {
-	console.log("controller.contactUs");
+	console.log("controller.contactUs", message.user);
 	User.setNotExploringUser(message.user, function() {
 		message.isExploringUser = false;
 		View.showContactUs(bot, message);
@@ -251,7 +251,7 @@ controller.contactUs = function(bot, message) {
 }
 
 controller.letsExplore = function(bot, message) {
-	console.log("controller.letsExplore");
+	console.log("controller.letsExplore", message.user);
 	User.setExploringUser(message.user, function() {
 		User.setLang(message.user, "", function() {
 			message.lang = "";
@@ -265,7 +265,7 @@ controller.letsExplore = function(bot, message) {
 }
 
 controller.letsExploreEn = function(bot, message) {
-	console.log("controller.letsExplore");
+	console.log("controller.letsExplore", message.user);
 	User.setExploringUser(message.user, function() {
 		User.setLang(message.user, "en", function() {
 			message.lang = "en";
@@ -279,7 +279,7 @@ controller.letsExploreEn = function(bot, message) {
 }
 
 controller.letsExploreInDefaultLang = function(bot, message) {
-	console.log("controller.letsExploreInDefaultLang");
+	console.log("controller.letsExploreInDefaultLang", message.user);
 	if (message.lang === "en") {
 		controller.letsExploreEn(bot, message);
 	} else {
@@ -288,11 +288,11 @@ controller.letsExploreInDefaultLang = function(bot, message) {
 }
 
 controller.defaultPostBackDataHandler = function(bot, message, postBackId, postBackData) {
-	console.error("Could not find a postback callback");
+	console.error("Could not find a postback callback", message.user);
 }
 
 controller.showMainQuestion = function(bot, message) {
-	console.log("controller.showMainQuestion");
+	console.log("controller.showMainQuestion", message.user);
 	if (message.onBoardMessageShowed) {
 		View.showMainQuestion(bot, message);
 		return;
@@ -308,6 +308,7 @@ controller.showMainQuestion = function(bot, message) {
 }
 
 controller.showLinks = function(bot, message) {
+	console.log("showLinks", message.user);
 	View.showLinks(bot, message, function() {
 		if (!message.isExploringUser) {
 			console.log("controller.showLinks - This is not an exploring user");
@@ -318,10 +319,12 @@ controller.showLinks = function(bot, message) {
 }
 
 controller.changeLanguage = function(bot, message) {
+	console.log("changeLanguage", message.user);
 	View.changeLanguage(bot, message);
 }
 
 controller.switchedLanguage = function(bot, message, lang) {
+	console.log("switchedLanguage", message.user);
 	User.setLang(message.user, lang, function() {
 		message.lang = lang;
 		View.showMainQuestion(bot, message);
@@ -329,14 +332,17 @@ controller.switchedLanguage = function(bot, message, lang) {
 }
 
 controller.findOptions = function(bot, message) {
+	console.log("findOptions", message.user);
 	View.showDeals(bot, message);
 }
 
 controller.showCategories = function(bot, message) {
+	console.log("showCategories", message.user);
 	View.showCategories(bot, message);
 }
 
 controller.choseCategory = function(bot, message, category) {
+	console.log("choseCategory", message.user);
 	message.dealCategory = category;
 	User.setDealCategory(message.user, category, function() {
 		View.showMainQuestion(bot, message);
@@ -344,10 +350,12 @@ controller.choseCategory = function(bot, message, category) {
 }
 
 controller.showTimes = function(bot, message) {
+	console.log("showTimes", message.user);
 	View.showTimes(bot, message);
 }
 
 controller.choseTime = function(bot, message, time) {
+	console.log("choseTime", message.user);
 	message.dealTime = time;
 	User.setDealTime(message.user, time, function() {
 		View.showMainQuestion(bot, message);
@@ -355,8 +363,8 @@ controller.choseTime = function(bot, message, time) {
 }
 
 controller.showHowToSendMyLocation = function(bot, message) {
-	View.showHowToSendMyLocation(bot, message, function() {
-	});
+	console.log("showHowToSendMyLocation", message.user);
+	View.showHowToSendMyLocation(bot, message, function() {});
 }
 
 module.exports = controller;
