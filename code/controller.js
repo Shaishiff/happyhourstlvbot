@@ -116,6 +116,7 @@ controller.messageReceived = function(bot, message, callback) {
 	enrichMessageData(bot, message, function() {
 		if (!message.startTime) {
 			console.log("controller.messageReceived - First ever message");
+			message.startTime = new Date();
 			User.setStartTime(message.user, function(){
 				View.showThankYouForContacting(bot, message);
 			});
@@ -141,7 +142,15 @@ controller.handlePostBack = function(bot, message, payload) {
 
 controller.postbackReceived = function(bot, message, callback) {
 	console.log("controller.postbackReceived", JSON.stringify(message));
-	enrichMessageData(bot, message, callback);
+	enrichMessageData(bot, message, function() {
+		if (!message.startTime) {
+			console.log("controller.postbackReceived - First ever message");
+			message.startTime = new Date();
+			User.setStartTime(message.user, callback);
+		} else {
+			if (typeof callback === "function") callback();
+		}
+	});
 }
 
 controller.messageSent = function(bot, message, callback) {
