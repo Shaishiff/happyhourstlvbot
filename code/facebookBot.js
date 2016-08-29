@@ -56,27 +56,23 @@ function Facebookbot(configuration) {
             request.post('https://graph.facebook.com/me/messages?access_token=' + configuration.access_token,
                 function(err, res, body) {
                     if (err) {
-                        botkit.debug('WEBHOOK ERROR', err);
+                        console.error('WEBHOOK ERROR', err);
                         return cb && cb(err);
                     }
 
                     try {
-
                         var json = JSON.parse(body);
-
                     } catch (err) {
-
-                        botkit.debug('JSON Parse error: ', err);
+                        console.error('JSON Parse error: ', err);
                         return cb && cb(err);
-
                     }
 
                     if (json.error) {
-                        botkit.debug('API ERROR', json.error);
+                        console.error('API ERROR', json.error);
                         return cb && cb(json.error.message);
                     }
 
-                    botkit.debug('WEBHOOK SUCCESS', body);
+                    console.log('WEBHOOK SUCCESS', JSON.stringify(body));
                     cb && cb(null, body);
                 }).form(facebook_message);
         };
@@ -295,15 +291,15 @@ function Facebookbot(configuration) {
             });
 
 
-        request.post('https://graph.facebook.com/me/subscribed_apps?access_token=' + configuration.access_token,
-            function(err, res, body) {
-                if (err) {
-                    facebook_botkit.log('Could not subscribe to page messages');
-                } else {
-                    facebook_botkit.debug('Successfully subscribed to Facebook events:', body);
-                    facebook_botkit.startTicking();
-                }
-            });
+        // request.post('https://graph.facebook.com/me/subscribed_apps?access_token=' + configuration.access_token,
+        //     function(err, res, body) {
+        //         if (err) {
+        //             facebook_botkit.log('Could not subscribe to page messages');
+        //         } else {
+        //             facebook_botkit.debug('Successfully subscribed to Facebook events:', body);
+        //             facebook_botkit.startTicking();
+        //         }
+        //     });
 
         return facebook_botkit;
 
